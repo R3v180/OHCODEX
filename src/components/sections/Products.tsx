@@ -1,7 +1,10 @@
+// ========== src/components/sections/Products.tsx ========== //
+
 // -----------------------------------------------------------------------------
 // Archivo: src/components/sections/Products.tsx
-// Versión: 1.0.0 - Conexión Real a Payload CMS
-// Descripción: Obtiene los productos de la DB y los muestra en tarjetas modernas.
+// Versión: 1.1.0 - Enlaces a Detalle de Producto
+// Descripción: Listado de productos. Ahora el Título y el Icono enlazan a la
+// página dinámica de detalle (/products/[slug]).
 // -----------------------------------------------------------------------------
 
 import React from 'react'
@@ -27,18 +30,16 @@ const getStatusConfig = (status: string) => {
 }
 
 export async function ProductsSection() {
-  // 1. CONEXIÓN AL CMS (Fetch de datos)
+  // 1. CONEXIÓN AL CMS
   const payload = await getPayload({ config: configPromise })
   
   // 2. OBTENER PRODUCTOS
-  // depth: 1 asegura que nos traiga la URL de la imagen (media), no solo el ID.
   const { docs: products } = await payload.find({
     collection: 'products',
     depth: 1, 
-    sort: '-isFeatured', // Los destacados primero
+    sort: '-isFeatured',
   })
 
-  // Si no hay productos, no mostramos nada (o mostramos un mensaje vacío)
   if (!products || products.length === 0) {
     return null 
   }
@@ -60,14 +61,15 @@ export async function ProductsSection() {
         {/* GRILLA DE TARJETAS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => {
-            // Configuración dinámica según estado
             const status = getStatusConfig(product.status)
             const StatusIcon = status.icon
             
-            // Tratamiento seguro de la imagen (Typescript)
             const iconUrl = typeof product.logo === 'object' && product.logo?.url 
               ? product.logo.url 
               : null
+            
+            // URL interna al detalle
+            const detailUrl = `/products/${product.slug}`
 
             return (
               <div 
@@ -76,14 +78,17 @@ export async function ProductsSection() {
               >
                 {/* Cabecera Card */}
                 <div className="flex items-start justify-between mb-6">
-                  {/* Icono Producto */}
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-colors">
-                     {iconUrl ? (
-                        <img src={iconUrl} alt={product.name} className="h-8 w-8 object-contain" />
-                     ) : (
-                        <Rocket className="h-6 w-6 text-zinc-400 group-hover:text-cyan-400" />
-                     )}
-                  </div>
+                  {/* Icono con Enlace */}
+                  <Link href={detailUrl} className="block">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-colors cursor-pointer">
+                       {iconUrl ? (
+                          <img src={iconUrl} alt={product.name} className="h-8 w-8 object-contain" />
+                       ) : (
+                          <Rocket className="h-6 w-6 text-zinc-400 group-hover:text-cyan-400" />
+                       )}
+                    </div>
+                  </Link>
+
                   {/* Badge Estado */}
                   <Badge variant="outline" className={`${status.color} capitalize flex gap-1.5`}>
                     <StatusIcon className="w-3 h-3" />
@@ -91,18 +96,20 @@ export async function ProductsSection() {
                   </Badge>
                 </div>
 
-                {/* Contenido */}
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
-                  {product.name}
-                </h3>
+                {/* Título con Enlace */}
+                <Link href={detailUrl} className="block mb-2">
+                  <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors cursor-pointer">
+                    {product.name}
+                  </h3>
+                </Link>
+
                 <p className="text-zinc-400 text-sm leading-relaxed mb-6 flex-1">
                   {product.shortDescription}
                 </p>
 
-                {/* Footer Card: Tecnologías y Botón */}
+                {/* Footer Card: Tecnologías y Botón Externo */}
                 <div className="mt-auto pt-6 border-t border-zinc-800/50 flex items-center justify-between">
-                  <div className="flex gap-2">
-                    {/* Solo mostramos las 3 primeras tecnologías para no saturar */}
+                  <div className="flex gap-2 flex-wrap">
                     {product.technologies?.slice(0,3).map((tech, i) => (
                       <span key={i} className="text-xs font-mono text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">
                         {tech.name}
@@ -110,11 +117,12 @@ export async function ProductsSection() {
                     ))}
                   </div>
                   
+                  {/* Botón de "Ver Proyecto" externo (si existe) */}
                   {product.projectUrl && (
-                    <Button asChild size="sm" variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950 p-0 h-auto font-semibold">
-                      <Link href={product.projectUrl} target="_blank">
-                        Ver Proyecto <ArrowUpRight className="ml-1 w-4 h-4" />
-                      </Link>
+                    <Button asChild size="sm" variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950 p-0 h-auto font-semibold ml-2">
+                      <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
+                        Visitar Web <ArrowUpRight className="ml-1 w-4 h-4" />
+                      </a>
                     </Button>
                   )}
                 </div>
@@ -127,6 +135,4 @@ export async function ProductsSection() {
   )
 }
 
-// -----------------------------------------------------------------------------
-// Fin archivo: src/components/sections/Products.tsx
-// -----------------------------------------------------------------------------
+// ========== Fin de src/components/sections/Products.tsx ========== //

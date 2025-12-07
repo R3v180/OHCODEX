@@ -5,6 +5,7 @@ import { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Política de Privacidad',

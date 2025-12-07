@@ -46,11 +46,12 @@
 42. src/globals/Company.ts
 43. src/globals/Landing.ts
 44. src/globals/Legal.ts
-45. src/lib/utils.ts
-46. src/payload-types.ts
-47. src/payload.config.ts
-48. tailwind.config.js
-49. tsconfig.json
+45. src/lib/cloudinaryAdapter.ts
+46. src/lib/utils.ts
+47. src/payload-types.ts
+48. src/payload.config.ts
+49. tailwind.config.js
+50. tsconfig.json
 
 
 ==================================================
@@ -61,9 +62,15 @@ CONTENIDO DE ARCHIVOS
 
 // ========== [1] .env ========== //
 
-# Added by Payload
+// ========== [1] .env ========== //
+Added by Payload
 DATABASE_URI=postgresql://neondb_owner:npg_nzlLWyOAp1j8@ep-orange-cherry-agt0euoy-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require
 PAYLOAD_SECRET=d0461335beb225ee0356cab5
+--- Almacenamiento & Email (Cloudinary) ---
+CLOUDINARY_CLOUD_NAME="dpp6gyfao"
+CLOUDINARY_API_KEY="361497464835859"
+CLOUDINARY_API_SECRET="n3gIbY12GQxYjeqDr_OexY5nVC4"
+// ========== Fin de .env ========== //
 
 // ========== Fin de .env ========== //
 
@@ -208,6 +215,7 @@ blank
         "@payloadcms/richtext-lexical": "beta",
         "@radix-ui/react-slot": "^1.2.4",
         "class-variance-authority": "^0.7.1",
+        "cloudinary": "^2.8.0",
         "clsx": "^2.1.1",
         "graphql": "^16.8.1",
         "lucide-react": "^0.556.0",
@@ -5955,6 +5963,18 @@ blank
       "resolved": "https://registry.npmjs.org/client-only/-/client-only-0.0.1.tgz",
       "integrity": "sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA=="
     },
+    "node_modules/cloudinary": {
+      "version": "2.8.0",
+      "resolved": "https://registry.npmjs.org/cloudinary/-/cloudinary-2.8.0.tgz",
+      "integrity": "sha512-s7frvR0HnQXeJsQSIsbLa/I09IMb1lOnVLEDH5b5E53WTiCYgrNNOBGV/i/nLHwrcEOUkqjfSwP1+enXWNYmdw==",
+      "dependencies": {
+        "lodash": "^4.17.21",
+        "q": "^1.5.1"
+      },
+      "engines": {
+        "node": ">=9"
+      }
+    },
     "node_modules/clsx": {
       "version": "2.1.1",
       "resolved": "https://registry.npmjs.org/clsx/-/clsx-2.1.1.tgz",
@@ -11029,6 +11049,16 @@ blank
         "node": ">=6"
       }
     },
+    "node_modules/q": {
+      "version": "1.5.1",
+      "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
+      "integrity": "sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==",
+      "deprecated": "You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.\n\n(For a CapTP with native promises, see @endo/eventual-send and @endo/captp)",
+      "engines": {
+        "node": ">=0.6.0",
+        "teleport": ">=0.2.0"
+      }
+    },
     "node_modules/qs-esm": {
       "version": "7.0.2",
       "resolved": "https://registry.npmjs.org/qs-esm/-/qs-esm-7.0.2.tgz",
@@ -13706,62 +13736,62 @@ blank
 // ========== [9] package.json ========== //
 
 {
-  "name": "ohcodex",
-  "version": "1.0.0",
-  "description": "OHCodex Corporate Website & CMS",
-  "license": "MIT",
-  "type": "module",
-  "scripts": {
-    "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
-    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
-    "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
-    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
-    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
-    "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
-    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
-    "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
-  },
-  "dependencies": {
-    "@payloadcms/db-postgres": "beta",
-    "@payloadcms/next": "beta",
-    "@payloadcms/payload-cloud": "beta",
-    "@payloadcms/richtext-lexical": "beta",
-    "@radix-ui/react-slot": "^1.2.4",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "graphql": "^16.8.1",
-    "lucide-react": "^0.556.0",
-    "next": "15.0.0",
-    "payload": "beta",
-    "react": "19.0.0-rc-65a56d0e-20241020",
-    "react-dom": "19.0.0-rc-65a56d0e-20241020",
-    "sharp": "0.32.6",
-    "tailwind-merge": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "devDependencies": {
-    "@types/node": "^22.5.4",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
-    "autoprefixer": "^10.4.22",
-    "cross-env": "^7.0.3",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17",
-    "typescript": "5.6.3"
-  },
-  "engines": {
-    "node": "^18.20.2 || >=20.9.0"
-  },
-  "overrides": {
-    "react": "19.0.0-rc-65a56d0e-20241020",
-    "react-dom": "19.0.0-rc-65a56d0e-20241020",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
-  }
+"name": "ohcodex",
+"version": "1.0.0",
+"description": "OHCodex Corporate Website & CMS",
+"license": "MIT",
+"type": "module",
+"scripts": {
+"build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+"dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+"devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
+"generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+"generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+"lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
+"payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+"start": "cross-env NODE_OPTIONS=--no-deprecation next start"
+},
+"dependencies": {
+"@payloadcms/db-postgres": "beta",
+"@payloadcms/next": "beta",
+"@payloadcms/payload-cloud": "beta",
+"@payloadcms/richtext-lexical": "beta",
+"@radix-ui/react-slot": "^1.2.4",
+"class-variance-authority": "^0.7.1",
+"cloudinary": "^2.5.1",
+"clsx": "^2.1.1",
+"cross-env": "^7.0.3",
+"graphql": "^16.8.1",
+"lucide-react": "^0.556.0",
+"next": "15.0.0",
+"payload": "beta",
+"react": "19.0.0-rc-65a56d0e-20241020",
+"react-dom": "19.0.0-rc-65a56d0e-20241020",
+"sharp": "0.32.6",
+"tailwind-merge": "^3.4.0",
+"tailwindcss-animate": "^1.0.7"
+},
+"devDependencies": {
+"@types/node": "^22.5.4",
+"@types/react": "npm:types-react@19.0.0-rc.1",
+"@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+"autoprefixer": "^10.4.22",
+"eslint": "^8",
+"eslint-config-next": "15.0.0",
+"postcss": "^8.5.6",
+"tailwindcss": "^3.4.17",
+"typescript": "5.6.3"
+},
+"engines": {
+"node": "^18.20.2 || >=20.9.0"
+},
+"overrides": {
+"react": "19.0.0-rc-65a56d0e-20241020",
+"react-dom": "19.0.0-rc-65a56d0e-20241020",
+"@types/react": "npm:types-react@19.0.0-rc.1",
+"@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
 }
-
+}
 
 // ========== Fin de package.json ========== //
 
@@ -14062,13 +14092,6 @@ export default function NotFound() {
 
 // ========== src/app/(frontend)/page.tsx ========== //
 
-// -----------------------------------------------------------------------------
-// Archivo: src/app/(frontend)/page.tsx
-// Versión: 2.0.0 - SEO Avanzado (JSON-LD)
-// Descripción: Home con inyección de Datos Estructurados (Schema.org).
-// Ayuda a Google a entender que esto es una Empresa de Software.
-// -----------------------------------------------------------------------------
-
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -14077,6 +14100,9 @@ import { ProductsSection } from '@/components/sections/Products'
 import { FeaturesSection } from '@/components/sections/Features'
 import { ContactSection } from '@/components/sections/Contact'
 import type { CompanyInfo } from '@/payload-types'
+
+// AÑADE ESTA LÍNEA AQUÍ AL PRINCIPIO
+export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
   // 1. Obtener datos de la empresa para el SEO
@@ -14090,13 +14116,13 @@ export default async function HomePage() {
   
   // Obtener URL del logo (si existe)
   const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
-    ? `${baseUrl}${company.logo.url}` 
+    ? company.logo.url // Payload ya nos dará la URL de Cloudinary aquí gracias al hook
     : `${baseUrl}/logo.png`
 
   // 2. Construir el Esquema JSON-LD (Organization / ProfessionalService)
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService', // Mejor que 'Organization' para servicios de IT
+    '@type': 'ProfessionalService',
     name: 'OHCodex',
     url: baseUrl,
     logo: logoUrl,
@@ -14121,19 +14147,17 @@ export default async function HomePage() {
       company?.linkedin,
       company?.github,
       company?.twitter,
-    ].filter(Boolean), // Filtra los que estén vacíos
+    ].filter(Boolean),
     priceRange: '$$$',
   }
 
   return (
     <>
-      {/* Script invisible para Google */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Contenido Visual */}
       <Hero />
       <ProductsSection />
       <FeaturesSection />
@@ -14994,7 +15018,10 @@ export const ContactSubmissions: CollectionConfig = {
 
 // ========== [31] src/collections/Media.ts ========== //
 
+// ========== src/collections/Media.ts ========== //
+
 import type { CollectionConfig } from 'payload'
+import { uploadToCloudinary, deleteFromCloudinary, useCloudinaryUrl } from '../lib/cloudinaryAdapter'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -15003,8 +15030,12 @@ export const Media: CollectionConfig = {
     plural: 'Archivos Multimedia',
   },
   access: {
-    // Por ahora, cualquiera puede ver las imágenes (para que la web cargue)
     read: () => true,
+  },
+  hooks: {
+    beforeChange: [uploadToCloudinary],
+    afterRead: [useCloudinaryUrl],
+    afterDelete: [deleteFromCloudinary],
   },
   fields: [
     {
@@ -15013,33 +15044,31 @@ export const Media: CollectionConfig = {
       required: true,
       label: 'Texto Alternativo (Alt)',
     },
+    {
+      name: 'publicId',
+      type: 'text',
+      admin: {
+        hidden: true,
+      },
+    },
+    // CAMBIO: Usamos 'externalUrl'
+    {
+      name: 'externalUrl',
+      type: 'text',
+      admin: {
+        hidden: true,
+      },
+    },
   ],
   upload: {
-    staticDir: 'media', // Guardará los archivos en la carpeta /media del proyecto
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 400,
-        height: 300,
-        position: 'centre',
-      },
-      {
-        name: 'card',
-        width: 768,
-        height: 1024,
-        position: 'centre',
-      },
-      {
-        name: 'hero', // Para fondos grandes
-        width: 1920,
-        height: 1080,
-        position: 'centre',
-      },
-    ],
+    staticDir: 'media',
     adminThumbnail: 'thumbnail',
-    mimeTypes: ['image/*', 'application/pdf'], // Aceptamos imágenes y PDFs
+    mimeTypes: ['image/*', 'application/pdf'],
+    disableLocalStorage: true,
   },
 }
+
+// ========== Fin de src/collections/Media.ts ========== //
 
 // ========== Fin de src/collections/Media.ts ========== //
 
@@ -15687,13 +15716,6 @@ export async function FeaturesSection() {
 
 // ========== src/components/sections/Hero.tsx ========== //
 
-// -----------------------------------------------------------------------------
-// Archivo: src/components/sections/Hero.tsx
-// Versión: 2.0.0 - Dinámico (CMS)
-// Descripción: Sección Hero conectada a la configuración global 'landing-page'.
-// Permite editar el título, subtítulo y badge desde el panel de administración.
-// -----------------------------------------------------------------------------
-
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -15716,7 +15738,7 @@ export async function Hero() {
   const subtitle = landing?.heroSubtitle || 'Transformamos negocios con software a medida de alto rendimiento. Desde PWAs ultra-rápidas hasta infraestructuras SaaS complejas.'
 
   return (
-    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-white/10 bg-black pt-20">
+    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-white/10 bg-black pt-20 pb-16">
       
       {/* 1. FONDO TECNOLÓGICO */}
       <div className="absolute inset-0 z-0">
@@ -15774,18 +15796,25 @@ export async function Hero() {
           </Button>
         </div>
 
-        {/* 6. TECH STACK (ESTÁTICO - Diseño) */}
-        <div className="mt-20 flex items-center justify-center gap-8 text-zinc-500 opacity-70 grayscale transition-all hover:grayscale-0">
+        {/* 6. TECH STACK (Responsive) */}
+        {/* Cambios: flex-wrap para permitir varias líneas, gap responsive, y ocultar separadores en móvil */}
+        <div className="mt-16 sm:mt-20 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-zinc-500 opacity-70 grayscale transition-all hover:grayscale-0">
             <div className="flex items-center gap-2">
                 <Code2 className="h-6 w-6" />
                 <span className="font-mono text-sm">Next.js 15</span>
             </div>
-            <div className="h-4 w-[1px] bg-zinc-800" />
+            
+            {/* Separador: oculto en móvil (hidden), visible en sm (sm:block) */}
+            <div className="hidden sm:block h-4 w-[1px] bg-zinc-800" />
+            
             <div className="flex items-center gap-2">
                 <Layers className="h-6 w-6" />
                 <span className="font-mono text-sm">Payload CMS</span>
             </div>
-            <div className="h-4 w-[1px] bg-zinc-800" />
+            
+            {/* Separador: oculto en móvil (hidden), visible en sm (sm:block) */}
+            <div className="hidden sm:block h-4 w-[1px] bg-zinc-800" />
+            
             <div className="flex items-center gap-2">
                 <span className="font-mono text-sm font-bold">NEON</span>
                 <span className="font-mono text-sm">Postgres</span>
@@ -16348,7 +16377,91 @@ export const Legal: GlobalConfig = {
 
 // ========== Fin de src/globals/Legal.ts ========== //
 
-// ========== [45] src/lib/utils.ts ========== //
+// ========== [45] src/lib/cloudinaryAdapter.ts ========== //
+
+// ========== src/lib/cloudinaryAdapter.ts ========== //
+
+import { v2 as cloudinary } from 'cloudinary'
+import type { CollectionBeforeChangeHook, CollectionAfterDeleteHook, CollectionAfterReadHook } from 'payload'
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
+
+export const uploadToCloudinary: CollectionBeforeChangeHook = async ({ data, req }) => {
+  if (req.file) {
+    try {
+      const file = req.file
+      const result = await new Promise<any>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'ohcodex-media',
+            resource_type: 'auto',
+          },
+          (error, result) => {
+            if (error) {
+              console.error('Cloudinary Error:', error)
+              reject(error)
+            } else {
+              resolve(result)
+            }
+          }
+        )
+        uploadStream.end(file.data)
+      })
+
+      data.width = result.width
+      data.height = result.height
+      data.filesize = result.bytes
+      data.mimeType = result.resource_type === 'image' ? `image/${result.format}` : 'application/pdf'
+      data.publicId = result.public_id 
+      
+      // CAMBIO: Usamos 'externalUrl'
+      data.externalUrl = result.secure_url
+
+    } catch (error) {
+      console.error('Error fatal subiendo a Cloudinary:', error)
+      throw new Error('Fallo en la subida de imagen externa.')
+    }
+  }
+  
+  return data
+}
+
+export const useCloudinaryUrl: CollectionAfterReadHook = ({ doc }) => {
+  // CAMBIO: Usamos 'externalUrl'
+  if (doc.externalUrl) {
+    doc.url = doc.externalUrl
+    
+    if (doc.sizes) {
+      Object.keys(doc.sizes).forEach((key) => {
+        if (doc.sizes[key]) {
+          doc.sizes[key].url = doc.externalUrl
+        }
+      })
+    }
+  }
+  return doc
+}
+
+export const deleteFromCloudinary: CollectionAfterDeleteHook = async ({ doc }) => {
+  try {
+    if (doc.publicId) {
+      await cloudinary.uploader.destroy(doc.publicId)
+      console.log(`Imagen borrada de Cloudinary: ${doc.publicId}`)
+    }
+  } catch (error) {
+    console.error('Error borrando imagen de Cloudinary:', error)
+  }
+}
+
+// ========== Fin de src/lib/cloudinaryAdapter.ts ========== //
+
+// ========== Fin de src/lib/cloudinaryAdapter.ts ========== //
+
+// ========== [46] src/lib/utils.ts ========== //
 
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -16360,7 +16473,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // ========== Fin de src/lib/utils.ts ========== //
 
-// ========== [46] src/payload-types.ts ========== //
+// ========== [47] src/payload-types.ts ========== //
 
 /* tslint:disable */
 /* eslint-disable */
@@ -16916,7 +17029,7 @@ declare module 'payload' {
 
 // ========== Fin de src/payload-types.ts ========== //
 
-// ========== [47] src/payload.config.ts ========== //
+// ========== [48] src/payload.config.ts ========== //
 
 // ========== src/payload.config.ts ========== //
 
@@ -16978,7 +17091,7 @@ export default buildConfig({
 
 // ========== Fin de src/payload.config.ts ========== //
 
-// ========== [48] tailwind.config.js ========== //
+// ========== [49] tailwind.config.js ========== //
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -17044,7 +17157,7 @@ export default {
 
 // ========== Fin de tailwind.config.js ========== //
 
-// ========== [49] tsconfig.json ========== //
+// ========== [50] tsconfig.json ========== //
 
 {
   "compilerOptions": {

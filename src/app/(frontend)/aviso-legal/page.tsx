@@ -6,6 +6,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 // CORRECCIÓN: Importamos 'LegalText' (singular) según sugiere el error
 import type { LegalText } from '@/payload-types'
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Aviso Legal',

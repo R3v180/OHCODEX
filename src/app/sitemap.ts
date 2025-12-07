@@ -1,12 +1,5 @@
 // ========== src/app/sitemap.ts ========== //
 
-// -----------------------------------------------------------------------------
-// Archivo: src/app/sitemap.ts
-// Versión: 1.0.0
-// Descripción: Generador dinámico del mapa del sitio (Sitemap XML).
-// Ayuda a Google a indexar todas las páginas, incluyendo los productos del CMS.
-// -----------------------------------------------------------------------------
-
 import { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -14,17 +7,16 @@ import configPromise from '@payload-config'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Definir la URL base (Producción o Local)
-  // IMPORTANTE: Asegúrate de configurar la variable NEXT_PUBLIC_SERVER_URL en Render
+  // 1. Definir la URL base
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
 
-  // 2. Obtener todos los productos publicados (live)
-  // Solo queremos que Google indexe lo que está listo, no los borradores
+  // 2. Obtener productos para indexar
+  // CORRECCIÓN APLICADA: Ahora busca productos 'live' Y 'beta' para que salgan en Google
   const { docs: products } = await payload.find({
     collection: 'products',
     where: {
       status: {
-        equals: 'live', // Solo productos "En Producción"
+        in: ['live', 'beta'], 
       },
     },
     depth: 0,
@@ -45,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
-      priority: 1, // La Home es la más importante
+      priority: 1,
     },
     {
       url: `${baseUrl}/aviso-legal`,
@@ -70,5 +62,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 5. Unir todo y devolver
   return [...staticRoutes, ...productUrls]
 }
-
-// ========== Fin de src/app/sitemap.ts ========== //

@@ -1,12 +1,5 @@
 // ========== src/components/sections/Hero.tsx ========== //
 
-// -----------------------------------------------------------------------------
-// Archivo: src/components/sections/Hero.tsx
-// Versión: 2.0.0 - Dinámico (CMS)
-// Descripción: Sección Hero conectada a la configuración global 'landing-page'.
-// Permite editar el título, subtítulo y badge desde el panel de administración.
-// -----------------------------------------------------------------------------
-
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -29,7 +22,7 @@ export async function Hero() {
   const subtitle = landing?.heroSubtitle || 'Transformamos negocios con software a medida de alto rendimiento. Desde PWAs ultra-rápidas hasta infraestructuras SaaS complejas.'
 
   return (
-    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-white/10 bg-black pt-20">
+    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-white/10 bg-black pt-20 pb-16">
       
       {/* 1. FONDO TECNOLÓGICO */}
       <div className="absolute inset-0 z-0">
@@ -87,18 +80,25 @@ export async function Hero() {
           </Button>
         </div>
 
-        {/* 6. TECH STACK (ESTÁTICO - Diseño) */}
-        <div className="mt-20 flex items-center justify-center gap-8 text-zinc-500 opacity-70 grayscale transition-all hover:grayscale-0">
+        {/* 6. TECH STACK (Responsive) */}
+        {/* Cambios: flex-wrap para permitir varias líneas, gap responsive, y ocultar separadores en móvil */}
+        <div className="mt-16 sm:mt-20 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-zinc-500 opacity-70 grayscale transition-all hover:grayscale-0">
             <div className="flex items-center gap-2">
                 <Code2 className="h-6 w-6" />
                 <span className="font-mono text-sm">Next.js 15</span>
             </div>
-            <div className="h-4 w-[1px] bg-zinc-800" />
+            
+            {/* Separador: oculto en móvil (hidden), visible en sm (sm:block) */}
+            <div className="hidden sm:block h-4 w-[1px] bg-zinc-800" />
+            
             <div className="flex items-center gap-2">
                 <Layers className="h-6 w-6" />
                 <span className="font-mono text-sm">Payload CMS</span>
             </div>
-            <div className="h-4 w-[1px] bg-zinc-800" />
+            
+            {/* Separador: oculto en móvil (hidden), visible en sm (sm:block) */}
+            <div className="hidden sm:block h-4 w-[1px] bg-zinc-800" />
+            
             <div className="flex items-center gap-2">
                 <span className="font-mono text-sm font-bold">NEON</span>
                 <span className="font-mono text-sm">Postgres</span>

@@ -32,8 +32,16 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'company-info': CompanyInfo;
+    'legal-texts': LegalText;
+    'landing-page': LandingPage;
+  };
+  globalsSelect: {
+    'company-info': CompanyInfoSelect<false> | CompanyInfoSelect<true>;
+    'legal-texts': LegalTextsSelect<false> | LegalTextsSelect<true>;
+    'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -374,6 +382,160 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "company-info".
+ */
+export interface CompanyInfo {
+  id: number;
+  logo: number | Media;
+  logoDark?: (number | null) | Media;
+  tagline?: string | null;
+  description?: string | null;
+  contactEmail: string;
+  phoneNumber?: string | null;
+  address?: string | null;
+  schedule?: string | null;
+  linkedin?: string | null;
+  github?: string | null;
+  twitter?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-texts".
+ */
+export interface LegalText {
+  id: number;
+  legalNotice: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  privacyPolicy: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  termsConditions: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "landing-page".
+ */
+export interface LandingPage {
+  id: number;
+  heroBadge?: string | null;
+  heroTitle: string;
+  heroSubtitle: string;
+  productsTitle?: string | null;
+  productsDescription?: string | null;
+  featuresTitle?: string | null;
+  featuresDescription?: string | null;
+  featuresList?:
+    | {
+        icon?: ('smartphone' | 'zap' | 'database' | 'shield') | null;
+        title: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "company-info_select".
+ */
+export interface CompanyInfoSelect<T extends boolean = true> {
+  logo?: T;
+  logoDark?: T;
+  tagline?: T;
+  description?: T;
+  contactEmail?: T;
+  phoneNumber?: T;
+  address?: T;
+  schedule?: T;
+  linkedin?: T;
+  github?: T;
+  twitter?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-texts_select".
+ */
+export interface LegalTextsSelect<T extends boolean = true> {
+  legalNotice?: T;
+  privacyPolicy?: T;
+  termsConditions?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "landing-page_select".
+ */
+export interface LandingPageSelect<T extends boolean = true> {
+  heroBadge?: T;
+  heroTitle?: T;
+  heroSubtitle?: T;
+  productsTitle?: T;
+  productsDescription?: T;
+  featuresTitle?: T;
+  featuresDescription?: T;
+  featuresList?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

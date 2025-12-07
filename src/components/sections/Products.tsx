@@ -2,9 +2,9 @@
 
 // -----------------------------------------------------------------------------
 // Archivo: src/components/sections/Products.tsx
-// Versión: 1.1.0 - Enlaces a Detalle de Producto
-// Descripción: Listado de productos. Ahora el Título y el Icono enlazan a la
-// página dinámica de detalle (/products/[slug]).
+// Versión: 2.0.0 - Cabecera Dinámica + Lista de Productos
+// Descripción: Obtiene el título/descripción de la sección desde el Global 'landing-page'
+// y la lista de tarjetas desde la Colección 'products'.
 // -----------------------------------------------------------------------------
 
 import React from 'react'
@@ -14,6 +14,7 @@ import configPromise from '@payload-config'
 import { ArrowUpRight, CheckCircle2, FlaskConical, Rocket, Timer } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import type { LandingPage } from '@/payload-types'
 
 // Función auxiliar para obtener el icono según el estado
 const getStatusConfig = (status: string) => {
@@ -30,16 +31,25 @@ const getStatusConfig = (status: string) => {
 }
 
 export async function ProductsSection() {
-  // 1. CONEXIÓN AL CMS
   const payload = await getPayload({ config: configPromise })
   
-  // 2. OBTENER PRODUCTOS
+  // 1. OBTENER CONFIGURACIÓN GLOBAL (Textos de cabecera)
+  const landing = (await payload.findGlobal({
+    slug: 'landing-page' as any,
+  })) as unknown as LandingPage
+
+  // 2. OBTENER LISTA DE PRODUCTOS (Datos de tarjetas)
   const { docs: products } = await payload.find({
     collection: 'products',
     depth: 1, 
     sort: '-isFeatured',
   })
 
+  // Textos con fallback
+  const title = landing?.productsTitle || 'Soluciones OHCodex'
+  const description = landing?.productsDescription || 'Software diseñado para resolver problemas reales. Desde la automatización de infraestructura hasta la gestión comercial.'
+
+  // Si no hay productos, no mostramos la sección
   if (!products || products.length === 0) {
     return null 
   }
@@ -48,13 +58,14 @@ export async function ProductsSection() {
     <section id="productos" className="bg-zinc-950 py-24 border-b border-white/5">
       <div className="container px-4 mx-auto">
         
-        {/* CABECERA DE SECCIÓN */}
+        {/* CABECERA DE SECCIÓN DINÁMICA */}
         <div className="mb-16 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Soluciones <span className="text-cyan-500">OHCODEX</span>
+            {/* Lógica simple para colorear la última palabra del título */}
+            {title.split(' ').slice(0, -1).join(' ')} <span className="text-cyan-500">{title.split(' ').slice(-1)}</span>
           </h2>
           <p className="mt-4 text-lg text-zinc-400 max-w-2xl mx-auto">
-            Software diseñado para resolver problemas reales. Desde la automatización de infraestructura hasta la gestión comercial.
+            {description}
           </p>
         </div>
 
@@ -68,7 +79,6 @@ export async function ProductsSection() {
               ? product.logo.url 
               : null
             
-            // URL interna al detalle
             const detailUrl = `/products/${product.slug}`
 
             return (
@@ -107,7 +117,7 @@ export async function ProductsSection() {
                   {product.shortDescription}
                 </p>
 
-                {/* Footer Card: Tecnologías y Botón Externo */}
+                {/* Footer Card */}
                 <div className="mt-auto pt-6 border-t border-zinc-800/50 flex items-center justify-between">
                   <div className="flex gap-2 flex-wrap">
                     {product.technologies?.slice(0,3).map((tech, i) => (
@@ -117,7 +127,6 @@ export async function ProductsSection() {
                     ))}
                   </div>
                   
-                  {/* Botón de "Ver Proyecto" externo (si existe) */}
                   {product.projectUrl && (
                     <Button asChild size="sm" variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950 p-0 h-auto font-semibold ml-2">
                       <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">

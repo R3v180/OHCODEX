@@ -1,36 +1,62 @@
+// ========== src/components/sections/Features.tsx ========== //
+
 // -----------------------------------------------------------------------------
 // Archivo: src/components/sections/Features.tsx
-// Versión: 1.0.0
-// Descripción: Explica los servicios principales (PWA, SaaS, Integraciones).
+// Versión: 2.0.0 - Lista Dinámica
+// Descripción: Muestra las características clave. El título, descripción y la
+// propia lista de items (icono + texto) se gestionan desde el Global 'landing-page'.
 // -----------------------------------------------------------------------------
 
 import React from 'react'
-import { Smartphone, Zap, Database, ShieldCheck } from 'lucide-react'
+import { Smartphone, Zap, Database, ShieldCheck, LucideIcon } from 'lucide-react'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
+import type { LandingPage } from '@/payload-types'
 
-const features = [
-  {
-    icon: Smartphone,
-    title: 'Expertos en PWA',
-    description: 'Creamos aplicaciones web que se instalan como nativas. Sin Apple Store ni Play Store. Actualizaciones instantáneas y funcionamiento offline (como en Pool-Control).',
-  },
-  {
-    icon: Zap,
-    title: 'Rendimiento Extremo',
-    description: 'Optimizamos cada milisegundo. Usamos Next.js y arquitecturas modernas para que tu software vuele, vital para herramientas de uso diario como Crono-Job.',
-  },
-  {
-    icon: Database,
-    title: 'Integración Total',
-    description: 'No creamos islas de datos. Conectamos tu software con ERPs existentes (Sage, A3), pasarelas de pago y hardware IoT.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Escalabilidad Real',
-    description: 'Arquitecturas preparadas para crecer. Desde un MVP para validar ideas hasta sistemas SaaS complejos con miles de usuarios concurrentes.',
-  },
-]
+// Mapa para traducir el texto del CMS al componente Icono real
+const iconMap: Record<string, LucideIcon> = {
+  smartphone: Smartphone,
+  zap: Zap,
+  database: Database,
+  shield: ShieldCheck,
+}
 
-export function FeaturesSection() {
+export async function FeaturesSection() {
+  const payload = await getPayload({ config: configPromise })
+  
+  // 1. Obtener datos globales
+  const landing = (await payload.findGlobal({
+    slug: 'landing-page' as any,
+  })) as unknown as LandingPage
+
+  // 2. Textos con Fallback
+  const title = landing?.featuresTitle || 'Más allá del código: Ingeniería de Producto'
+  const description = landing?.featuresDescription || 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.'
+  
+  // 3. Lista de Características (Si está vacía en el CMS, usamos una por defecto para que no quede feo)
+  const featuresList = landing?.featuresList || [
+    {
+      icon: 'smartphone',
+      title: 'Expertos en PWA',
+      description: 'Creamos aplicaciones web que se instalan como nativas. Sin Apple Store ni Play Store.',
+    },
+    {
+      icon: 'zap',
+      title: 'Rendimiento Extremo',
+      description: 'Optimizamos cada milisegundo. Usamos Next.js y arquitecturas modernas.',
+    },
+    {
+      icon: 'database',
+      title: 'Integración Total',
+      description: 'Conectamos tu software con ERPs existentes, pasarelas de pago y hardware IoT.',
+    },
+    {
+      icon: 'shield',
+      title: 'Escalabilidad Real',
+      description: 'Arquitecturas preparadas para crecer. Desde un MVP hasta sistemas SaaS complejos.',
+    },
+  ]
+
   return (
     <section id="metodologia" className="bg-black py-24 relative overflow-hidden">
       
@@ -43,16 +69,22 @@ export function FeaturesSection() {
           {/* COLUMNA IZQUIERDA: Texto */}
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
-              Más allá del código: <br />
-              <span className="text-cyan-500">Ingeniería de Producto</span>
+              {/* Coloreamos la segunda mitad del título */}
+              {title.split(':').length > 1 ? (
+                <>
+                  {title.split(':')[0]}: <br />
+                  <span className="text-cyan-500">{title.split(':')[1]}</span>
+                </>
+              ) : (
+                title
+              )}
             </h2>
             <p className="text-lg text-zinc-400 mb-8 leading-relaxed">
-              En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico. 
-              Analizamos tu modelo de negocio (como el sistema de puntos de LoyalPyme) y diseñamos la arquitectura técnica perfecta para soportarlo.
+              {description}
             </p>
             
             <div className="flex flex-col gap-4">
-               {/* Lista de ventajas con diseño visual */}
+               {/* Lista de ventajas visuales (Estáticas por diseño, o podrías añadirlas al CMS si quisieras) */}
                {['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros'].map((item, i) => (
                  <div key={i} className="flex items-center gap-3">
                    <div className="h-2 w-2 rounded-full bg-cyan-500" />
@@ -62,17 +94,19 @@ export function FeaturesSection() {
             </div>
           </div>
 
-          {/* COLUMNA DERECHA: Grid de Iconos */}
+          {/* COLUMNA DERECHA: Grid de Iconos Dinámico */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {features.map((feature, index) => {
-              const Icon = feature.icon
+            {featuresList.map((feature, index) => {
+              // Resolver el icono desde el mapa, si no existe usamos 'Zap' por defecto
+              const IconComponent = iconMap[feature.icon || 'zap'] || Zap
+              
               return (
                 <div 
                   key={index} 
                   className="group rounded-2xl border border-white/10 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all hover:bg-zinc-800 hover:border-cyan-500/30"
                 >
                   <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
-                    <Icon className="h-6 w-6" />
+                    <IconComponent className="h-6 w-6" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {feature.title}
@@ -90,3 +124,5 @@ export function FeaturesSection() {
     </section>
   )
 }
+
+// ========== Fin de src/components/sections/Features.tsx ========== //

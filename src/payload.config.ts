@@ -1,4 +1,5 @@
-// src/payload.config.ts
+// ========== src/payload.config.ts ========== //
+
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -8,10 +9,16 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { es } from 'payload/i18n/es'
 
+// Importamos Colecciones
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Products } from './collections/Products'
-import { ContactSubmissions } from './collections/ContactSubmissions' // <--- 1. Importamos la nueva colección
+import { ContactSubmissions } from './collections/ContactSubmissions'
+
+// Importamos Globales (NUEVO)
+import { Company } from './globals/Company'
+import { Legal } from './globals/Legal'
+import { Landing } from './globals/Landing'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -27,8 +34,10 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  // 2. Añadimos ContactSubmissions al array de colecciones
+  // Registramos Colecciones y Globales
   collections: [Users, Media, Products, ContactSubmissions],
+  globals: [Company, Legal, Landing], // <--- AQUÍ SE REGISTRAN
+  
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -44,3 +53,5 @@ export default buildConfig({
     payloadCloudPlugin(),
   ],
 })
+
+// ========== Fin de src/payload.config.ts ========== //

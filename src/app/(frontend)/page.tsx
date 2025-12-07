@@ -1,12 +1,5 @@
 // ========== src/app/(frontend)/page.tsx ========== //
 
-// -----------------------------------------------------------------------------
-// Archivo: src/app/(frontend)/page.tsx
-// Versión: 2.0.0 - SEO Avanzado (JSON-LD)
-// Descripción: Home con inyección de Datos Estructurados (Schema.org).
-// Ayuda a Google a entender que esto es una Empresa de Software.
-// -----------------------------------------------------------------------------
-
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -15,6 +8,9 @@ import { ProductsSection } from '@/components/sections/Products'
 import { FeaturesSection } from '@/components/sections/Features'
 import { ContactSection } from '@/components/sections/Contact'
 import type { CompanyInfo } from '@/payload-types'
+
+// AÑADE ESTA LÍNEA AQUÍ AL PRINCIPIO
+export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
   // 1. Obtener datos de la empresa para el SEO
@@ -28,13 +24,13 @@ export default async function HomePage() {
   
   // Obtener URL del logo (si existe)
   const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
-    ? `${baseUrl}${company.logo.url}` 
+    ? company.logo.url // Payload ya nos dará la URL de Cloudinary aquí gracias al hook
     : `${baseUrl}/logo.png`
 
   // 2. Construir el Esquema JSON-LD (Organization / ProfessionalService)
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService', // Mejor que 'Organization' para servicios de IT
+    '@type': 'ProfessionalService',
     name: 'OHCodex',
     url: baseUrl,
     logo: logoUrl,
@@ -59,19 +55,17 @@ export default async function HomePage() {
       company?.linkedin,
       company?.github,
       company?.twitter,
-    ].filter(Boolean), // Filtra los que estén vacíos
+    ].filter(Boolean),
     priceRange: '$$$',
   }
 
   return (
     <>
-      {/* Script invisible para Google */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Contenido Visual */}
       <Hero />
       <ProductsSection />
       <FeaturesSection />

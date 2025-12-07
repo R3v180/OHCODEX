@@ -1,13 +1,16 @@
+// ========== src/app/(frontend)/page.tsx ========== //
+
 // -----------------------------------------------------------------------------
 // Archivo: src/app/(frontend)/page.tsx
-// Versión: 1.3.0 - Integración de FeaturesSection
-// Descripción: Página de inicio pública. Orquesta las secciones: Hero, Productos y Metodología.
+// Versión: 1.4.0 - Integración Final (Hero + Productos + Features + Contacto)
+// Descripción: Página de inicio completa. Orquesta todas las secciones del sitio.
 // -----------------------------------------------------------------------------
 
 import React from 'react'
 import { Hero } from '@/components/sections/Hero'
 import { ProductsSection } from '@/components/sections/Products'
 import { FeaturesSection } from '@/components/sections/Features'
+import { ContactSection } from '@/components/sections/Contact'
 
 export default function HomePage() {
   return (
@@ -21,7 +24,8 @@ export default function HomePage() {
       {/* 3. METODOLOGÍA: Explicación de servicios PWA/SaaS */}
       <FeaturesSection />
       
-      {/* Próximamente: <ContactForm /> */}
+      {/* 4. CONTACTO: Formulario de captación de leads */}
+      <ContactSection />
     </>
   )
 }
@@ -29,3 +33,5 @@ export default function HomePage() {
 // -----------------------------------------------------------------------------
 // Fin archivo: src/app/(frontend)/page.tsx
 // -----------------------------------------------------------------------------
+
+// ========== Fin de src/app/(frontend)/page.tsx ========== //

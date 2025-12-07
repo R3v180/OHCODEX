@@ -1,7 +1,7 @@
 // ========== src/collections/Media.ts ========== //
 import type { CollectionConfig } from 'payload'
-// Importamos los hooks de nuestro adaptador personalizado
-import { uploadToCloudinary, deleteFromCloudinary } from '../lib/cloudinaryAdapter'
+// Importamos los 3 hooks del adaptador (incluido el nuevo useCloudinaryUrl)
+import { uploadToCloudinary, deleteFromCloudinary, useCloudinaryUrl } from '../lib/cloudinaryAdapter'
 export const Media: CollectionConfig = {
 slug: 'media',
 labels: {
@@ -11,10 +11,10 @@ plural: 'Archivos Multimedia',
 access: {
 read: () => true,
 },
-// AQUÍ ESTÁ LA MAGIA: Conectamos los eventos
 hooks: {
-beforeChange: [uploadToCloudinary], // Antes de guardar, sube a Cloudinary
-afterDelete: [deleteFromCloudinary], // Al borrar en Payload, borra en Cloudinary
+beforeChange: [uploadToCloudinary], // Sube a Cloudinary y guarda la URL segura
+afterRead: [useCloudinaryUrl], // "Engaña" al frontend para usar la URL de Cloudinary
+afterDelete: [deleteFromCloudinary], // Limpia basura en Cloudinary
 },
 fields: [
 {
@@ -23,7 +23,7 @@ type: 'text',
 required: true,
 label: 'Texto Alternativo (Alt)',
 },
-// Añadimos un campo oculto para guardar el ID de Cloudinary (necesario para borrar)
+// Campo técnico para borrar la imagen
 {
 name: 'publicId',
 type: 'text',
@@ -31,11 +31,20 @@ admin: {
 hidden: true,
 },
 },
+// NUEVO CAMPO: Guardamos aquí la URL real de Cloudinary
+{
+name: 'cloudinaryURL',
+type: 'text',
+admin: {
+hidden: true,
+},
+},
 ],
 upload: {
-staticDir: 'media', // Payload necesita esto por defecto, pero Cloudinary lo ignorará al sobreescribir la URL
+staticDir: 'media', // Carpeta "falsa" para cumplir con Payload
 adminThumbnail: 'thumbnail',
 mimeTypes: ['image/*', 'application/pdf'],
+disableLocalStorage: true, // Le decimos a Payload que no intente guardar en disco
 },
 }
-// ========== Fin de src/collections/Media.ts ========== // 
+// ========== Fin de src/collections/Media.ts ========== //

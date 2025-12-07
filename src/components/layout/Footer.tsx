@@ -1,7 +1,10 @@
+// ========== src/components/layout/Footer.tsx ========== //
+
 // -----------------------------------------------------------------------------
 // Archivo: src/components/layout/Footer.tsx
-// Versión: 1.0.0 - Diseño inicial Dark Mode
-// Descripción: Pie de página global con enlaces de navegación y copyright.
+// Versión: 1.1.0 - Enlaces Legales Funcionales
+// Descripción: Pie de página global. Ahora conecta con las páginas de Aviso Legal,
+// Privacidad y Términos para cumplir con RGPD y protección civil.
 // -----------------------------------------------------------------------------
 
 import React from 'react'
@@ -33,12 +36,12 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-6">Navegación</h3>
             <ul className="space-y-4">
               <li>
-                <Link href="#productos" className="text-zinc-400 hover:text-cyan-400 transition-colors">
+                <Link href="/#productos" className="text-zinc-400 hover:text-cyan-400 transition-colors">
                   Productos
                 </Link>
               </li>
               <li>
-                <Link href="#metodologia" className="text-zinc-400 hover:text-cyan-400 transition-colors">
+                <Link href="/#metodologia" className="text-zinc-400 hover:text-cyan-400 transition-colors">
                   Metodología
                 </Link>
               </li>
@@ -67,14 +70,21 @@ export function Footer() {
           </div>
         </div>
 
-        {/* 4. BARRA COPYRIGHT */}
+        {/* 4. BARRA COPYRIGHT & LEGAL */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-zinc-500 text-sm">
-            &copy; {currentYear} OHCodex Software Development. Todos los derechos reservados.
+            &copy; {currentYear} OHCodex. Todos los derechos reservados.
           </p>
           <div className="flex gap-6 text-sm text-zinc-500">
-            <Link href="#" className="hover:text-zinc-300">Aviso Legal</Link>
-            <Link href="#" className="hover:text-zinc-300">Privacidad</Link>
+            <Link href="/aviso-legal" className="hover:text-zinc-300 transition-colors">
+              Aviso Legal
+            </Link>
+            <Link href="/privacidad" className="hover:text-zinc-300 transition-colors">
+              Privacidad
+            </Link>
+            <Link href="/terminos" className="hover:text-zinc-300 transition-colors">
+              Términos
+            </Link>
           </div>
         </div>
       </div>
@@ -82,6 +92,4 @@ export function Footer() {
   )
 }
 
-// -----------------------------------------------------------------------------
-// Fin archivo: src/components/layout/Footer.tsx
-// -----------------------------------------------------------------------------
+// ========== Fin de src/components/layout/Footer.tsx ========== //

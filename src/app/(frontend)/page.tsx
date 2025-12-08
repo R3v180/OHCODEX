@@ -1,5 +1,3 @@
-// ========== src/app/(frontend)/page.tsx ========== //
-
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -9,25 +7,25 @@ import { FeaturesSection } from '@/components/sections/Features'
 import { ContactSection } from '@/components/sections/Contact'
 import type { CompanyInfo } from '@/payload-types'
 
-// AÑADE ESTA LÍNEA AQUÍ AL PRINCIPIO
+// Forzamos que la página se regenere en cada visita para tener datos frescos
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
-  // 1. Obtener datos de la empresa para el SEO
   const payload = await getPayload({ config: configPromise })
+  
+  // 1. Recuperamos los datos de la empresa
   const company = (await payload.findGlobal({
     slug: 'company-info' as any,
   })) as unknown as CompanyInfo
 
-  // URL base segura
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
   
-  // Obtener URL del logo (si existe)
+  // Gestión segura del logo
   const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
-    ? company.logo.url // Payload ya nos dará la URL de Cloudinary aquí gracias al hook
+    ? company.logo.url 
     : `${baseUrl}/logo.png`
 
-  // 2. Construir el Esquema JSON-LD (Organization / ProfessionalService)
+  // Metadatos para Google
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
@@ -35,7 +33,7 @@ export default async function HomePage() {
     url: baseUrl,
     logo: logoUrl,
     image: logoUrl,
-    description: company?.description || 'Ingeniería de software avanzada y desarrollo SaaS.',
+    description: company?.description || 'Ingeniería de software avanzada.',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Jávea',
@@ -47,7 +45,7 @@ export default async function HomePage() {
       '@type': 'ContactPoint',
       telephone: company?.phoneNumber,
       contactType: 'customer service',
-      email: company?.contactEmail,
+      email: company?.contactEmail, // Email para SEO
       areaServed: 'ES',
       availableLanguage: ['es', 'en'],
     },
@@ -69,9 +67,10 @@ export default async function HomePage() {
       <Hero />
       <ProductsSection />
       <FeaturesSection />
-      <ContactSection />
+      
+      {/* --- AQUÍ ESTÁ LA CLAVE --- */}
+      {/* Pasamos el email recuperado de la BD al componente visual */}
+      <ContactSection email={company?.contactEmail || 'info@ohcodex.com'} />
     </>
   )
 }
-
-// ========== Fin de src/app/(frontend)/page.tsx ========== //

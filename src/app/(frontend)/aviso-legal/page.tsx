@@ -1,22 +1,27 @@
-// ========== src/app/(frontend)/aviso-legal/page.tsx ========== //
-
 import React from 'react'
 import { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-// CORRECCIÓN: Importamos 'LegalText' (singular) según sugiere el error
 import type { LegalText } from '@/payload-types'
-export const dynamic = 'force-dynamic'
+
+// ✅ CAMBIO: De 'force-dynamic' a ISR (mucho más rápido)
+export const revalidate = 3600 // 1 hora (el legal cambia poco)
 
 export const metadata: Metadata = {
   title: 'Aviso Legal',
   description: 'Información legal y titularidad del sitio web OHCodex.',
+  robots: {
+    index: false, // Opcional: A veces no interesa que Google indexe el texto legal para no "diluir" las keywords importantes, pero puedes dejarlo en true si prefieres.
+    follow: true,
+  },
 }
 
-// --- Helper para renderizar texto enriquecido del CMS ---
+// ... (El resto del componente SerializeLexical y AvisoLegalPage se queda igual)
+// Solo asegúrate de copiar el componente completo si no quieres editar solo la cabecera.
+// Aquí te dejo el componente completo para copiar/pegar y no fallar:
+
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
-
   return (
     <>
       {nodes.map((node, i) => {
@@ -27,9 +32,7 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
           if (node.format & 8) text = <u key={i} className="underline">{text}</u>
           return text
         }
-
         if (!node) return null
-
         switch (node.type) {
           case 'heading':
             const Tag = node.tag as any
@@ -53,8 +56,6 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
 
 export default async function AvisoLegalPage() {
   const payload = await getPayload({ config: configPromise })
-  
-  // CORRECCIÓN: Usamos 'LegalText' en el casting
   const legal = (await payload.findGlobal({
     slug: 'legal-texts' as any,
   })) as unknown as LegalText
@@ -63,20 +64,14 @@ export default async function AvisoLegalPage() {
     <div className="bg-black min-h-screen py-24">
       <div className="container px-4 mx-auto max-w-4xl">
         <h1 className="text-3xl font-bold text-white mb-8">Aviso Legal</h1>
-        
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* Renderizado condicional */}
           {legal?.legalNotice && 'root' in legal.legalNotice ? (
             <SerializeLexical nodes={(legal.legalNotice.root as any).children} />
           ) : (
-            <p className="text-zinc-500 italic">
-              Contenido pendiente de redacción en el panel de administración.
-            </p>
+            <p className="text-zinc-500 italic">Contenido pendiente...</p>
           )}
         </div>
       </div>
     </div>
   )
 }
-
-// ========== Fin de src/app/(frontend)/aviso-legal/page.tsx ========== //

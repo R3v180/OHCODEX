@@ -1,15 +1,15 @@
-// ========== src/app/(frontend)/privacidad/page.tsx ========== //
-
 import React from 'react'
 import { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
-export const dynamic = 'force-dynamic'
+
+// ✅ CAMBIO: Optimización de velocidad
+export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidad',
-  description: 'Política de tratamiento de datos personales de OHCodex.',
+  title: 'Términos y Condiciones',
+  description: 'Condiciones de uso de los servicios y software de OHCodex.',
 }
 
 // --- Helper para renderizar texto enriquecido ---
@@ -50,10 +50,9 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   )
 }
 
-export default async function PrivacidadPage() {
+export default async function TerminosPage() {
   const payload = await getPayload({ config: configPromise })
   
-  // Obtenemos los textos legales globales
   const legal = (await payload.findGlobal({
     slug: 'legal-texts' as any,
   })) as unknown as LegalText
@@ -61,15 +60,14 @@ export default async function PrivacidadPage() {
   return (
     <div className="bg-black min-h-screen py-24">
       <div className="container px-4 mx-auto max-w-4xl">
-        <h1 className="text-3xl font-bold text-white mb-8">Política de Privacidad</h1>
+        <h1 className="text-3xl font-bold text-white mb-8">Términos y Condiciones</h1>
         
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* Campo: privacyPolicy */}
-          {legal?.privacyPolicy && 'root' in legal.privacyPolicy ? (
-            <SerializeLexical nodes={(legal.privacyPolicy.root as any).children} />
+          {legal?.termsConditions && 'root' in legal.termsConditions ? (
+            <SerializeLexical nodes={(legal.termsConditions.root as any).children} />
           ) : (
             <p className="text-zinc-500 italic">
-              Política de privacidad pendiente de redacción en el panel de administración.
+              Términos y condiciones pendientes de redacción en el panel de administración.
             </p>
           )}
         </div>
@@ -77,5 +75,3 @@ export default async function PrivacidadPage() {
     </div>
   )
 }
-
-// ========== Fin de src/app/(frontend)/privacidad/page.tsx ========== //

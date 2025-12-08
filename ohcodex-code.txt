@@ -13882,6 +13882,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 // CORRECCIÓN: Importamos 'LegalText' (singular) según sugiere el error
 import type { LegalText } from '@/payload-types'
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Aviso Legal',
@@ -14090,8 +14091,6 @@ export default function NotFound() {
 
 // ========== [15] src/app/(frontend)/page.tsx ========== //
 
-// ========== src/app/(frontend)/page.tsx ========== //
-
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -14101,25 +14100,25 @@ import { FeaturesSection } from '@/components/sections/Features'
 import { ContactSection } from '@/components/sections/Contact'
 import type { CompanyInfo } from '@/payload-types'
 
-// AÑADE ESTA LÍNEA AQUÍ AL PRINCIPIO
+// Forzamos que la página se regenere en cada visita para tener datos frescos
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
-  // 1. Obtener datos de la empresa para el SEO
   const payload = await getPayload({ config: configPromise })
+  
+  // 1. Recuperamos los datos de la empresa
   const company = (await payload.findGlobal({
     slug: 'company-info' as any,
   })) as unknown as CompanyInfo
 
-  // URL base segura
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
   
-  // Obtener URL del logo (si existe)
+  // Gestión segura del logo
   const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
-    ? company.logo.url // Payload ya nos dará la URL de Cloudinary aquí gracias al hook
+    ? company.logo.url 
     : `${baseUrl}/logo.png`
 
-  // 2. Construir el Esquema JSON-LD (Organization / ProfessionalService)
+  // Metadatos para Google
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
@@ -14127,7 +14126,7 @@ export default async function HomePage() {
     url: baseUrl,
     logo: logoUrl,
     image: logoUrl,
-    description: company?.description || 'Ingeniería de software avanzada y desarrollo SaaS.',
+    description: company?.description || 'Ingeniería de software avanzada.',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Jávea',
@@ -14139,7 +14138,7 @@ export default async function HomePage() {
       '@type': 'ContactPoint',
       telephone: company?.phoneNumber,
       contactType: 'customer service',
-      email: company?.contactEmail,
+      email: company?.contactEmail, // Email para SEO
       areaServed: 'ES',
       availableLanguage: ['es', 'en'],
     },
@@ -14161,12 +14160,13 @@ export default async function HomePage() {
       <Hero />
       <ProductsSection />
       <FeaturesSection />
-      <ContactSection />
+      
+      {/* --- AQUÍ ESTÁ LA CLAVE --- */}
+      {/* Pasamos el email recuperado de la BD al componente visual */}
+      <ContactSection email={company?.contactEmail || 'info@ohcodex.com'} />
     </>
   )
 }
-
-// ========== Fin de src/app/(frontend)/page.tsx ========== //
 
 // ========== Fin de src/app/(frontend)/page.tsx ========== //
 
@@ -14179,6 +14179,7 @@ import { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Política de Privacidad',
@@ -14480,6 +14481,7 @@ import { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Términos y Condiciones',
@@ -14881,13 +14883,6 @@ export default function robots(): MetadataRoute.Robots {
 
 // ========== src/app/sitemap.ts ========== //
 
-// -----------------------------------------------------------------------------
-// Archivo: src/app/sitemap.ts
-// Versión: 1.0.0
-// Descripción: Generador dinámico del mapa del sitio (Sitemap XML).
-// Ayuda a Google a indexar todas las páginas, incluyendo los productos del CMS.
-// -----------------------------------------------------------------------------
-
 import { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -14895,17 +14890,16 @@ import configPromise from '@payload-config'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Definir la URL base (Producción o Local)
-  // IMPORTANTE: Asegúrate de configurar la variable NEXT_PUBLIC_SERVER_URL en Render
+  // 1. Definir la URL base
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
 
-  // 2. Obtener todos los productos publicados (live)
-  // Solo queremos que Google indexe lo que está listo, no los borradores
+  // 2. Obtener productos para indexar
+  // CORRECCIÓN APLICADA: Ahora busca productos 'live' Y 'beta' para que salgan en Google
   const { docs: products } = await payload.find({
     collection: 'products',
     where: {
       status: {
-        equals: 'live', // Solo productos "En Producción"
+        in: ['live', 'beta'], 
       },
     },
     depth: 0,
@@ -14926,7 +14920,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
-      priority: 1, // La Home es la más importante
+      priority: 1,
     },
     {
       url: `${baseUrl}/aviso-legal`,
@@ -14951,8 +14945,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 5. Unir todo y devolver
   return [...staticRoutes, ...productUrls]
 }
-
-// ========== Fin de src/app/sitemap.ts ========== //
 
 // ========== Fin de src/app/sitemap.ts ========== //
 
@@ -15384,15 +15376,6 @@ export function Header() {
 
 // ========== [36] src/components/sections/Contact.tsx ========== //
 
-// ========== src/components/sections/Contact.tsx ========== //
-
-// -----------------------------------------------------------------------------
-// Archivo: src/components/sections/Contact.tsx
-// Versión: 1.0.0 - Diseño Dark Mode & Lógica Server Actions
-// Descripción: Formulario de contacto integrado con Payload CMS. Usa useActionState
-// para manejar el envío sin JS complejo en cliente.
-// -----------------------------------------------------------------------------
-
 'use client'
 
 import React, { useActionState } from 'react'
@@ -15405,19 +15388,21 @@ const initialState = {
   message: '',
 }
 
-export function ContactSection() {
+// CORRECCIÓN CLAVE: Definimos explícitamente que este componente recibe un 'email' de tipo string
+export function ContactSection({ email }: { email: string }) {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
+
+  // Usamos el prop o un valor por defecto si viniera vacío
+  const displayEmail = email || 'info@ohcodex.com'
 
   return (
     <section id="contacto" className="relative bg-black py-24 overflow-hidden border-t border-white/10">
       
-      {/* Elemento decorativo de fondo */}
       <div className="absolute right-0 bottom-0 -z-10 h-[600px] w-[600px] rounded-full bg-cyan-900/10 blur-[120px] opacity-50" />
 
       <div className="container px-4 mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           
-          {/* COLUMNA IZQUIERDA: Información */}
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
               Inicia tu <br />
@@ -15435,7 +15420,9 @@ export function ContactSection() {
                 </div>
                 <div>
                   <h3 className="text-white font-semibold text-lg">Contacto Directo</h3>
-                  <p className="text-zinc-500 mt-1">info@ohcodex.com</p>
+                  <a href={`mailto:${displayEmail}`} className="text-zinc-500 mt-1 hover:text-cyan-400 transition-colors block">
+                    {displayEmail}
+                  </a>
                   <p className="text-zinc-600 text-sm mt-1">Respuesta en &lt; 24h laborables</p>
                 </div>
               </div>
@@ -15453,10 +15440,8 @@ export function ContactSection() {
             </div>
           </div>
 
-          {/* COLUMNA DERECHA: Formulario */}
           <div className="bg-zinc-900/30 border border-white/10 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
             {state.success ? (
-              // VISTA DE ÉXITO
               <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-500">
                 <div className="h-20 w-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mb-6 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
                   <Send className="h-10 w-10" />
@@ -15467,7 +15452,6 @@ export function ContactSection() {
                 </p>
               </div>
             ) : (
-              // FORMULARIO ACTIVO
               <form action={formAction} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
@@ -15507,7 +15491,6 @@ export function ContactSection() {
                       <option value="api">Integración de Sistemas / API</option>
                       <option value="other">Consultoría / Otro</option>
                     </select>
-                    {/* Flecha custom para el select */}
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-500">
                       <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                     </div>
@@ -15537,11 +15520,10 @@ export function ContactSection() {
                     />
                   </div>
                   <label htmlFor="privacyAccepted" className="text-xs text-zinc-500 leading-relaxed cursor-pointer select-none">
-                    He leído y acepto la <a href="#" className="underline hover:text-zinc-300 decoration-zinc-700 underline-offset-2">política de privacidad</a>. Entiendo que mis datos se procesarán para gestionar esta solicitud.
+                    He leído y acepto la <a href="/privacidad" target="_blank" className="underline hover:text-zinc-300 decoration-zinc-700 underline-offset-2">política de privacidad</a>. Entiendo que mis datos se procesarán para gestionar esta solicitud.
                   </label>
                 </div>
 
-                {/* Mensaje de Error del Servidor */}
                 {state.message && !state.success && (
                   <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center animate-in fade-in slide-in-from-top-1">
                     <span className="mr-2">⚠️</span> {state.message}
@@ -15569,13 +15551,6 @@ export function ContactSection() {
     </section>
   )
 }
-
-// -----------------------------------------------------------------------------
-// Fin archivo: src/components/sections/Contact.tsx
-// -----------------------------------------------------------------------------
-
-// ========== Fin de src/components/sections/Contact.tsx ========== //
-
 
 // ========== Fin de src/components/sections/Contact.tsx ========== //
 
@@ -15834,13 +15809,6 @@ export async function Hero() {
 
 // ========== src/components/sections/Products.tsx ========== //
 
-// -----------------------------------------------------------------------------
-// Archivo: src/components/sections/Products.tsx
-// Versión: 2.0.0 - Cabecera Dinámica + Lista de Productos
-// Descripción: Obtiene el título/descripción de la sección desde el Global 'landing-page'
-// y la lista de tarjetas desde la Colección 'products'.
-// -----------------------------------------------------------------------------
-
 import React from 'react'
 import Link from 'next/link'
 import { getPayload } from 'payload'
@@ -15867,23 +15835,21 @@ const getStatusConfig = (status: string) => {
 export async function ProductsSection() {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. OBTENER CONFIGURACIÓN GLOBAL (Textos de cabecera)
+  // 1. OBTENER CONFIGURACIÓN GLOBAL
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
   })) as unknown as LandingPage
 
-  // 2. OBTENER LISTA DE PRODUCTOS (Datos de tarjetas)
+  // 2. OBTENER LISTA DE PRODUCTOS
   const { docs: products } = await payload.find({
     collection: 'products',
     depth: 1, 
     sort: '-isFeatured',
   })
 
-  // Textos con fallback
   const title = landing?.productsTitle || 'Soluciones OHCodex'
   const description = landing?.productsDescription || 'Software diseñado para resolver problemas reales. Desde la automatización de infraestructura hasta la gestión comercial.'
 
-  // Si no hay productos, no mostramos la sección
   if (!products || products.length === 0) {
     return null 
   }
@@ -15892,10 +15858,8 @@ export async function ProductsSection() {
     <section id="productos" className="bg-zinc-950 py-24 border-b border-white/5">
       <div className="container px-4 mx-auto">
         
-        {/* CABECERA DE SECCIÓN DINÁMICA */}
         <div className="mb-16 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            {/* Lógica simple para colorear la última palabra del título */}
             {title.split(' ').slice(0, -1).join(' ')} <span className="text-cyan-500">{title.split(' ').slice(-1)}</span>
           </h2>
           <p className="mt-4 text-lg text-zinc-400 max-w-2xl mx-auto">
@@ -15903,7 +15867,6 @@ export async function ProductsSection() {
           </p>
         </div>
 
-        {/* GRILLA DE TARJETAS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => {
             const status = getStatusConfig(product.status)
@@ -15920,18 +15883,22 @@ export async function ProductsSection() {
                 key={product.id} 
                 className="group relative flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all hover:border-cyan-500/50 hover:bg-zinc-900 hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]"
               >
+                {/* --- ENLACE MAESTRO (Cubre toda la tarjeta) --- */}
+                <Link href={detailUrl} className="absolute inset-0 z-0" aria-label={`Ver detalles de ${product.name}`}>
+                  <span className="sr-only">Ver detalles</span>
+                </Link>
+
                 {/* Cabecera Card */}
-                <div className="flex items-start justify-between mb-6">
-                  {/* Icono con Enlace */}
-                  <Link href={detailUrl} className="block">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-colors cursor-pointer">
-                       {iconUrl ? (
-                          <img src={iconUrl} alt={product.name} className="h-8 w-8 object-contain" />
-                       ) : (
-                          <Rocket className="h-6 w-6 text-zinc-400 group-hover:text-cyan-400" />
-                       )}
-                    </div>
-                  </Link>
+                {/* z-10 para asegurar que el contenido se ve sobre el enlace, aunque el clic pasa a través si no hay interacción */}
+                <div className="relative z-10 flex items-start justify-between mb-6">
+                  {/* Icono (Ya no necesita Link propio) */}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-colors">
+                      {iconUrl ? (
+                        <img src={iconUrl} alt={product.name} className="h-8 w-8 object-contain" />
+                      ) : (
+                        <Rocket className="h-6 w-6 text-zinc-400 group-hover:text-cyan-400" />
+                      )}
+                  </div>
 
                   {/* Badge Estado */}
                   <Badge variant="outline" className={`${status.color} capitalize flex gap-1.5`}>
@@ -15940,19 +15907,17 @@ export async function ProductsSection() {
                   </Badge>
                 </div>
 
-                {/* Título con Enlace */}
-                <Link href={detailUrl} className="block mb-2">
-                  <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors cursor-pointer">
-                    {product.name}
-                  </h3>
-                </Link>
+                {/* Título (Ya no necesita Link propio) */}
+                <h3 className="relative z-10 text-xl font-bold text-white group-hover:text-cyan-400 transition-colors mb-2">
+                  {product.name}
+                </h3>
 
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6 flex-1">
+                <p className="relative z-10 text-zinc-400 text-sm leading-relaxed mb-6 flex-1">
                   {product.shortDescription}
                 </p>
 
                 {/* Footer Card */}
-                <div className="mt-auto pt-6 border-t border-zinc-800/50 flex items-center justify-between">
+                <div className="relative z-10 mt-auto pt-6 border-t border-zinc-800/50 flex items-center justify-between">
                   <div className="flex gap-2 flex-wrap">
                     {product.technologies?.slice(0,3).map((tech, i) => (
                       <span key={i} className="text-xs font-mono text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">
@@ -15961,12 +15926,15 @@ export async function ProductsSection() {
                     ))}
                   </div>
                   
+                  {/* BOTÓN EXTERNO: Importante z-20 para que esté "encima" del enlace maestro de la tarjeta */}
                   {product.projectUrl && (
-                    <Button asChild size="sm" variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950 p-0 h-auto font-semibold ml-2">
-                      <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
-                        Visitar Web <ArrowUpRight className="ml-1 w-4 h-4" />
-                      </a>
-                    </Button>
+                    <div className="relative z-20">
+                        <Button asChild size="sm" variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950 p-0 h-auto font-semibold ml-2">
+                        <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
+                            Visitar Web <ArrowUpRight className="ml-1 w-4 h-4" />
+                        </a>
+                        </Button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -15977,8 +15945,6 @@ export async function ProductsSection() {
     </section>
   )
 }
-
-// ========== Fin de src/components/sections/Products.tsx ========== //
 
 // ========== Fin de src/components/sections/Products.tsx ========== //
 
@@ -16097,7 +16063,7 @@ export const Company: GlobalConfig = {
   slug: 'company-info',
   label: 'Configuración Empresa',
   access: {
-    read: () => true, // Todo el mundo puede ver el logo y contacto
+    read: () => true,
   },
   fields: [
     {
@@ -16110,8 +16076,11 @@ export const Company: GlobalConfig = {
               name: 'logo',
               type: 'upload',
               relationTo: 'media',
-              required: true,
-              label: 'Logo Principal (Header)',
+              required: false, // <--- CAMBIO: Ahora es opcional
+              label: 'Logo Principal (Imagen Opcional)',
+              admin: {
+                description: 'Sube una imagen solo si quieres reemplazar el texto OHCODEX del header.',
+              },
             },
             {
               name: 'logoDark',
@@ -16186,8 +16155,6 @@ export const Company: GlobalConfig = {
     },
   ],
 }
-
-// ========== Fin de src/globals/Company.ts ========== //
 
 // ========== Fin de src/globals/Company.ts ========== //
 

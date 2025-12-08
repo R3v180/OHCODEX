@@ -8,9 +8,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ExternalLink, Layers } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image' // ✅ Importamos el componente optimizado
 import { Metadata } from 'next'
 
-// --- HELPER: Serializador Básico para Lexical (Rich Text) ---
+// --- ISR: Actualización en segundo plano cada 10 min ---
+export const revalidate = 600
+
+// --- HELPER: Serializador Básico para Rich Text ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
 
@@ -19,7 +23,6 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
       {nodes.map((node, i) => {
         if (node.type === 'text') {
           let text = <span key={i}>{node.text}</span>
-          // Bitwise checks for formatting (bold, italic, etc.)
           if (node.format & 1) text = <strong key={i} className="font-bold text-white">{text}</strong>
           if (node.format & 2) text = <em key={i} className="italic">{text}</em>
           if (node.format & 8) text = <u key={i} className="underline">{text}</u>
@@ -30,7 +33,6 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
 
         switch (node.type) {
           case 'heading':
-            // CORRECCIÓN: Usamos 'any' para evitar conflictos de tipado estricto con JSX dinámico
             const Tag = node.tag as any
             const sizes: Record<string, string> = { 
               h1: 'text-3xl mt-8 mb-4 text-white', 
@@ -71,13 +73,26 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   )
 }
 
+// --- GENERACIÓN DE RUTAS ESTÁTICAS (Súper Velocidad) ---
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  const { docs: products } = await payload.find({
+    collection: 'products',
+    depth: 0,
+    limit: 100,
+  })
+
+  return products.map((product) => ({
+    slug: product.slug,
+  }))
+}
+
 // --- LÓGICA DE PÁGINA ---
 
 interface Args {
   params: Promise<{ slug: string }>
 }
 
-// 1. Generar Metadatos Dinámicos (SEO)
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
@@ -89,35 +104,67 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   if (!docs[0]) return { title: 'Producto no encontrado' }
 
   return {
-    title: `${docs[0].name} | OHCodex`,
+    title: `${docs[0].name} | OHCodex Software`,
     description: docs[0].shortDescription,
+    openGraph: {
+      title: `${docs[0].name} - Solución de Software OHCodex`,
+      description: docs[0].shortDescription,
+      // Usamos la imagen hero si existe, o la default
+      images: typeof docs[0].heroImage === 'object' && docs[0].heroImage?.url 
+        ? [{ url: docs[0].heroImage.url }]
+        : undefined,
+    }
   }
 }
 
-// 2. Componente de Página
 export default async function ProductPage({ params }: Args) {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
 
-  // Buscar producto por slug
   const { docs } = await payload.find({
     collection: 'products',
     where: { slug: { equals: slug } },
-    depth: 1, // Traer imágenes completas
+    depth: 1,
   })
 
   const product = docs[0]
 
   if (!product) return notFound()
 
-  // Manejo seguro de imágenes
+  // Manejo seguro de URLs
   const heroUrl = typeof product.heroImage === 'object' && product.heroImage?.url ? product.heroImage.url : null
   const logoUrl = typeof product.logo === 'object' && product.logo?.url ? product.logo.url : null
+
+  // ✅ DATOS ESTRUCTURADOS (JSON-LD) para Aplicación de Software
+  const softwareJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: product.name,
+    description: product.shortDescription,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web, Cloud', // Ajustar según el caso
+    offers: {
+      '@type': 'Offer',
+      price: '0', // 0 si es a consultar o demo
+      priceCurrency: 'EUR',
+      availability: product.status === 'live' ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+    },
+    author: {
+        '@type': 'Organization',
+        name: 'OHCodex'
+    },
+    ...(heroUrl && { image: heroUrl }),
+  }
 
   return (
     <article className="min-h-screen bg-black pt-24 pb-16">
       
-      {/* HEADER DE PRODUCTO */}
+      {/* Inyectamos los datos para Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
+      />
+
       <div className="container px-4 mx-auto">
         <div className="mb-8">
           <Link href="/#productos" className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors">
@@ -130,7 +177,17 @@ export default async function ProductPage({ params }: Args) {
           {/* COLUMNA IZQUIERDA: Info Principal */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-4 mb-6">
-              {logoUrl && <img src={logoUrl} alt="Logo" className="h-16 w-16 object-contain rounded-xl bg-zinc-900/50 p-2 border border-white/10" />}
+              {logoUrl && (
+                <div className="relative h-16 w-16 shrink-0 rounded-xl bg-zinc-900/50 border border-white/10 overflow-hidden p-2">
+                    <Image 
+                        src={logoUrl} 
+                        alt={`Logo de ${product.name}`}
+                        fill
+                        className="object-contain p-1"
+                        sizes="64px"
+                    />
+                </div>
+              )}
               <div>
                 <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl mb-2">
                   {product.name}
@@ -143,13 +200,16 @@ export default async function ProductPage({ params }: Args) {
               </div>
             </div>
 
-            {/* HERO IMAGE (SCREENSHOT) */}
+            {/* ✅ HERO IMAGE OPTIMIZADA CON NEXT/IMAGE */}
             {heroUrl ? (
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl shadow-cyan-900/10 mb-10 group">
-                <img 
+              <div className="relative w-full aspect-video rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl shadow-cyan-900/10 mb-10 group">
+                <Image 
                   src={heroUrl} 
-                  alt={`Captura de ${product.name}`} 
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                  alt={`Interfaz o captura de ${product.name}`}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
+                  priority // Carga prioritaria para mejorar LCP
                 />
               </div>
             ) : (
@@ -207,5 +267,3 @@ export default async function ProductPage({ params }: Args) {
     </article>
   )
 }
-
-// ========== Fin de src/app/(frontend)/products/[slug]/page.tsx ========== //

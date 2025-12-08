@@ -10,9 +10,9 @@ const inter = Inter({ subsets: ['latin'] })
 // URL base para producción
 const getServerUrl = () => process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
 
-// ✅ URL DIRECTA DE CLOUDINARY (Tu nueva imagen)
-// Al definirla aquí como constante, forzamos a Facebook/WhatsApp a usar esta sí o sí.
-const SOCIAL_IMAGE_URL = 'https://res.cloudinary.com/dpp6gyfao/image/upload/v1765155825/ohcodex-media/jxp3xizggi35tqrakfva.png'
+// ✅ NUEVA IMAGEN (Optimizada para WhatsApp/LinkedIn)
+// Hemos añadido 'w_1200,h_630,c_fill,q_auto' para asegurar que pese poco y tenga el tamaño perfecto.
+const SOCIAL_IMAGE_URL = 'https://res.cloudinary.com/dpp6gyfao/image/upload/w_1200,h_630,c_fill,q_auto/v1765156811/ohcodex-media/jz9fdr3w83as6gxi40fq.jpg'
 
 // Configuración SEO Global
 export const metadata: Metadata = {
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     description: 'Transformamos negocios con software a medida de alto rendimiento.',
     images: [
       {
-        url: SOCIAL_IMAGE_URL, // ✅ Usamos tu URL de Cloudinary
+        url: SOCIAL_IMAGE_URL,
         width: 1200,
         height: 630,
         alt: 'OHCodex Software Development',
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     title: 'OHCodex | Desarrollo de Software Avanzado',
     description: 'Ingeniería de software para empresas ambiciosas. PWA, SaaS y APIs.',
     creator: '@ohcodex',
-    images: [SOCIAL_IMAGE_URL], // ✅ Usamos tu URL de Cloudinary
+    images: [SOCIAL_IMAGE_URL],
   },
   
   icons: {
@@ -115,4 +115,4 @@ export default function FrontendLayout({
       </body>
     </html>
   )
-} 
+}

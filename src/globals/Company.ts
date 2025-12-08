@@ -6,7 +6,7 @@ export const Company: GlobalConfig = {
   slug: 'company-info',
   label: 'Configuración Empresa',
   access: {
-    read: () => true, // Todo el mundo puede ver el logo y contacto
+    read: () => true,
   },
   fields: [
     {
@@ -19,8 +19,11 @@ export const Company: GlobalConfig = {
               name: 'logo',
               type: 'upload',
               relationTo: 'media',
-              required: true,
-              label: 'Logo Principal (Header)',
+              required: false, // <--- CAMBIO: Ahora es opcional
+              label: 'Logo Principal (Imagen Opcional)',
+              admin: {
+                description: 'Sube una imagen solo si quieres reemplazar el texto OHCODEX del header.',
+              },
             },
             {
               name: 'logoDark',
@@ -95,5 +98,3 @@ export const Company: GlobalConfig = {
     },
   ],
 }
-
-// ========== Fin de src/globals/Company.ts ========== //

@@ -1,12 +1,3 @@
-// ========== src/components/sections/Contact.tsx ========== //
-
-// -----------------------------------------------------------------------------
-// Archivo: src/components/sections/Contact.tsx
-// Versión: 1.0.0 - Diseño Dark Mode & Lógica Server Actions
-// Descripción: Formulario de contacto integrado con Payload CMS. Usa useActionState
-// para manejar el envío sin JS complejo en cliente.
-// -----------------------------------------------------------------------------
-
 'use client'
 
 import React, { useActionState } from 'react'
@@ -19,19 +10,21 @@ const initialState = {
   message: '',
 }
 
-export function ContactSection() {
+// CORRECCIÓN CLAVE: Definimos explícitamente que este componente recibe un 'email' de tipo string
+export function ContactSection({ email }: { email: string }) {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
+
+  // Usamos el prop o un valor por defecto si viniera vacío
+  const displayEmail = email || 'info@ohcodex.com'
 
   return (
     <section id="contacto" className="relative bg-black py-24 overflow-hidden border-t border-white/10">
       
-      {/* Elemento decorativo de fondo */}
       <div className="absolute right-0 bottom-0 -z-10 h-[600px] w-[600px] rounded-full bg-cyan-900/10 blur-[120px] opacity-50" />
 
       <div className="container px-4 mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           
-          {/* COLUMNA IZQUIERDA: Información */}
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
               Inicia tu <br />
@@ -49,7 +42,9 @@ export function ContactSection() {
                 </div>
                 <div>
                   <h3 className="text-white font-semibold text-lg">Contacto Directo</h3>
-                  <p className="text-zinc-500 mt-1">info@ohcodex.com</p>
+                  <a href={`mailto:${displayEmail}`} className="text-zinc-500 mt-1 hover:text-cyan-400 transition-colors block">
+                    {displayEmail}
+                  </a>
                   <p className="text-zinc-600 text-sm mt-1">Respuesta en &lt; 24h laborables</p>
                 </div>
               </div>
@@ -67,10 +62,8 @@ export function ContactSection() {
             </div>
           </div>
 
-          {/* COLUMNA DERECHA: Formulario */}
           <div className="bg-zinc-900/30 border border-white/10 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
             {state.success ? (
-              // VISTA DE ÉXITO
               <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-500">
                 <div className="h-20 w-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mb-6 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
                   <Send className="h-10 w-10" />
@@ -81,7 +74,6 @@ export function ContactSection() {
                 </p>
               </div>
             ) : (
-              // FORMULARIO ACTIVO
               <form action={formAction} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
@@ -121,7 +113,6 @@ export function ContactSection() {
                       <option value="api">Integración de Sistemas / API</option>
                       <option value="other">Consultoría / Otro</option>
                     </select>
-                    {/* Flecha custom para el select */}
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-500">
                       <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                     </div>
@@ -151,11 +142,10 @@ export function ContactSection() {
                     />
                   </div>
                   <label htmlFor="privacyAccepted" className="text-xs text-zinc-500 leading-relaxed cursor-pointer select-none">
-                    He leído y acepto la <a href="#" className="underline hover:text-zinc-300 decoration-zinc-700 underline-offset-2">política de privacidad</a>. Entiendo que mis datos se procesarán para gestionar esta solicitud.
+                    He leído y acepto la <a href="/privacidad" target="_blank" className="underline hover:text-zinc-300 decoration-zinc-700 underline-offset-2">política de privacidad</a>. Entiendo que mis datos se procesarán para gestionar esta solicitud.
                   </label>
                 </div>
 
-                {/* Mensaje de Error del Servidor */}
                 {state.message && !state.success && (
                   <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center animate-in fade-in slide-in-from-top-1">
                     <span className="mr-2">⚠️</span> {state.message}
@@ -183,9 +173,3 @@ export function ContactSection() {
     </section>
   )
 }
-
-// -----------------------------------------------------------------------------
-// Fin archivo: src/components/sections/Contact.tsx
-// -----------------------------------------------------------------------------
-
-// ========== Fin de src/components/sections/Contact.tsx ========== //

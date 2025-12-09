@@ -11,12 +11,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
 
   // 2. Obtener productos para indexar
-  // CORRECCIÓN APLICADA: Ahora busca productos 'live' Y 'beta' para que salgan en Google
+  // CAMBIO: Añadimos 'development' y 'concept' para que TODO el portfolio se indexe
   const { docs: products } = await payload.find({
     collection: 'products',
     where: {
       status: {
-        in: ['live', 'beta'], 
+        in: ['live', 'beta', 'development', 'concept'], 
       },
     },
     depth: 0,
@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/products/${product.slug}`,
     lastModified: new Date(product.updatedAt),
     changeFrequency: 'weekly' as const,
-    priority: 0.8,
+    priority: product.isFeatured ? 0.9 : 0.7, // Prioridad más alta si es destacado
   }))
 
   // 4. Generar URLs estáticas (Home y Legales)

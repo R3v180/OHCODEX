@@ -81,8 +81,9 @@ export function Testimonials({
               >
                 <div>
                   <Quote className="h-8 w-8 text-cyan-500/50 mb-6" />
+                  {/* CORRECCIÓN AQUÍ: Usamos &quot; en lugar de " */}
                   <p className="text-zinc-300 text-lg leading-relaxed italic mb-8">
-                    "{item.quote}"
+                    &quot;{item.quote}&quot;
                   </p>
                 </div>
 

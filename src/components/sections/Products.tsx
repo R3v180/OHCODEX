@@ -32,14 +32,15 @@ export async function ProductsSection() {
   const { docs: products } = await payload.find({
     collection: 'products',
     depth: 1, 
-    sort: '-isFeatured',
+    // CAMBIO IMPORTANTE: Ordenar por el campo 'order' ascendente (1, 2, 3...)
+    sort: 'order', 
   })
 
   // 2. Extraer configuración visual con Fallbacks
   const title = landing?.productsTitle || 'Soluciones OHCodex'
   const description = landing?.productsDescription || 'Software diseñado para resolver problemas reales.'
   
-  // Configuración de Rejilla (2, 3 o 4 columnas)
+  // Configuración de Rejilla
   const gridColsOption = landing.productsGridCols || '3'
   const gridClass = {
     '2': 'lg:grid-cols-2',
@@ -47,7 +48,7 @@ export async function ProductsSection() {
     '4': 'lg:grid-cols-4',
   }[gridColsOption]
 
-  // Configuración de Alineación (Izquierda o Centro)
+  // Configuración de Alineación
   const alignOption = landing.productsAlign || 'center'
   const headerAlignClass = alignOption === 'center' ? 'text-center mx-auto' : 'text-left mr-auto'
 

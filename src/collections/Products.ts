@@ -1,5 +1,3 @@
-// ========== src/collections/Products.ts ========== //
-
 import type { CollectionConfig } from 'payload'
 
 export const Products: CollectionConfig = {
@@ -8,9 +6,12 @@ export const Products: CollectionConfig = {
     singular: 'Producto',
     plural: 'Productos',
   },
+  // CORRECCIÓN: defaultSort va aquí, en la raíz
+  defaultSort: 'order',
+  
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'status', 'isFeatured'],
+    defaultColumns: ['name', 'order', 'status', 'isFeatured'],
   },
   access: {
     read: () => true, // Acceso público para la web
@@ -38,6 +39,18 @@ export const Products: CollectionConfig = {
                 description: 'Identificador URL (ej: pool-control)',
               },
             },
+            // --- NUEVO CAMPO DE ORDEN ---
+            {
+              name: 'order',
+              type: 'number',
+              label: 'Orden de Aparición',
+              required: true,
+              defaultValue: 10, // Valor alto por defecto
+              admin: {
+                position: 'sidebar',
+                description: '1 aparece primero, 2 segundo, etc.',
+              },
+            },
             {
               type: 'row',
               fields: [
@@ -63,7 +76,7 @@ export const Products: CollectionConfig = {
                   defaultValue: false,
                   admin: {
                     width: '50%',
-                    description: 'Si se marca, saldrá más grande en la home',
+                    description: 'Si se marca, saldrá más grande en la home (dependiendo del diseño).',
                   },
                 },
               ],

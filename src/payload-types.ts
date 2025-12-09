@@ -119,6 +119,7 @@ export interface Product {
   id: number;
   name: string;
   slug: string;
+  order: number;
   status: 'concept' | 'development' | 'beta' | 'live';
   isFeatured?: boolean | null;
   shortDescription: string;
@@ -325,6 +326,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface ProductsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
+  order?: T;
   status?: T;
   isFeatured?: T;
   shortDescription?: T;

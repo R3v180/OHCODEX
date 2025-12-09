@@ -40,11 +40,13 @@ export interface Config {
     'company-info': CompanyInfo;
     'legal-texts': LegalText;
     'landing-page': LandingPage;
+    'email-settings': EmailSetting;
   };
   globalsSelect: {
     'company-info': CompanyInfoSelect<false> | CompanyInfoSelect<true>;
     'legal-texts': LegalTextsSelect<false> | LegalTextsSelect<true>;
     'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
+    'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -159,6 +161,7 @@ export interface Product {
  */
 export interface ContactSubmission {
   id: number;
+  isRead?: boolean | null;
   name: string;
   email: string;
   serviceType?: ('pwa' | 'saas' | 'api' | 'other') | null;
@@ -351,6 +354,7 @@ export interface ProductsSelect<T extends boolean = true> {
  * via the `definition` "contact-submissions_select".
  */
 export interface ContactSubmissionsSelect<T extends boolean = true> {
+  isRead?: T;
   name?: T;
   email?: T;
   serviceType?: T;
@@ -554,6 +558,22 @@ export interface LandingPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-settings".
+ */
+export interface EmailSetting {
+  id: number;
+  smtpHost: string;
+  smtpPort: number;
+  smtpUser: string;
+  smtpPass: string;
+  fromName: string;
+  fromEmail: string;
+  toEmail: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "company-info_select".
  */
 export interface CompanyInfoSelect<T extends boolean = true> {
@@ -639,6 +659,22 @@ export interface LandingPageSelect<T extends boolean = true> {
         answer?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-settings_select".
+ */
+export interface EmailSettingsSelect<T extends boolean = true> {
+  smtpHost?: T;
+  smtpPort?: T;
+  smtpUser?: T;
+  smtpPass?: T;
+  fromName?: T;
+  fromEmail?: T;
+  toEmail?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

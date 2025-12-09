@@ -1,5 +1,3 @@
-// ========== src/payload.config.ts ========== //
-
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -23,6 +21,8 @@ import { Categories } from './collections/Categories'
 import { Company } from './globals/Company'
 import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
+// --- NUEVO: Importamos la configuración de email ---
+import { EmailSettings } from './globals/EmailSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -38,16 +38,16 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  // --- AQUÍ ESTÁ LA CLAVE: TIENEN QUE ESTAR LAS 6 ---
   collections: [
     Users, 
     Media, 
     Products, 
     ContactSubmissions,
-    Posts,      // <--- IMPORTANTE: Asegúrate de que esto está aquí
-    Categories  // <--- IMPORTANTE: Asegúrate de que esto está aquí
+    Posts,      
+    Categories  
   ],
-  globals: [Company, Legal, Landing],
+  // --- AÑADIMOS EmailSettings AQUÍ ---
+  globals: [Company, Legal, Landing, EmailSettings],
   
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

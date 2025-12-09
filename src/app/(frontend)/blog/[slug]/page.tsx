@@ -14,11 +14,8 @@ import type { Post } from '@/payload-types'
 // ISR: Actualizar contenido cada 10 minutos
 export const revalidate = 600
 
-// --- MODO DEPURACIÓN VISUAL ---
-// Cámbialo a 'false' cuando termines de arreglar el contenido para ocultar las etiquetas rojas.
-const DEBUG_MODE = true
-
 // --- Serializador de Texto Rico (Rich Text) ---
+// LIMPIO: Sin etiquetas de depuración, solo diseño final.
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
 
@@ -39,73 +36,34 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
         switch (node.type) {
           case 'heading':
             const Tag = node.tag as any
-            // He ajustado ligeramente los tamaños para que no sean tan gigantes
+            // TAMAÑOS AJUSTADOS: H2 ahora es más proporcionado
             const sizes: Record<string, string> = { 
               h1: 'text-3xl sm:text-4xl mt-12 mb-6 text-white font-bold tracking-tight', 
-              h2: 'text-2xl sm:text-3xl mt-10 mb-5 text-white font-bold tracking-tight', 
+              h2: 'text-2xl sm:text-3xl mt-10 mb-5 text-white font-bold tracking-tight', // Antes era text-3xl
               h3: 'text-xl sm:text-2xl mt-8 mb-4 text-white font-semibold', 
               h4: 'text-lg sm:text-xl mt-6 mb-3 text-white font-semibold'
             }
-            
-            return (
-              <div key={i} className="relative group">
-                {/* Chivato visual para Títulos */}
-                {DEBUG_MODE && (
-                  <span className="absolute -left-14 top-1 text-[10px] font-mono bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30 select-none">
-                    &lt;{node.tag.toUpperCase()}&gt;
-                  </span>
-                )}
-                <Tag className={sizes[node.tag] || ''}>
-                  <SerializeLexical nodes={node.children} />
-                </Tag>
-              </div>
-            )
+            return <Tag key={i} className={sizes[node.tag] || ''}><SerializeLexical nodes={node.children} /></Tag>
           
           case 'paragraph':
-            return (
-              <div key={i} className="relative group">
-                {/* Chivato visual para Párrafos (se ve al pasar el mouse o si está activo el debug) */}
-                {DEBUG_MODE && (
-                  <span className="absolute -left-10 top-1 text-[10px] font-mono text-zinc-700 select-none">
-                    ¶ p
-                  </span>
-                )}
-                <p className="mb-6 leading-7 text-zinc-300 text-lg">
-                  <SerializeLexical nodes={node.children} />
-                </p>
-              </div>
-            )
+            return <p key={i} className="mb-6 leading-7 text-zinc-300 text-lg"><SerializeLexical nodes={node.children} /></p>
           
           case 'quote':
             return (
-              <div key={i} className="relative">
-                {DEBUG_MODE && <span className="absolute -left-10 top-2 text-[10px] text-zinc-700">“qt”</span>}
-                <blockquote className="border-l-4 border-cyan-500 pl-4 italic text-zinc-400 my-8 py-2 bg-zinc-900/30 rounded-r-lg">
-                  <SerializeLexical nodes={node.children} />
-                </blockquote>
-              </div>
+              <blockquote key={i} className="border-l-4 border-cyan-500 pl-4 italic text-zinc-400 my-8 py-2 bg-zinc-900/30 rounded-r-lg">
+                <SerializeLexical nodes={node.children} />
+              </blockquote>
             )
 
           case 'list':
             const ListTag = node.listType === 'number' ? 'ol' : 'ul'
-            return (
-              <div key={i} className="relative">
-                 {DEBUG_MODE && <span className="absolute -left-10 top-0 text-[10px] text-zinc-700">list</span>}
-                 <ListTag className={`mb-6 pl-6 ${node.listType === 'number' ? 'list-decimal' : 'list-disc'} text-zinc-300 marker:text-cyan-500`}>
-                    <SerializeLexical nodes={node.children} />
-                 </ListTag>
-              </div>
-            )
+            return <ListTag key={i} className={`mb-6 pl-6 ${node.listType === 'number' ? 'list-decimal' : 'list-disc'} text-zinc-300 marker:text-cyan-500`}><SerializeLexical nodes={node.children} /></ListTag>
           
           case 'listitem':
             return <li key={i} className="mb-2 pl-2"><SerializeLexical nodes={node.children} /></li>
           
           case 'link':
-            return (
-              <a key={i} href={node.fields.url} target={node.fields.newTab ? '_blank' : '_self'} className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4 decoration-cyan-500/30 hover:decoration-cyan-300">
-                <SerializeLexical nodes={node.children} />
-              </a>
-            )
+            return <a key={i} href={node.fields.url} target={node.fields.newTab ? '_blank' : '_self'} className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4 decoration-cyan-500/30 hover:decoration-cyan-300"><SerializeLexical nodes={node.children} /></a>
 
           default:
             return <SerializeLexical key={i} nodes={node.children} />
@@ -182,6 +140,7 @@ export default async function BlogPostPage({ params }: Args) {
     return new Date(dateString).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
   }
 
+  // Schema.org para Artículos (SEO Técnico)
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -198,6 +157,7 @@ export default async function BlogPostPage({ params }: Args) {
 
   return (
     <article className="min-h-screen bg-black pt-24 pb-20">
+      {/* Inyección JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
 
       {/* Cabecera del Artículo */}
@@ -257,7 +217,7 @@ export default async function BlogPostPage({ params }: Args) {
           )}
         </div>
 
-        {/* CTA Final */}
+        {/* CTA Final: Captación de Leads */}
         <div className="mt-16 p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800 text-center">
           <h3 className="text-xl font-bold text-white mb-2">¿Te interesa este tema?</h3>
           <p className="text-zinc-400 mb-6">Ayudamos a empresas a implementar estas tecnologías en sus procesos.</p>

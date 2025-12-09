@@ -1,0 +1,78 @@
+/* src/app/(payload)/custom.scss */
+
+/* Esto afecta a todo el panel de administración */
+@layer payload-default {
+  
+  /* Buscamos el editor de texto (Lexical) */
+  .payload-richtext-editor-content {
+    
+    /* CHIVATO PARA H1 */
+    h1 {
+      position: relative;
+      &::before {
+        content: 'H1';
+        position: absolute;
+        left: -35px;
+        top: 0;
+        font-size: 10px;
+        font-family: monospace;
+        background-color: #ef4444; /* Rojo */
+        color: white;
+        padding: 2px 4px;
+        border-radius: 4px;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+
+    /* CHIVATO PARA H2 (El que te estaba dando problemas) */
+    h2 {
+      position: relative;
+      &::before {
+        content: 'H2';
+        position: absolute;
+        left: -35px;
+        top: 0;
+        font-size: 10px;
+        font-family: monospace;
+        background-color: #f97316; /* Naranja */
+        color: white;
+        padding: 2px 4px;
+        border-radius: 4px;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+
+    /* CHIVATO PARA H3 */
+    h3 {
+      position: relative;
+      &::before {
+        content: 'H3';
+        position: absolute;
+        left: -35px;
+        top: 0;
+        font-size: 10px;
+        font-family: monospace;
+        background-color: #eab308; /* Amarillo */
+        color: black;
+        padding: 2px 4px;
+        border-radius: 4px;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+    
+    /* Marcamos visualmente los párrafos al pasar el ratón */
+    p:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      position: relative;
+      &::before {
+        content: '¶';
+        position: absolute;
+        left: -20px;
+        color: #666;
+      }
+    }
+  }
+}

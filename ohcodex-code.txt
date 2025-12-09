@@ -15,44 +15,48 @@
 11. postcss.config.js
 12. src/app/(frontend)/actions.ts
 13. src/app/(frontend)/aviso-legal/page.tsx
-14. src/app/(frontend)/layout.tsx
-15. src/app/(frontend)/not-found.tsx
-16. src/app/(frontend)/page.tsx
-17. src/app/(frontend)/privacidad/page.tsx
-18. src/app/(frontend)/products/[slug]/page.tsx
-19. src/app/(frontend)/terminos/page.tsx
-20. src/app/(payload)/admin/[[...segments]]/not-found.tsx
-21. src/app/(payload)/admin/[[...segments]]/page.tsx
-22. src/app/(payload)/admin/importMap.js
-23. src/app/(payload)/api/[...slug]/route.ts
-24. src/app/(payload)/api/graphql-playground/route.ts
-25. src/app/(payload)/api/graphql/route.ts
-26. src/app/(payload)/layout.tsx
-27. src/app/globals.css
-28. src/app/my-route/route.ts
-29. src/app/robots.ts
-30. src/app/sitemap.ts
-31. src/collections/ContactSubmissions.ts
-32. src/collections/Media.ts
-33. src/collections/Products.ts
-34. src/collections/Users.ts
-35. src/components/layout/Footer.tsx
-36. src/components/layout/Header.tsx
-37. src/components/sections/Contact.tsx
-38. src/components/sections/Features.tsx
-39. src/components/sections/Hero.tsx
-40. src/components/sections/Products.tsx
-41. src/components/ui/badge.tsx
-42. src/components/ui/button.tsx
-43. src/globals/Company.ts
-44. src/globals/Landing.ts
-45. src/globals/Legal.ts
-46. src/lib/cloudinaryAdapter.ts
-47. src/lib/utils.ts
-48. src/payload-types.ts
-49. src/payload.config.ts
-50. tailwind.config.js
-51. tsconfig.json
+14. src/app/(frontend)/blog/[slug]/page.tsx
+15. src/app/(frontend)/blog/page.tsx
+16. src/app/(frontend)/layout.tsx
+17. src/app/(frontend)/not-found.tsx
+18. src/app/(frontend)/page.tsx
+19. src/app/(frontend)/privacidad/page.tsx
+20. src/app/(frontend)/products/[slug]/page.tsx
+21. src/app/(frontend)/terminos/page.tsx
+22. src/app/(payload)/admin/[[...segments]]/not-found.tsx
+23. src/app/(payload)/admin/[[...segments]]/page.tsx
+24. src/app/(payload)/admin/importMap.js
+25. src/app/(payload)/api/[...slug]/route.ts
+26. src/app/(payload)/api/graphql-playground/route.ts
+27. src/app/(payload)/api/graphql/route.ts
+28. src/app/(payload)/layout.tsx
+29. src/app/globals.css
+30. src/app/my-route/route.ts
+31. src/app/robots.ts
+32. src/app/sitemap.ts
+33. src/collections/Categories.ts
+34. src/collections/ContactSubmissions.ts
+35. src/collections/Media.ts
+36. src/collections/Posts.ts
+37. src/collections/Products.ts
+38. src/collections/Users.ts
+39. src/components/layout/Footer.tsx
+40. src/components/layout/Header.tsx
+41. src/components/sections/Contact.tsx
+42. src/components/sections/Features.tsx
+43. src/components/sections/Hero.tsx
+44. src/components/sections/Products.tsx
+45. src/components/ui/badge.tsx
+46. src/components/ui/button.tsx
+47. src/globals/Company.ts
+48. src/globals/Landing.ts
+49. src/globals/Legal.ts
+50. src/lib/cloudinaryAdapter.ts
+51. src/lib/utils.ts
+52. src/payload-types.ts
+53. src/payload.config.ts
+54. tailwind.config.js
+55. tsconfig.json
 
 
 ==================================================
@@ -13961,100 +13965,492 @@ export default async function AvisoLegalPage() {
 
 // ========== Fin de src/app/(frontend)/aviso-legal/page.tsx ========== //
 
-// ========== [14] src/app/(frontend)/layout.tsx ========== //
+// ========== [14] src/app/(frontend)/blog/[slug]/page.tsx ========== //
+
+// ========== src/app/(frontend)/blog/[slug]/page.tsx ========== //
+
+import React from 'react'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
+import { notFound } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowLeft, CalendarDays, User, Clock } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Metadata } from 'next'
+import type { Post } from '@/payload-types'
+
+// ISR: Actualizar contenido cada 10 minutos
+export const revalidate = 600
+
+// --- Serializador de Texto Rico (Rich Text) ---
+// Convierte el JSON de Payload en HTML con estilos Tailwind
+const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
+  if (!nodes || !Array.isArray(nodes)) return null
+
+  return (
+    <>
+      {nodes.map((node, i) => {
+        if (node.type === 'text') {
+          let text = <span key={i}>{node.text}</span>
+          if (node.format & 1) text = <strong key={i} className="font-bold text-white">{text}</strong>
+          if (node.format & 2) text = <em key={i} className="italic">{text}</em>
+          if (node.format & 8) text = <u key={i} className="underline">{text}</u>
+          if (node.format & 16) text = <code key={i} className="bg-zinc-800 text-cyan-400 px-1 py-0.5 rounded text-sm font-mono">{text}</code>
+          return text
+        }
+
+        if (!node) return null
+
+        switch (node.type) {
+          case 'heading':
+            const Tag = node.tag as any
+            const sizes: Record<string, string> = { 
+              h1: 'text-3xl sm:text-4xl mt-10 mb-6 text-white font-bold', 
+              h2: 'text-2xl sm:text-3xl mt-10 mb-5 text-white font-bold', 
+              h3: 'text-xl sm:text-2xl mt-8 mb-4 text-white font-semibold', 
+              h4: 'text-lg sm:text-xl mt-6 mb-3 text-white font-semibold'
+            }
+            return <Tag key={i} className={sizes[node.tag] || ''}><SerializeLexical nodes={node.children} /></Tag>
+          
+          case 'paragraph':
+            return <p key={i} className="mb-6 leading-7 text-zinc-300 text-lg"><SerializeLexical nodes={node.children} /></p>
+          
+          case 'quote':
+            return (
+              <blockquote key={i} className="border-l-4 border-cyan-500 pl-4 italic text-zinc-400 my-8 py-2 bg-zinc-900/30 rounded-r-lg">
+                <SerializeLexical nodes={node.children} />
+              </blockquote>
+            )
+
+          case 'list':
+            const ListTag = node.listType === 'number' ? 'ol' : 'ul'
+            return <ListTag key={i} className={`mb-6 pl-6 ${node.listType === 'number' ? 'list-decimal' : 'list-disc'} text-zinc-300 marker:text-cyan-500`}><SerializeLexical nodes={node.children} /></ListTag>
+          
+          case 'listitem':
+            return <li key={i} className="mb-2 pl-2"><SerializeLexical nodes={node.children} /></li>
+          
+          case 'link':
+            return <a key={i} href={node.fields.url} target={node.fields.newTab ? '_blank' : '_self'} className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4 decoration-cyan-500/30 hover:decoration-cyan-300"><SerializeLexical nodes={node.children} /></a>
+
+          default:
+            return <SerializeLexical key={i} nodes={node.children} />
+        }
+      })}
+    </>
+  )
+}
+
+// --- Generación de Rutas Estáticas ---
+// Esto hace que el blog cargue instantáneo en producción
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  const { docs: posts } = await payload.find({
+    collection: 'posts',
+    depth: 0,
+    limit: 100,
+  })
+  return posts.map((post) => ({ slug: post.slug }))
+}
+
+interface Args {
+  params: Promise<{ slug: string }>
+}
+
+// --- SEO Dinámico ---
+export async function generateMetadata({ params }: Args): Promise<Metadata> {
+  const { slug } = await params
+  const payload = await getPayload({ config: configPromise })
+  const { docs } = await payload.find({
+    collection: 'posts',
+    where: { slug: { equals: slug } },
+  })
+
+  if (!docs[0]) return { title: 'Artículo no encontrado' }
+  const post = docs[0]
+
+  const title = post.metaTitle || post.title
+  const description = post.metaDescription || post.excerpt
+
+  return {
+    title: `${title} | Blog OHCodex`,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      publishedTime: post.publishedDate,
+      authors: ['OHCodex Team'],
+      images: typeof post.coverImage === 'object' && post.coverImage?.url ? [{ url: post.coverImage.url }] : undefined,
+    }
+  }
+}
+
+export default async function BlogPostPage({ params }: Args) {
+  const { slug } = await params
+  const payload = await getPayload({ config: configPromise })
+
+  const { docs } = await payload.find({
+    collection: 'posts',
+    where: { slug: { equals: slug } },
+    depth: 2, // Profundidad 2 para traer datos completos de autor y categoría
+  })
+
+  const post = docs[0] as Post
+
+  if (!post) return notFound()
+
+  // Helpers de datos seguros
+  const coverUrl = typeof post.coverImage === 'object' && post.coverImage?.url ? post.coverImage.url : null
+  const categoryName = typeof post.category === 'object' && post.category?.name ? post.category.name : 'General'
+  const authorName = typeof post.author === 'object' && post.author?.email ? 'Equipo OHCodex' : 'OHCodex'
+  
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+  }
+
+  // Schema.org para Artículos (SEO Técnico)
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    image: coverUrl ? [coverUrl] : [],
+    datePublished: post.publishedDate,
+    dateModified: post.updatedAt,
+    author: {
+      '@type': 'Organization',
+      name: authorName,
+    },
+    description: post.excerpt,
+  }
+
+  return (
+    <article className="min-h-screen bg-black pt-24 pb-20">
+      {/* Inyección JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+
+      {/* Cabecera del Artículo */}
+      <div className="container px-4 mx-auto max-w-4xl">
+        <Link href="/blog" className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors mb-8">
+          <ArrowLeft className="mr-2 h-4 w-4" /> Volver al Blog
+        </Link>
+
+        <div className="mb-6 flex gap-2">
+          <Badge className="bg-cyan-950 text-cyan-400 border-cyan-900 hover:bg-cyan-900">
+            {categoryName}
+          </Badge>
+        </div>
+
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+          {post.title}
+        </h1>
+
+        <div className="flex items-center gap-6 text-zinc-500 text-sm border-b border-zinc-800 pb-8 mb-8 font-mono">
+          <div className="flex items-center gap-2">
+            <CalendarDays className="w-4 h-4" />
+            {formatDate(post.publishedDate)}
+          </div>
+          <div className="flex items-center gap-2">
+            <User className="w-4 h-4" />
+            {authorName}
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            Lectura de 5 min
+          </div>
+        </div>
+      </div>
+
+      {/* Imagen Principal */}
+      {coverUrl && (
+        <div className="container px-4 mx-auto max-w-5xl mb-12">
+          <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
+            <Image 
+              src={coverUrl} 
+              alt={post.title} 
+              fill 
+              className="object-cover"
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              priority
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Cuerpo del Artículo */}
+      <div className="container px-4 mx-auto max-w-3xl">
+        <div className="prose prose-invert prose-lg max-w-none">
+          {/* Renderizado de contenido rico */}
+          {post.content && 'root' in post.content && (
+            <SerializeLexical nodes={(post.content.root as any).children} />
+          )}
+        </div>
+
+        {/* CTA Final: Captación de Leads */}
+        <div className="mt-16 p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800 text-center">
+          <h3 className="text-xl font-bold text-white mb-2">¿Te interesa este tema?</h3>
+          <p className="text-zinc-400 mb-6">Ayudamos a empresas a implementar estas tecnologías en sus procesos.</p>
+          <Link href="/#contacto" className="inline-flex h-10 items-center justify-center rounded-md bg-white px-8 text-sm font-medium text-black transition-colors hover:bg-zinc-200">
+            Hablemos
+          </Link>
+        </div>
+      </div>
+    </article>
+  )
+}
+
+// ========== Fin de src/app/(frontend)/blog/[slug]/page.tsx ========== //
+
+// ========== [15] src/app/(frontend)/blog/page.tsx ========== //
+
+// ========== src/app/(frontend)/blog/page.tsx ========== //
+
+import React from 'react'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Badge } from '@/components/ui/badge'
+import { CalendarDays, User } from 'lucide-react'
+import { Metadata } from 'next'
+import type { Post } from '@/payload-types'
+
+// CAMBIO: Ponemos 0 para forzar la actualización inmediata y ver los posts
+export const revalidate = 0
+
+export const metadata: Metadata = {
+  title: 'Blog de Ingeniería y Software | OHCodex',
+  description: 'Artículos sobre desarrollo PWA, arquitecturas SaaS, escalabilidad y transformación digital.',
+}
+
+export default async function BlogPage() {
+  const payload = await getPayload({ config: configPromise })
+
+  // 1. Obtener los posts publicados
+  const { docs: posts } = await payload.find({
+    collection: 'posts',
+    sort: '-publishedDate', // El más reciente primero
+    depth: 1, // Traer datos de autor y categoría
+    limit: 12,
+  })
+
+  // Formateador de fecha simple
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+  }
+
+  return (
+    <div className="bg-black min-h-screen pt-24 pb-20">
+      <div className="container px-4 mx-auto">
+        
+        {/* CABECERA */}
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl mb-6">
+            Ingeniería & <span className="text-cyan-500">Pensamiento</span>
+          </h1>
+          <p className="text-lg text-zinc-400 leading-relaxed">
+            Exploramos las tecnologías que impulsan nuestros productos. 
+            Desde arquitecturas PWA offline-first hasta estrategias de escalabilidad en la nube.
+          </p>
+        </div>
+
+        {/* LISTADO DE POSTS */}
+        {posts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => {
+              // Manejo seguro de la imagen
+              const coverUrl = typeof post.coverImage === 'object' && post.coverImage?.url 
+                ? post.coverImage.url 
+                : null
+              
+              // Manejo seguro de la categoría
+              const categoryName = typeof post.category === 'object' && post.category?.name 
+                ? post.category.name 
+                : 'General'
+
+              // Manejo seguro del autor
+              const authorName = typeof post.author === 'object' && post.author?.email 
+                ? 'Equipo OHCodex' 
+                : 'OHCodex'
+
+              return (
+                <article key={post.id} className="group flex flex-col h-full bg-zinc-900/30 border border-zinc-800 rounded-2xl overflow-hidden hover:border-cyan-500/30 transition-all">
+                  
+                  {/* Imagen */}
+                  <Link href={`/blog/${post.slug}`} className="relative h-56 w-full overflow-hidden block">
+                    {coverUrl ? (
+                      <Image 
+                        src={coverUrl} 
+                        alt={post.title} 
+                        fill 
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-zinc-800 flex items-center justify-center text-zinc-600">
+                        Sin imagen
+                      </div>
+                    )}
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-black/70 backdrop-blur-sm text-white border-white/10 hover:bg-black/90">
+                        {categoryName}
+                      </Badge>
+                    </div>
+                  </Link>
+
+                  {/* Contenido */}
+                  <div className="flex flex-col flex-1 p-6">
+                    <div className="flex items-center gap-4 text-xs text-zinc-500 mb-4 font-mono">
+                      <span className="flex items-center gap-1">
+                        <CalendarDays className="w-3.5 h-3.5" />
+                        {formatDate(post.publishedDate)}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <User className="w-3.5 h-3.5" />
+                        {authorName}
+                      </span>
+                    </div>
+
+                    <Link href={`/blog/${post.slug}`} className="block">
+                      <h2 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors line-clamp-2">
+                        {post.title}
+                      </h2>
+                    </Link>
+
+                    <p className="text-zinc-400 text-sm leading-relaxed line-clamp-3 mb-6 flex-1">
+                      {post.excerpt}
+                    </p>
+
+                    <div className="mt-auto pt-4 border-t border-zinc-800">
+                      <Link href={`/blog/${post.slug}`} className="text-sm font-medium text-cyan-500 hover:text-cyan-400 flex items-center gap-2">
+                        Leer artículo completo <span aria-hidden="true">&rarr;</span>
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-20 bg-zinc-900/30 rounded-2xl border border-zinc-800 border-dashed">
+            <p className="text-zinc-500">No hay artículos publicados todavía.</p>
+          </div>
+        )}
+
+      </div>
+    </div>
+  )
+}
+
+// ========== Fin de src/app/(frontend)/blog/page.tsx ========== //
+
+// ========== [16] src/app/(frontend)/layout.tsx ========== //
+
+// ========== src/app/(frontend)/layout.tsx ========== //
 
 import React from 'react'
 import '../globals.css'
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import type { CompanyInfo } from '@/payload-types'
 
 const inter = Inter({ subsets: ['latin'] })
 
 // URL base para producción
 const getServerUrl = () => process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
 
-// ✅ NUEVA IMAGEN (Optimizada para WhatsApp/LinkedIn)
-// Hemos añadido 'w_1200,h_630,c_fill,q_auto' para asegurar que pese poco y tenga el tamaño perfecto.
+// Imagen Social por defecto (Fallback)
 const SOCIAL_IMAGE_URL = 'https://res.cloudinary.com/dpp6gyfao/image/upload/w_1200,h_630,c_fill,q_auto/v1765156811/ohcodex-media/jz9fdr3w83as6gxi40fq.jpg'
 
-// Configuración SEO Global
-export const metadata: Metadata = {
-  metadataBase: new URL(getServerUrl()),
+// ✅ CAMBIO: Ahora es una función asíncrona que lee de la BD
+export async function generateMetadata(): Promise<Metadata> {
+  const payload = await getPayload({ config: configPromise })
   
-  title: {
-    default: 'OHCodex | Desarrollo de Software a Medida y Sistemas SaaS',
-    template: '%s | OHCodex - Ingeniería de Software',
-  },
+  // Obtenemos la configuración global
+  const company = (await payload.findGlobal({
+    slug: 'company-info' as any,
+  })) as unknown as CompanyInfo
+
+  // Valores dinámicos con fallback
+  const title = company?.defaultTitle || 'OHCodex | Desarrollo de Software a Medida'
+  const titleTemplate = company?.titleTemplate || '%s | OHCodex'
+  const description = company?.defaultDescription || 'Empresa de desarrollo de software especializada en PWAs y arquitecturas SaaS.'
   
-  description: 'Empresa de desarrollo de software especializada en PWAs, arquitecturas SaaS escalables y transformación digital. Expertos en React, Next.js y Cloud Native.',
-  
-  keywords: [
-    'Desarrollo de Software España',
-    'Agencia Desarrollo SaaS',
-    'Consultoría Tecnológica Alicante',
-    'Aplicaciones Web Progresivas (PWA)',
-    'Next.js Experts',
-    'Payload CMS Developers',
-    'Arquitectura de Software Escalable',
-    'Desarrollo Web a Medida',
-    'React',
-    'PostgreSQL'
-  ],
-  
-  authors: [{ name: 'OHCodex Team', url: 'https://ohcodex.com' }],
-  creator: 'OHCodex',
-  
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+  // Mapeamos las keywords del array de objetos a un array de strings
+  const keywords = company?.keywords?.map(k => k.keyword).filter((k): k is string => !!k) || [
+    'Desarrollo de Software', 'SaaS', 'PWA', 'Next.js'
+  ]
+
+  return {
+    metadataBase: new URL(getServerUrl()),
+    
+    title: {
+      default: title,
+      template: titleTemplate,
+    },
+    
+    description,
+    
+    keywords,
+    
+    authors: [{ name: 'OHCodex Team', url: getServerUrl() }],
+    creator: 'OHCodex',
+    
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-
-  // Canonical URL (Importante para Google)
-  alternates: {
-    canonical: './',
-  },
-
-  // Open Graph (Facebook, LinkedIn, WhatsApp)
-  openGraph: {
-    type: 'website',
-    locale: 'es_ES',
-    url: '/',
-    siteName: 'OHCodex',
-    title: 'OHCodex | Arquitectos de Ecosistemas Digitales',
-    description: 'Transformamos negocios con software a medida de alto rendimiento.',
-    images: [
-      {
-        url: SOCIAL_IMAGE_URL,
-        width: 1200,
-        height: 630,
-        alt: 'OHCodex Software Development',
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
-    ],
-  },
+    },
 
-  // Twitter Cards (X)
-  twitter: {
-    card: 'summary_large_image',
-    title: 'OHCodex | Desarrollo de Software Avanzado',
-    description: 'Ingeniería de software para empresas ambiciosas. PWA, SaaS y APIs.',
-    creator: '@ohcodex',
-    images: [SOCIAL_IMAGE_URL],
-  },
-  
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-  },
+    alternates: {
+      canonical: './',
+    },
+
+    openGraph: {
+      type: 'website',
+      locale: 'es_ES',
+      url: '/',
+      siteName: 'OHCodex',
+      title: title,
+      description: description,
+      images: [
+        {
+          url: SOCIAL_IMAGE_URL,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
+      creator: '@ohcodex',
+      images: [SOCIAL_IMAGE_URL],
+    },
+    
+    icons: {
+      icon: '/favicon.ico',
+      shortcut: '/favicon-16x16.png',
+      apple: '/apple-touch-icon.png',
+    },
+  }
 }
 
 export default function FrontendLayout({
@@ -14084,7 +14480,7 @@ export default function FrontendLayout({
 
 // ========== Fin de src/app/(frontend)/layout.tsx ========== //
 
-// ========== [15] src/app/(frontend)/not-found.tsx ========== //
+// ========== [17] src/app/(frontend)/not-found.tsx ========== //
 
 // ========== src/app/(frontend)/not-found.tsx ========== //
 
@@ -14139,7 +14535,7 @@ export default function NotFound() {
 
 // ========== Fin de src/app/(frontend)/not-found.tsx ========== //
 
-// ========== [16] src/app/(frontend)/page.tsx ========== //
+// ========== [18] src/app/(frontend)/page.tsx ========== //
 
 // ========== src/app/(frontend)/page.tsx ========== //
 
@@ -14230,7 +14626,7 @@ export default async function HomePage() {
 
 // ========== Fin de src/app/(frontend)/page.tsx ========== //
 
-// ========== [17] src/app/(frontend)/privacidad/page.tsx ========== //
+// ========== [19] src/app/(frontend)/privacidad/page.tsx ========== //
 
 import React from 'react'
 import { Metadata } from 'next'
@@ -14312,7 +14708,7 @@ export default async function TerminosPage() {
 
 // ========== Fin de src/app/(frontend)/privacidad/page.tsx ========== //
 
-// ========== [18] src/app/(frontend)/products/[slug]/page.tsx ========== //
+// ========== [20] src/app/(frontend)/products/[slug]/page.tsx ========== //
 
 // ========== src/app/(frontend)/products/[slug]/page.tsx ========== //
 
@@ -14322,15 +14718,16 @@ import configPromise from '@payload-config'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, ExternalLink, Layers } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ExternalLink, Layers, Rocket } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image' // ✅ Importamos el componente optimizado
+import Image from 'next/image'
 import { Metadata } from 'next'
+import type { Product } from '@/payload-types'
 
-// --- ISR: Actualización en segundo plano cada 10 min ---
+// --- ISR: Actualización cada 10 min ---
 export const revalidate = 600
 
-// --- HELPER: Serializador Básico para Rich Text ---
+// --- HELPER: Serializador Rich Text ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
 
@@ -14363,24 +14760,19 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
                 <SerializeLexical nodes={node.children} />
               </Tag>
             )
-          
           case 'paragraph':
             return <p key={i} className="mb-4 leading-relaxed text-zinc-400"><SerializeLexical nodes={node.children} /></p>
-          
           case 'list':
             const ListTag = node.listType === 'number' ? 'ol' : 'ul'
             return <ListTag key={i} className={`mb-4 pl-6 ${node.listType === 'number' ? 'list-decimal' : 'list-disc'} text-zinc-400`}><SerializeLexical nodes={node.children} /></ListTag>
-          
           case 'listitem':
             return <li key={i} className="mb-1"><SerializeLexical nodes={node.children} /></li>
-          
           case 'link':
             return (
               <a key={i} href={node.fields.url} target={node.fields.newTab ? '_blank' : '_self'} rel="noopener noreferrer" className="text-cyan-400 hover:underline">
                 <SerializeLexical nodes={node.children} />
               </a>
             )
-
           default:
             return <SerializeLexical key={i} nodes={node.children} />
         }
@@ -14389,7 +14781,7 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   )
 }
 
-// --- GENERACIÓN DE RUTAS ESTÁTICAS (Súper Velocidad) ---
+// --- GENERACIÓN DE RUTAS ESTÁTICAS ---
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const { docs: products } = await payload.find({
@@ -14403,12 +14795,11 @@ export async function generateStaticParams() {
   }))
 }
 
-// --- LÓGICA DE PÁGINA ---
-
 interface Args {
   params: Promise<{ slug: string }>
 }
 
+// --- METADATA SEO OPTIMIZADA ---
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
@@ -14418,16 +14809,21 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   })
 
   if (!docs[0]) return { title: 'Producto no encontrado' }
+  const product = docs[0]
+
+  // ✅ Lógica prioritaria: Si existe metaTitle manual, úsalo. Si no, usa el nombre + branding.
+  const title = product.metaTitle || `${product.name} | OHCodex Software`
+  // ✅ Lógica prioritaria: Si existe metaDescription, úsala. Si no, la corta.
+  const description = product.metaDescription || product.shortDescription
 
   return {
-    title: `${docs[0].name} | OHCodex Software`,
-    description: docs[0].shortDescription,
+    title,
+    description,
     openGraph: {
-      title: `${docs[0].name} - Solución de Software OHCodex`,
-      description: docs[0].shortDescription,
-      // Usamos la imagen hero si existe, o la default
-      images: typeof docs[0].heroImage === 'object' && docs[0].heroImage?.url 
-        ? [{ url: docs[0].heroImage.url }]
+      title,
+      description,
+      images: typeof product.heroImage === 'object' && product.heroImage?.url 
+        ? [{ url: product.heroImage.url }]
         : undefined,
     }
   }
@@ -14440,46 +14836,37 @@ export default async function ProductPage({ params }: Args) {
   const { docs } = await payload.find({
     collection: 'products',
     where: { slug: { equals: slug } },
-    depth: 1,
+    depth: 2, // Aumentamos profundidad para traer datos de 'relatedProducts'
   })
 
-  const product = docs[0]
+  const product = docs[0] as Product
 
   if (!product) return notFound()
 
-  // Manejo seguro de URLs
   const heroUrl = typeof product.heroImage === 'object' && product.heroImage?.url ? product.heroImage.url : null
   const logoUrl = typeof product.logo === 'object' && product.logo?.url ? product.logo.url : null
 
-  // ✅ DATOS ESTRUCTURADOS (JSON-LD) para Aplicación de Software
+  // JSON-LD
   const softwareJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: product.name,
     description: product.shortDescription,
     applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web, Cloud', // Ajustar según el caso
+    operatingSystem: 'Web, Cloud', 
     offers: {
       '@type': 'Offer',
-      price: '0', // 0 si es a consultar o demo
+      price: '0', 
       priceCurrency: 'EUR',
       availability: product.status === 'live' ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
     },
-    author: {
-        '@type': 'Organization',
-        name: 'OHCodex'
-    },
+    author: { '@type': 'Organization', name: 'OHCodex' },
     ...(heroUrl && { image: heroUrl }),
   }
 
   return (
     <article className="min-h-screen bg-black pt-24 pb-16">
-      
-      {/* Inyectamos los datos para Google */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
 
       <div className="container px-4 mx-auto">
         <div className="mb-8">
@@ -14490,18 +14877,12 @@ export default async function ProductPage({ params }: Args) {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           
-          {/* COLUMNA IZQUIERDA: Info Principal */}
+          {/* COLUMNA PRINCIPAL */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-4 mb-6">
               {logoUrl && (
                 <div className="relative h-16 w-16 shrink-0 rounded-xl bg-zinc-900/50 border border-white/10 overflow-hidden p-2">
-                    <Image 
-                        src={logoUrl} 
-                        alt={`Logo de ${product.name}`}
-                        fill
-                        className="object-contain p-1"
-                        sizes="64px"
-                    />
+                    <Image src={logoUrl} alt={`Logo ${product.name}`} fill className="object-contain p-1" sizes="64px" />
                 </div>
               )}
               <div>
@@ -14516,16 +14897,15 @@ export default async function ProductPage({ params }: Args) {
               </div>
             </div>
 
-            {/* ✅ HERO IMAGE OPTIMIZADA CON NEXT/IMAGE */}
             {heroUrl ? (
               <div className="relative w-full aspect-video rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl shadow-cyan-900/10 mb-10 group">
                 <Image 
                   src={heroUrl} 
-                  alt={`Interfaz o captura de ${product.name}`}
-                  fill
+                  alt={`Interfaz de ${product.name}`} 
+                  fill 
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
-                  priority // Carga prioritaria para mejorar LCP
+                  sizes="(max-width: 768px) 100vw, 800px"
+                  priority 
                 />
               </div>
             ) : (
@@ -14534,50 +14914,91 @@ export default async function ProductPage({ params }: Args) {
               </div>
             )}
 
-            {/* DESCRIPCIÓN RICA (LEXICAL) */}
             <div className="prose prose-invert max-w-none prose-p:text-zinc-400 prose-headings:text-white prose-a:text-cyan-400">
               <h2 className="text-2xl font-bold text-white mb-4">Sobre el Proyecto</h2>
               {product.description && 'root' in product.description && (
                 <SerializeLexical nodes={(product.description.root as any).children} />
               )}
             </div>
+
+            {/* ✅ SECCIÓN PRODUCTOS RELACIONADOS (Nuevo) */}
+            {product.relatedProducts && product.relatedProducts.length > 0 && (
+              <div className="mt-20 pt-10 border-t border-white/10">
+                <h3 className="text-2xl font-bold text-white mb-6">Otros Proyectos Similares</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {product.relatedProducts.map((related) => {
+                    // Type guard para asegurar que es un objeto producto y no solo un ID
+                    if (typeof related !== 'object' || related === null) return null
+                    // Type guard adicional para asegurar que tiene slug
+                    if (!('slug' in related)) return null
+
+                    const relLogo = typeof related.logo === 'object' && related.logo?.url ? related.logo.url : null
+
+                    return (
+                      <Link 
+                        key={related.id} 
+                        href={`/products/${related.slug}`}
+                        className="group flex items-start gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900 hover:border-cyan-500/30 transition-all"
+                      >
+                        <div className="h-12 w-12 shrink-0 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden p-2">
+                           {relLogo ? (
+                             <Image src={relLogo} alt={related.name} width={32} height={32} className="object-contain" />
+                           ) : (
+                             <Rocket className="h-6 w-6 text-zinc-500" />
+                           )}
+                        </div>
+                        <div>
+                          <h4 className="text-white font-semibold group-hover:text-cyan-400 transition-colors">
+                            {related.name}
+                          </h4>
+                          <p className="text-sm text-zinc-500 line-clamp-2 mt-1">
+                            {related.shortDescription}
+                          </p>
+                        </div>
+                        <ArrowRight className="ml-auto h-5 w-5 text-zinc-600 group-hover:text-cyan-500 opacity-0 group-hover:opacity-100 transition-all self-center" />
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
           </div>
 
-          {/* COLUMNA DERECHA: Sidebar / Metadatos */}
+          {/* COLUMNA SIDEBAR */}
           <div className="lg:col-span-1 space-y-8">
-            
-            {/* CTA / Enlace */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 backdrop-blur-sm">
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 backdrop-blur-sm sticky top-24">
               <h3 className="text-white font-semibold mb-4">Ficha Técnica</h3>
               
               {product.projectUrl ? (
-                <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white mb-4" asChild>
+                <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white mb-6 shadow-lg shadow-cyan-900/20" asChild>
                   <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
                     Visitar Sitio Web <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
               ) : (
-                <Button disabled className="w-full bg-zinc-800 text-zinc-500 border border-zinc-700">
-                  Acceso Privado / En Desarrollo
+                <Button disabled className="w-full bg-zinc-800 text-zinc-500 border border-zinc-700 mb-6">
+                  En Desarrollo
                 </Button>
               )}
-            </div>
 
-            {/* Tecnologías */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 backdrop-blur-sm">
-              <div className="flex items-center gap-2 mb-4 text-white font-semibold">
-                <Layers className="h-5 w-5 text-cyan-500" /> Stack Tecnológico
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {product.technologies?.map((tech, i) => (
-                  <span key={i} className="px-3 py-1 rounded-md bg-zinc-950 border border-zinc-800 text-sm text-zinc-400 font-mono">
-                    {tech.name}
-                  </span>
-                ))}
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center gap-2 text-white font-medium mb-3">
+                    <Layers className="h-4 w-4 text-cyan-500" /> Stack Tecnológico
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {product.technologies?.map((tech, i) => (
+                      <span key={i} className="px-2.5 py-1 rounded text-xs bg-zinc-950 border border-zinc-800 text-zinc-400 font-mono">
+                        {tech.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-
           </div>
+
         </div>
       </div>
     </article>
@@ -14586,7 +15007,7 @@ export default async function ProductPage({ params }: Args) {
 
 // ========== Fin de src/app/(frontend)/products/[slug]/page.tsx ========== //
 
-// ========== [19] src/app/(frontend)/terminos/page.tsx ========== //
+// ========== [21] src/app/(frontend)/terminos/page.tsx ========== //
 
 // ========== src/app/(frontend)/terminos/page.tsx ========== //
 
@@ -14672,7 +15093,7 @@ export default async function TerminosPage() {
 
 // ========== Fin de src/app/(frontend)/terminos/page.tsx ========== //
 
-// ========== [20] src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
+// ========== [22] src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14702,7 +15123,7 @@ export default NotFound
 
 // ========== Fin de src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
 
-// ========== [21] src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
+// ========== [23] src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14732,7 +15153,7 @@ export default Page
 
 // ========== Fin de src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
 
-// ========== [22] src/app/(payload)/admin/importMap.js ========== //
+// ========== [24] src/app/(payload)/admin/importMap.js ========== //
 
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -14785,7 +15206,7 @@ export const importMap = {
 
 // ========== Fin de src/app/(payload)/admin/importMap.js ========== //
 
-// ========== [23] src/app/(payload)/api/[...slug]/route.ts ========== //
+// ========== [25] src/app/(payload)/api/[...slug]/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14810,7 +15231,7 @@ export const OPTIONS = REST_OPTIONS(config)
 
 // ========== Fin de src/app/(payload)/api/[...slug]/route.ts ========== //
 
-// ========== [24] src/app/(payload)/api/graphql-playground/route.ts ========== //
+// ========== [26] src/app/(payload)/api/graphql-playground/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14823,7 +15244,7 @@ export const GET = GRAPHQL_PLAYGROUND_GET(config)
 
 // ========== Fin de src/app/(payload)/api/graphql-playground/route.ts ========== //
 
-// ========== [25] src/app/(payload)/api/graphql/route.ts ========== //
+// ========== [27] src/app/(payload)/api/graphql/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14837,7 +15258,7 @@ export const OPTIONS = REST_OPTIONS(config)
 
 // ========== Fin de src/app/(payload)/api/graphql/route.ts ========== //
 
-// ========== [26] src/app/(payload)/layout.tsx ========== //
+// ========== [28] src/app/(payload)/layout.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14874,7 +15295,7 @@ export default Layout
 
 // ========== Fin de src/app/(payload)/layout.tsx ========== //
 
-// ========== [27] src/app/globals.css ========== //
+// ========== [29] src/app/globals.css ========== //
 
 @tailwind base;
 @tailwind components;
@@ -14938,7 +15359,7 @@ export default Layout
 
 // ========== Fin de src/app/globals.css ========== //
 
-// ========== [28] src/app/my-route/route.ts ========== //
+// ========== [30] src/app/my-route/route.ts ========== //
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -14958,7 +15379,7 @@ export const GET = async () => {
 
 // ========== Fin de src/app/my-route/route.ts ========== //
 
-// ========== [29] src/app/robots.ts ========== //
+// ========== [31] src/app/robots.ts ========== //
 
 // ========== src/app/robots.ts ========== //
 
@@ -14993,7 +15414,7 @@ export default function robots(): MetadataRoute.Robots {
 
 // ========== Fin de src/app/robots.ts ========== //
 
-// ========== [30] src/app/sitemap.ts ========== //
+// ========== [32] src/app/sitemap.ts ========== //
 
 // ========== src/app/sitemap.ts ========== //
 
@@ -15007,34 +15428,54 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 1. Definir la URL base
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
 
-  // 2. Obtener productos para indexar
-  // CORRECCIÓN APLICADA: Ahora busca productos 'live' Y 'beta' para que salgan en Google
+  // 2. Obtener PRODUCTOS
   const { docs: products } = await payload.find({
     collection: 'products',
     where: {
       status: {
-        in: ['live', 'beta'], 
+        in: ['live', 'beta', 'development', 'concept'], 
       },
     },
     depth: 0,
     limit: 1000,
   })
 
-  // 3. Generar URLs dinámicas de productos
+  // 3. Obtener POSTS DEL BLOG (Nuevo)
+  const { docs: posts } = await payload.find({
+    collection: 'posts',
+    depth: 0,
+    limit: 1000,
+  })
+
+  // 4. Generar URLs dinámicas de PRODUCTOS
   const productUrls = products.map((product) => ({
     url: `${baseUrl}/products/${product.slug}`,
     lastModified: new Date(product.updatedAt),
     changeFrequency: 'weekly' as const,
-    priority: 0.8,
+    priority: product.isFeatured ? 0.9 : 0.7,
   }))
 
-  // 4. Generar URLs estáticas (Home y Legales)
+  // 5. Generar URLs dinámicas de POSTS (Nuevo)
+  const postUrls = posts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.updatedAt),
+    changeFrequency: 'monthly' as const, // Los posts cambian menos que los productos
+    priority: 0.6, // Prioridad estándar para artículos
+  }))
+
+  // 6. Generar URLs estáticas (Home, Blog Index y Legales)
   const staticRoutes = [
     {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 1,
+    },
+    {
+      url: `${baseUrl}/blog`, // Índice del blog
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/aviso-legal`,
@@ -15056,13 +15497,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // 5. Unir todo y devolver
-  return [...staticRoutes, ...productUrls]
+  // 7. Unir todo y devolver
+  return [...staticRoutes, ...productUrls, ...postUrls]
 }
 
 // ========== Fin de src/app/sitemap.ts ========== //
 
-// ========== [31] src/collections/ContactSubmissions.ts ========== //
+// ========== [33] src/collections/Categories.ts ========== //
+
+    // ========== src/collections/Categories.ts ========== //
+
+import type { CollectionConfig } from 'payload'
+
+export const Categories: CollectionConfig = {
+  slug: 'categories',
+  labels: {
+    singular: 'Categoría',
+    plural: 'Categorías',
+  },
+  admin: {
+    useAsTitle: 'name',
+  },
+  access: {
+    read: () => true, // Lectura pública para la web
+  },
+  fields: [
+    {
+      name: 'name',
+      type: 'text',
+      required: true,
+      label: 'Nombre',
+    },
+    {
+      name: 'slug',
+      type: 'text',
+      label: 'Slug URL (Opcional)',
+      admin: {
+        description: 'Identificador para la URL (ej: tecnologia, noticias). Si se deja vacío, se puede usar el nombre.',
+      },
+    },
+  ],
+}
+
+// ========== Fin de src/collections/Categories.ts ========== //
+
+// ========== [34] src/collections/ContactSubmissions.ts ========== //
 
 // src/collections/ContactSubmissions.ts
 import type { CollectionConfig } from 'payload'
@@ -15122,7 +15601,7 @@ export const ContactSubmissions: CollectionConfig = {
 
 // ========== Fin de src/collections/ContactSubmissions.ts ========== //
 
-// ========== [32] src/collections/Media.ts ========== //
+// ========== [35] src/collections/Media.ts ========== //
 
 // ========== src/collections/Media.ts ========== //
 
@@ -15178,7 +15657,139 @@ export const Media: CollectionConfig = {
 
 // ========== Fin de src/collections/Media.ts ========== //
 
-// ========== [33] src/collections/Products.ts ========== //
+// ========== [36] src/collections/Posts.ts ========== //
+
+// ========== src/collections/Posts.ts ========== //
+
+import type { CollectionConfig } from 'payload'
+
+export const Posts: CollectionConfig = {
+  slug: 'posts',
+  labels: {
+    singular: 'Artículo',
+    plural: 'Artículos del Blog',
+  },
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'publishedDate', 'category', 'status'],
+  },
+  access: {
+    read: () => true, // Lectura pública
+  },
+  fields: [
+    {
+      type: 'tabs',
+      tabs: [
+        // --- PESTAÑA 1: CONTENIDO ---
+        {
+          label: 'Contenido',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              label: 'Título del Artículo',
+            },
+            {
+              name: 'slug',
+              type: 'text',
+              required: true,
+              unique: true,
+              admin: {
+                position: 'sidebar',
+                description: 'URL amigable (ej: arquitectura-saas-escalable)',
+              },
+            },
+            {
+              name: 'publishedDate',
+              type: 'date',
+              required: true,
+              label: 'Fecha de Publicación',
+              defaultValue: () => new Date(),
+              admin: {
+                position: 'sidebar',
+              },
+            },
+            {
+              name: 'author',
+              type: 'relationship',
+              relationTo: 'users' as any, // 'as any' para evitar error circular inicial
+              required: true,
+              label: 'Autor',
+              admin: {
+                position: 'sidebar',
+              },
+            },
+            {
+              name: 'category',
+              type: 'relationship',
+              relationTo: 'categories' as any, // 'as any' para evitar error circular inicial
+              required: true,
+              label: 'Categoría',
+              admin: {
+                position: 'sidebar',
+              },
+            },
+            {
+              name: 'coverImage',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              label: 'Imagen Principal (Cover)',
+            },
+            {
+              name: 'excerpt',
+              type: 'textarea',
+              required: true,
+              label: 'Extracto / Resumen',
+              maxLength: 300,
+              admin: {
+                description: 'Texto breve que aparecerá en la tarjeta del blog.',
+              },
+            },
+            {
+              name: 'content',
+              type: 'richText',
+              required: true,
+              label: 'Cuerpo del Artículo',
+            },
+          ],
+        },
+
+        // --- PESTAÑA 2: SEO ---
+        {
+          label: 'SEO',
+          fields: [
+            {
+              name: 'metaTitle',
+              type: 'text',
+              label: 'Meta Título (Opcional)',
+              admin: {
+                description: 'Si se deja vacío, se usará el título del artículo.',
+              },
+            },
+            {
+              name: 'metaDescription',
+              type: 'textarea',
+              label: 'Meta Descripción (Opcional)',
+              minLength: 50,
+              maxLength: 160,
+              admin: {
+                description: 'Si se deja vacío, se usará el extracto.',
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
+
+// ========== Fin de src/collections/Posts.ts ========== //
+
+// ========== [37] src/collections/Products.ts ========== //
+
+// ========== src/collections/Products.ts ========== //
 
 import type { CollectionConfig } from 'payload'
 
@@ -15193,88 +15804,152 @@ export const Products: CollectionConfig = {
     defaultColumns: ['name', 'status', 'isFeatured'],
   },
   access: {
-    read: () => true, // Importante: acceso público para que la web pueda leerlos
+    read: () => true, // Acceso público para la web
   },
   fields: [
     {
-      name: 'name',
-      type: 'text',
-      required: true,
-      label: 'Nombre del Producto',
-    },
-    {
-      name: 'slug',
-      type: 'text',
-      required: true,
-      unique: true,
-      admin: {
-        position: 'sidebar',
-        description: 'Identificador URL (ej: pool-control)',
-      },
-    },
-    {
-      name: 'status',
-      type: 'select',
-      required: true,
-      defaultValue: 'development',
-      options: [
-        { label: 'Concepto', value: 'concept' },
-        { label: 'En Desarrollo', value: 'development' },
-        { label: 'Beta Pública', value: 'beta' },
-        { label: 'En Producción (Live)', value: 'live' },
-      ],
-      admin: {
-        position: 'sidebar',
-      },
-    },
-    {
-      name: 'isFeatured',
-      type: 'checkbox',
-      label: '¿Producto Destacado?',
-      defaultValue: false,
-      admin: {
-        position: 'sidebar',
-        description: 'Si se marca, saldrá más grande en la home',
-      },
-    },
-    {
-      name: 'shortDescription',
-      type: 'textarea',
-      required: true,
-      label: 'Descripción Corta (Tarjeta)',
-      maxLength: 250,
-    },
-    {
-      name: 'description',
-      type: 'richText', // Editor visual completo
-      label: 'Caso de Éxito / Detalle',
-    },
-    {
-      name: 'logo',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Logo o Icono',
-    },
-    {
-      name: 'heroImage',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Imagen de Fondo (Card)',
-    },
-    {
-      name: 'projectUrl',
-      type: 'text',
-      label: 'Enlace externo (si existe)',
-    },
-    {
-      name: 'technologies',
-      type: 'array',
-      label: 'Tecnologías Usadas',
-      fields: [
+      type: 'tabs',
+      tabs: [
+        // --- PESTAÑA 1: INFORMACIÓN PRINCIPAL ---
         {
-          name: 'name',
-          type: 'text',
-          label: 'Tecnología (ej: React, IoT)',
+          label: 'Información General',
+          fields: [
+            {
+              name: 'name',
+              type: 'text',
+              required: true,
+              label: 'Nombre del Producto',
+            },
+            {
+              name: 'slug',
+              type: 'text',
+              required: true,
+              unique: true,
+              admin: {
+                description: 'Identificador URL (ej: pool-control)',
+              },
+            },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'status',
+                  type: 'select',
+                  required: true,
+                  defaultValue: 'development',
+                  options: [
+                    { label: 'Concepto', value: 'concept' },
+                    { label: 'En Desarrollo', value: 'development' },
+                    { label: 'Beta Pública', value: 'beta' },
+                    { label: 'En Producción (Live)', value: 'live' },
+                  ],
+                  admin: {
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'isFeatured',
+                  type: 'checkbox',
+                  label: '¿Producto Destacado?',
+                  defaultValue: false,
+                  admin: {
+                    width: '50%',
+                    description: 'Si se marca, saldrá más grande en la home',
+                  },
+                },
+              ],
+            },
+            {
+              name: 'shortDescription',
+              type: 'textarea',
+              required: true,
+              label: 'Descripción Corta (Tarjeta)',
+              maxLength: 250,
+            },
+            {
+              name: 'description',
+              type: 'richText', // Editor visual completo
+              label: 'Caso de Éxito / Detalle',
+            },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'logo',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Logo o Icono',
+                  admin: { width: '50%' },
+                },
+                {
+                  name: 'heroImage',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Imagen de Fondo (Card)',
+                  admin: { width: '50%' },
+                },
+              ],
+            },
+            {
+              name: 'projectUrl',
+              type: 'text',
+              label: 'Enlace externo (si existe)',
+            },
+            {
+              name: 'technologies',
+              type: 'array',
+              label: 'Tecnologías Usadas',
+              fields: [
+                {
+                  name: 'name',
+                  type: 'text',
+                  label: 'Tecnología (ej: React, IoT)',
+                },
+              ],
+            },
+          ],
+        },
+        
+        // --- PESTAÑA 2: SEO ESPECÍFICO ---
+        {
+          label: 'SEO',
+          fields: [
+            {
+              name: 'metaTitle',
+              type: 'text',
+              label: 'Meta Título (Opcional)',
+              admin: {
+                description: 'Si se deja vacío, se usará el nombre del producto.',
+              },
+            },
+            {
+              name: 'metaDescription',
+              type: 'textarea',
+              label: 'Meta Descripción (Opcional)',
+              admin: {
+                description: 'Si se deja vacío, se usará la descripción corta.',
+              },
+              minLength: 50,
+              maxLength: 160,
+            },
+          ],
+        },
+
+        // --- PESTAÑA 3: RELACIONADOS ---
+        {
+          label: 'Relacionados',
+          fields: [
+            {
+              name: 'relatedProducts',
+              type: 'relationship',
+              relationTo: 'products',
+              hasMany: true,
+              label: 'Productos Relacionados',
+              admin: {
+                description: 'Selecciona otros productos para mostrar al final de la página y mejorar el enlazado interno.',
+              },
+            },
+          ],
         },
       ],
     },
@@ -15283,7 +15958,7 @@ export const Products: CollectionConfig = {
 
 // ========== Fin de src/collections/Products.ts ========== //
 
-// ========== [34] src/collections/Users.ts ========== //
+// ========== [38] src/collections/Users.ts ========== //
 
 import type { CollectionConfig } from 'payload'
 
@@ -15302,7 +15977,7 @@ export const Users: CollectionConfig = {
 
 // ========== Fin de src/collections/Users.ts ========== //
 
-// ========== [35] src/components/layout/Footer.tsx ========== //
+// ========== [39] src/components/layout/Footer.tsx ========== //
 
 // ========== src/components/layout/Footer.tsx ========== //
 
@@ -15436,7 +16111,7 @@ export async function Footer() {
 
 // ========== Fin de src/components/layout/Footer.tsx ========== //
 
-// ========== [36] src/components/layout/Header.tsx ========== //
+// ========== [40] src/components/layout/Header.tsx ========== //
 
 // ========== src/components/layout/Header.tsx ========== //
 
@@ -15457,23 +16132,23 @@ export function Header() {
 
         {/* NAVEGACIÓN DESKTOP */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400">
-          {/* CORRECCIÓN: Añadida la barra '/' antes de '#' para navegar desde cualquier página */}
           <Link href="/#productos" className="hover:text-cyan-400 transition-colors">
             Productos
           </Link>
-          {/* Apuntamos Servicios a Metodología si no hay sección específica, o a /#servicios si la creaste */}
-          <Link href="/#metodologia" className="hover:text-cyan-400 transition-colors">
-            Servicios
-          </Link>
+          
           <Link href="/#metodologia" className="hover:text-cyan-400 transition-colors">
             Metodología
+          </Link>
+
+          {/* ✅ NUEVO ENLACE: Blog */}
+          <Link href="/blog" className="hover:text-cyan-400 transition-colors font-semibold text-zinc-100">
+            Blog
           </Link>
         </nav>
 
         {/* BOTÓN CONTACTO */}
         <div className="flex items-center gap-4">
           <Button asChild variant="outline" className="border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/10 hover:text-cyan-300">
-            {/* CORRECCIÓN: Añadida la barra '/' */}
             <Link href="/#contacto">
               Contactar
             </Link>
@@ -15486,9 +16161,7 @@ export function Header() {
 
 // ========== Fin de src/components/layout/Header.tsx ========== //
 
-// ========== Fin de src/components/layout/Header.tsx ========== //
-
-// ========== [37] src/components/sections/Contact.tsx ========== //
+// ========== [41] src/components/sections/Contact.tsx ========== //
 
 'use client'
 
@@ -15668,7 +16341,7 @@ export function ContactSection({ email }: { email: string }) {
 
 // ========== Fin de src/components/sections/Contact.tsx ========== //
 
-// ========== [38] src/components/sections/Features.tsx ========== //
+// ========== [42] src/components/sections/Features.tsx ========== //
 
 // ========== src/components/sections/Features.tsx ========== //
 
@@ -15801,7 +16474,7 @@ export async function FeaturesSection() {
 
 // ========== Fin de src/components/sections/Features.tsx ========== //
 
-// ========== [39] src/components/sections/Hero.tsx ========== //
+// ========== [43] src/components/sections/Hero.tsx ========== //
 
 // ========== src/components/sections/Hero.tsx ========== //
 
@@ -15919,7 +16592,7 @@ export async function Hero() {
 
 // ========== Fin de src/components/sections/Hero.tsx ========== //
 
-// ========== [40] src/components/sections/Products.tsx ========== //
+// ========== [44] src/components/sections/Products.tsx ========== //
 
 // ========== src/components/sections/Products.tsx ========== //
 
@@ -16063,7 +16736,7 @@ export async function ProductsSection() {
 
 // ========== Fin de src/components/sections/Products.tsx ========== //
 
-// ========== [41] src/components/ui/badge.tsx ========== //
+// ========== [45] src/components/ui/badge.tsx ========== //
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -16105,7 +16778,7 @@ export { Badge, badgeVariants }
 
 // ========== Fin de src/components/ui/badge.tsx ========== //
 
-// ========== [42] src/components/ui/button.tsx ========== //
+// ========== [46] src/components/ui/button.tsx ========== //
 
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
@@ -16168,7 +16841,7 @@ export { Button, buttonVariants }
 
 // ========== Fin de src/components/ui/button.tsx ========== //
 
-// ========== [43] src/globals/Company.ts ========== //
+// ========== [47] src/globals/Company.ts ========== //
 
 // ========== src/globals/Company.ts ========== //
 
@@ -16191,7 +16864,7 @@ export const Company: GlobalConfig = {
               name: 'logo',
               type: 'upload',
               relationTo: 'media',
-              required: false, // <--- CAMBIO: Ahora es opcional
+              required: false,
               label: 'Logo Principal (Imagen Opcional)',
               admin: {
                 description: 'Sube una imagen solo si quieres reemplazar el texto OHCODEX del header.',
@@ -16212,8 +16885,59 @@ export const Company: GlobalConfig = {
             {
               name: 'description',
               type: 'textarea',
-              label: 'Descripción Breve (Footer/SEO)',
+              label: 'Descripción Breve (Footer)',
               defaultValue: 'Ingeniería de software avanzada para empresas que buscan escalabilidad.',
+            },
+          ],
+        },
+        {
+          label: 'SEO Global',
+          description: 'Configuración por defecto para buscadores (Google)',
+          fields: [
+            {
+              name: 'defaultTitle',
+              type: 'text',
+              required: true,
+              label: 'Título por defecto (Home)',
+              defaultValue: 'OHCodex | Desarrollo de Software a Medida y Sistemas SaaS',
+              admin: {
+                description: 'Se usará en la página principal y como fallback.',
+              },
+            },
+            {
+              name: 'titleTemplate',
+              type: 'text',
+              required: true,
+              label: 'Plantilla de Título',
+              defaultValue: '%s | OHCodex',
+              admin: {
+                description: 'El %s se reemplazará por el título de la página actual (ej: "Aviso Legal | OHCodex").',
+              },
+            },
+            {
+              name: 'defaultDescription',
+              type: 'textarea',
+              required: true,
+              label: 'Meta Descripción Global',
+              defaultValue: 'Empresa de desarrollo de software especializada en PWAs, arquitecturas SaaS escalables y transformación digital.',
+              minLength: 50,
+              maxLength: 160,
+            },
+            {
+              name: 'keywords',
+              type: 'array',
+              label: 'Palabras Clave Globales',
+              labels: {
+                singular: 'Keyword',
+                plural: 'Keywords',
+              },
+              fields: [
+                {
+                  name: 'keyword',
+                  type: 'text',
+                  label: 'Palabra clave',
+                },
+              ],
             },
           ],
         },
@@ -16273,7 +16997,7 @@ export const Company: GlobalConfig = {
 
 // ========== Fin de src/globals/Company.ts ========== //
 
-// ========== [44] src/globals/Landing.ts ========== //
+// ========== [48] src/globals/Landing.ts ========== //
 
 // ========== src/globals/Landing.ts ========== //
 
@@ -16401,7 +17125,7 @@ export const Landing: GlobalConfig = {
 
 // ========== Fin de src/globals/Landing.ts ========== //
 
-// ========== [45] src/globals/Legal.ts ========== //
+// ========== [49] src/globals/Legal.ts ========== //
 
 // ========== src/globals/Legal.ts ========== //
 
@@ -16459,7 +17183,7 @@ export const Legal: GlobalConfig = {
 
 // ========== Fin de src/globals/Legal.ts ========== //
 
-// ========== [46] src/lib/cloudinaryAdapter.ts ========== //
+// ========== [50] src/lib/cloudinaryAdapter.ts ========== //
 
 // ========== src/lib/cloudinaryAdapter.ts ========== //
 
@@ -16543,7 +17267,7 @@ export const deleteFromCloudinary: CollectionAfterDeleteHook = async ({ doc }) =
 
 // ========== Fin de src/lib/cloudinaryAdapter.ts ========== //
 
-// ========== [47] src/lib/utils.ts ========== //
+// ========== [51] src/lib/utils.ts ========== //
 
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -16555,7 +17279,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // ========== Fin de src/lib/utils.ts ========== //
 
-// ========== [48] src/payload-types.ts ========== //
+// ========== [52] src/payload-types.ts ========== //
 
 /* tslint:disable */
 /* eslint-disable */
@@ -16574,6 +17298,8 @@ export interface Config {
     media: Media;
     products: Product;
     'contact-submissions': ContactSubmission;
+    posts: Post;
+    categories: Category;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -16584,6 +17310,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -16652,6 +17380,8 @@ export interface User {
 export interface Media {
   id: number;
   alt: string;
+  publicId?: string | null;
+  externalUrl?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -16663,32 +17393,6 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    hero?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -16725,6 +17429,9 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  relatedProducts?: (number | Product)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -16739,6 +17446,50 @@ export interface ContactSubmission {
   serviceType?: ('pwa' | 'saas' | 'api' | 'other') | null;
   message: string;
   privacyAccepted: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  publishedDate: string;
+  author: number | User;
+  category: number | Category;
+  coverImage: number | Media;
+  excerpt: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  slug?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -16764,6 +17515,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'contact-submissions';
         value: number | ContactSubmission;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -16828,6 +17587,8 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  publicId?: T;
+  externalUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -16839,40 +17600,6 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        card?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        hero?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -16894,6 +17621,9 @@ export interface ProductsSelect<T extends boolean = true> {
         name?: T;
         id?: T;
       };
+  metaTitle?: T;
+  metaDescription?: T;
+  relatedProducts?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -16907,6 +17637,34 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
   serviceType?: T;
   message?: T;
   privacyAccepted?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  publishedDate?: T;
+  author?: T;
+  category?: T;
+  coverImage?: T;
+  excerpt?: T;
+  content?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -16948,10 +17706,19 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface CompanyInfo {
   id: number;
-  logo: number | Media;
+  logo?: (number | null) | Media;
   logoDark?: (number | null) | Media;
   tagline?: string | null;
   description?: string | null;
+  defaultTitle: string;
+  titleTemplate: string;
+  defaultDescription: string;
+  keywords?:
+    | {
+        keyword?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   contactEmail: string;
   phoneNumber?: string | null;
   address?: string | null;
@@ -17049,6 +17816,15 @@ export interface CompanyInfoSelect<T extends boolean = true> {
   logoDark?: T;
   tagline?: T;
   description?: T;
+  defaultTitle?: T;
+  titleTemplate?: T;
+  defaultDescription?: T;
+  keywords?:
+    | T
+    | {
+        keyword?: T;
+        id?: T;
+      };
   contactEmail?: T;
   phoneNumber?: T;
   address?: T;
@@ -17111,7 +17887,7 @@ declare module 'payload' {
 
 // ========== Fin de src/payload-types.ts ========== //
 
-// ========== [49] src/payload.config.ts ========== //
+// ========== [53] src/payload.config.ts ========== //
 
 // ========== src/payload.config.ts ========== //
 
@@ -17124,13 +17900,17 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { es } from 'payload/i18n/es'
 
-// Importamos Colecciones
+// 1. Importamos Colecciones Existentes
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { ContactSubmissions } from './collections/ContactSubmissions'
 
-// Importamos Globales (NUEVO)
+// 2. Importamos Colecciones Nuevas (BLOG)
+import { Posts } from './collections/Posts'
+import { Categories } from './collections/Categories'
+
+// 3. Importamos Globales
 import { Company } from './globals/Company'
 import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
@@ -17149,9 +17929,16 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  // Registramos Colecciones y Globales
-  collections: [Users, Media, Products, ContactSubmissions],
-  globals: [Company, Legal, Landing], // <--- AQUÍ SE REGISTRAN
+  // --- AQUÍ ESTÁ LA CLAVE: TIENEN QUE ESTAR LAS 6 ---
+  collections: [
+    Users, 
+    Media, 
+    Products, 
+    ContactSubmissions,
+    Posts,      // <--- IMPORTANTE: Asegúrate de que esto está aquí
+    Categories  // <--- IMPORTANTE: Asegúrate de que esto está aquí
+  ],
+  globals: [Company, Legal, Landing],
   
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -17171,9 +17958,7 @@ export default buildConfig({
 
 // ========== Fin de src/payload.config.ts ========== //
 
-// ========== Fin de src/payload.config.ts ========== //
-
-// ========== [50] tailwind.config.js ========== //
+// ========== [54] tailwind.config.js ========== //
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -17239,7 +18024,7 @@ export default {
 
 // ========== Fin de tailwind.config.js ========== //
 
-// ========== [51] tsconfig.json ========== //
+// ========== [55] tsconfig.json ========== //
 
 {
   "compilerOptions": {

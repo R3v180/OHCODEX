@@ -11,11 +11,10 @@ import { Badge } from '@/components/ui/badge'
 import { Metadata } from 'next'
 import type { Post } from '@/payload-types'
 
-// ISR: Actualizar contenido cada 10 minutos
-export const revalidate = 600
+// CAMBIO: 0 segundos para que la actualización sea inmediata al editar
+export const revalidate = 0
 
 // --- Serializador de Texto Rico (Rich Text) ---
-// LIMPIO: Sin etiquetas de depuración, solo diseño final.
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
 
@@ -36,10 +35,9 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
         switch (node.type) {
           case 'heading':
             const Tag = node.tag as any
-            // TAMAÑOS AJUSTADOS: H2 ahora es más proporcionado
             const sizes: Record<string, string> = { 
               h1: 'text-3xl sm:text-4xl mt-12 mb-6 text-white font-bold tracking-tight', 
-              h2: 'text-2xl sm:text-3xl mt-10 mb-5 text-white font-bold tracking-tight', // Antes era text-3xl
+              h2: 'text-2xl sm:text-3xl mt-10 mb-5 text-white font-bold tracking-tight', 
               h3: 'text-xl sm:text-2xl mt-8 mb-4 text-white font-semibold', 
               h4: 'text-lg sm:text-xl mt-6 mb-3 text-white font-semibold'
             }

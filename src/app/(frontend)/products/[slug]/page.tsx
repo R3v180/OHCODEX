@@ -6,15 +6,16 @@ import configPromise from '@payload-config'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, ExternalLink, Layers } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ExternalLink, Layers, Rocket } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image' // ✅ Importamos el componente optimizado
+import Image from 'next/image'
 import { Metadata } from 'next'
+import type { Product } from '@/payload-types'
 
-// --- ISR: Actualización en segundo plano cada 10 min ---
+// --- ISR: Actualización cada 10 min ---
 export const revalidate = 600
 
-// --- HELPER: Serializador Básico para Rich Text ---
+// --- HELPER: Serializador Rich Text ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
 
@@ -47,24 +48,19 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
                 <SerializeLexical nodes={node.children} />
               </Tag>
             )
-          
           case 'paragraph':
             return <p key={i} className="mb-4 leading-relaxed text-zinc-400"><SerializeLexical nodes={node.children} /></p>
-          
           case 'list':
             const ListTag = node.listType === 'number' ? 'ol' : 'ul'
             return <ListTag key={i} className={`mb-4 pl-6 ${node.listType === 'number' ? 'list-decimal' : 'list-disc'} text-zinc-400`}><SerializeLexical nodes={node.children} /></ListTag>
-          
           case 'listitem':
             return <li key={i} className="mb-1"><SerializeLexical nodes={node.children} /></li>
-          
           case 'link':
             return (
               <a key={i} href={node.fields.url} target={node.fields.newTab ? '_blank' : '_self'} rel="noopener noreferrer" className="text-cyan-400 hover:underline">
                 <SerializeLexical nodes={node.children} />
               </a>
             )
-
           default:
             return <SerializeLexical key={i} nodes={node.children} />
         }
@@ -73,7 +69,7 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   )
 }
 
-// --- GENERACIÓN DE RUTAS ESTÁTICAS (Súper Velocidad) ---
+// --- GENERACIÓN DE RUTAS ESTÁTICAS ---
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const { docs: products } = await payload.find({
@@ -87,12 +83,11 @@ export async function generateStaticParams() {
   }))
 }
 
-// --- LÓGICA DE PÁGINA ---
-
 interface Args {
   params: Promise<{ slug: string }>
 }
 
+// --- METADATA SEO OPTIMIZADA ---
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
@@ -102,16 +97,21 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   })
 
   if (!docs[0]) return { title: 'Producto no encontrado' }
+  const product = docs[0]
+
+  // ✅ Lógica prioritaria: Si existe metaTitle manual, úsalo. Si no, usa el nombre + branding.
+  const title = product.metaTitle || `${product.name} | OHCodex Software`
+  // ✅ Lógica prioritaria: Si existe metaDescription, úsala. Si no, la corta.
+  const description = product.metaDescription || product.shortDescription
 
   return {
-    title: `${docs[0].name} | OHCodex Software`,
-    description: docs[0].shortDescription,
+    title,
+    description,
     openGraph: {
-      title: `${docs[0].name} - Solución de Software OHCodex`,
-      description: docs[0].shortDescription,
-      // Usamos la imagen hero si existe, o la default
-      images: typeof docs[0].heroImage === 'object' && docs[0].heroImage?.url 
-        ? [{ url: docs[0].heroImage.url }]
+      title,
+      description,
+      images: typeof product.heroImage === 'object' && product.heroImage?.url 
+        ? [{ url: product.heroImage.url }]
         : undefined,
     }
   }
@@ -124,46 +124,37 @@ export default async function ProductPage({ params }: Args) {
   const { docs } = await payload.find({
     collection: 'products',
     where: { slug: { equals: slug } },
-    depth: 1,
+    depth: 2, // Aumentamos profundidad para traer datos de 'relatedProducts'
   })
 
-  const product = docs[0]
+  const product = docs[0] as Product
 
   if (!product) return notFound()
 
-  // Manejo seguro de URLs
   const heroUrl = typeof product.heroImage === 'object' && product.heroImage?.url ? product.heroImage.url : null
   const logoUrl = typeof product.logo === 'object' && product.logo?.url ? product.logo.url : null
 
-  // ✅ DATOS ESTRUCTURADOS (JSON-LD) para Aplicación de Software
+  // JSON-LD
   const softwareJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: product.name,
     description: product.shortDescription,
     applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web, Cloud', // Ajustar según el caso
+    operatingSystem: 'Web, Cloud', 
     offers: {
       '@type': 'Offer',
-      price: '0', // 0 si es a consultar o demo
+      price: '0', 
       priceCurrency: 'EUR',
       availability: product.status === 'live' ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
     },
-    author: {
-        '@type': 'Organization',
-        name: 'OHCodex'
-    },
+    author: { '@type': 'Organization', name: 'OHCodex' },
     ...(heroUrl && { image: heroUrl }),
   }
 
   return (
     <article className="min-h-screen bg-black pt-24 pb-16">
-      
-      {/* Inyectamos los datos para Google */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
 
       <div className="container px-4 mx-auto">
         <div className="mb-8">
@@ -174,18 +165,12 @@ export default async function ProductPage({ params }: Args) {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           
-          {/* COLUMNA IZQUIERDA: Info Principal */}
+          {/* COLUMNA PRINCIPAL */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-4 mb-6">
               {logoUrl && (
                 <div className="relative h-16 w-16 shrink-0 rounded-xl bg-zinc-900/50 border border-white/10 overflow-hidden p-2">
-                    <Image 
-                        src={logoUrl} 
-                        alt={`Logo de ${product.name}`}
-                        fill
-                        className="object-contain p-1"
-                        sizes="64px"
-                    />
+                    <Image src={logoUrl} alt={`Logo ${product.name}`} fill className="object-contain p-1" sizes="64px" />
                 </div>
               )}
               <div>
@@ -200,16 +185,15 @@ export default async function ProductPage({ params }: Args) {
               </div>
             </div>
 
-            {/* ✅ HERO IMAGE OPTIMIZADA CON NEXT/IMAGE */}
             {heroUrl ? (
               <div className="relative w-full aspect-video rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl shadow-cyan-900/10 mb-10 group">
                 <Image 
                   src={heroUrl} 
-                  alt={`Interfaz o captura de ${product.name}`}
-                  fill
+                  alt={`Interfaz de ${product.name}`} 
+                  fill 
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
-                  priority // Carga prioritaria para mejorar LCP
+                  sizes="(max-width: 768px) 100vw, 800px"
+                  priority 
                 />
               </div>
             ) : (
@@ -218,50 +202,91 @@ export default async function ProductPage({ params }: Args) {
               </div>
             )}
 
-            {/* DESCRIPCIÓN RICA (LEXICAL) */}
             <div className="prose prose-invert max-w-none prose-p:text-zinc-400 prose-headings:text-white prose-a:text-cyan-400">
               <h2 className="text-2xl font-bold text-white mb-4">Sobre el Proyecto</h2>
               {product.description && 'root' in product.description && (
                 <SerializeLexical nodes={(product.description.root as any).children} />
               )}
             </div>
+
+            {/* ✅ SECCIÓN PRODUCTOS RELACIONADOS (Nuevo) */}
+            {product.relatedProducts && product.relatedProducts.length > 0 && (
+              <div className="mt-20 pt-10 border-t border-white/10">
+                <h3 className="text-2xl font-bold text-white mb-6">Otros Proyectos Similares</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {product.relatedProducts.map((related) => {
+                    // Type guard para asegurar que es un objeto producto y no solo un ID
+                    if (typeof related !== 'object' || related === null) return null
+                    // Type guard adicional para asegurar que tiene slug
+                    if (!('slug' in related)) return null
+
+                    const relLogo = typeof related.logo === 'object' && related.logo?.url ? related.logo.url : null
+
+                    return (
+                      <Link 
+                        key={related.id} 
+                        href={`/products/${related.slug}`}
+                        className="group flex items-start gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900 hover:border-cyan-500/30 transition-all"
+                      >
+                        <div className="h-12 w-12 shrink-0 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden p-2">
+                           {relLogo ? (
+                             <Image src={relLogo} alt={related.name} width={32} height={32} className="object-contain" />
+                           ) : (
+                             <Rocket className="h-6 w-6 text-zinc-500" />
+                           )}
+                        </div>
+                        <div>
+                          <h4 className="text-white font-semibold group-hover:text-cyan-400 transition-colors">
+                            {related.name}
+                          </h4>
+                          <p className="text-sm text-zinc-500 line-clamp-2 mt-1">
+                            {related.shortDescription}
+                          </p>
+                        </div>
+                        <ArrowRight className="ml-auto h-5 w-5 text-zinc-600 group-hover:text-cyan-500 opacity-0 group-hover:opacity-100 transition-all self-center" />
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
           </div>
 
-          {/* COLUMNA DERECHA: Sidebar / Metadatos */}
+          {/* COLUMNA SIDEBAR */}
           <div className="lg:col-span-1 space-y-8">
-            
-            {/* CTA / Enlace */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 backdrop-blur-sm">
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 backdrop-blur-sm sticky top-24">
               <h3 className="text-white font-semibold mb-4">Ficha Técnica</h3>
               
               {product.projectUrl ? (
-                <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white mb-4" asChild>
+                <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white mb-6 shadow-lg shadow-cyan-900/20" asChild>
                   <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
                     Visitar Sitio Web <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
               ) : (
-                <Button disabled className="w-full bg-zinc-800 text-zinc-500 border border-zinc-700">
-                  Acceso Privado / En Desarrollo
+                <Button disabled className="w-full bg-zinc-800 text-zinc-500 border border-zinc-700 mb-6">
+                  En Desarrollo
                 </Button>
               )}
-            </div>
 
-            {/* Tecnologías */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 backdrop-blur-sm">
-              <div className="flex items-center gap-2 mb-4 text-white font-semibold">
-                <Layers className="h-5 w-5 text-cyan-500" /> Stack Tecnológico
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {product.technologies?.map((tech, i) => (
-                  <span key={i} className="px-3 py-1 rounded-md bg-zinc-950 border border-zinc-800 text-sm text-zinc-400 font-mono">
-                    {tech.name}
-                  </span>
-                ))}
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center gap-2 text-white font-medium mb-3">
+                    <Layers className="h-4 w-4 text-cyan-500" /> Stack Tecnológico
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {product.technologies?.map((tech, i) => (
+                      <span key={i} className="px-2.5 py-1 rounded text-xs bg-zinc-950 border border-zinc-800 text-zinc-400 font-mono">
+                        {tech.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-
           </div>
+
         </div>
       </div>
     </article>

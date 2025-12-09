@@ -1,95 +1,104 @@
+// ========== src/app/(frontend)/layout.tsx ========== //
+
 import React from 'react'
 import '../globals.css'
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import type { CompanyInfo } from '@/payload-types'
 
 const inter = Inter({ subsets: ['latin'] })
 
 // URL base para producción
 const getServerUrl = () => process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
 
-// ✅ NUEVA IMAGEN (Optimizada para WhatsApp/LinkedIn)
-// Hemos añadido 'w_1200,h_630,c_fill,q_auto' para asegurar que pese poco y tenga el tamaño perfecto.
+// Imagen Social por defecto (Fallback)
 const SOCIAL_IMAGE_URL = 'https://res.cloudinary.com/dpp6gyfao/image/upload/w_1200,h_630,c_fill,q_auto/v1765156811/ohcodex-media/jz9fdr3w83as6gxi40fq.jpg'
 
-// Configuración SEO Global
-export const metadata: Metadata = {
-  metadataBase: new URL(getServerUrl()),
+// ✅ CAMBIO: Ahora es una función asíncrona que lee de la BD
+export async function generateMetadata(): Promise<Metadata> {
+  const payload = await getPayload({ config: configPromise })
   
-  title: {
-    default: 'OHCodex | Desarrollo de Software a Medida y Sistemas SaaS',
-    template: '%s | OHCodex - Ingeniería de Software',
-  },
+  // Obtenemos la configuración global
+  const company = (await payload.findGlobal({
+    slug: 'company-info' as any,
+  })) as unknown as CompanyInfo
+
+  // Valores dinámicos con fallback
+  const title = company?.defaultTitle || 'OHCodex | Desarrollo de Software a Medida'
+  const titleTemplate = company?.titleTemplate || '%s | OHCodex'
+  const description = company?.defaultDescription || 'Empresa de desarrollo de software especializada en PWAs y arquitecturas SaaS.'
   
-  description: 'Empresa de desarrollo de software especializada en PWAs, arquitecturas SaaS escalables y transformación digital. Expertos en React, Next.js y Cloud Native.',
-  
-  keywords: [
-    'Desarrollo de Software España',
-    'Agencia Desarrollo SaaS',
-    'Consultoría Tecnológica Alicante',
-    'Aplicaciones Web Progresivas (PWA)',
-    'Next.js Experts',
-    'Payload CMS Developers',
-    'Arquitectura de Software Escalable',
-    'Desarrollo Web a Medida',
-    'React',
-    'PostgreSQL'
-  ],
-  
-  authors: [{ name: 'OHCodex Team', url: 'https://ohcodex.com' }],
-  creator: 'OHCodex',
-  
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+  // Mapeamos las keywords del array de objetos a un array de strings
+  const keywords = company?.keywords?.map(k => k.keyword).filter((k): k is string => !!k) || [
+    'Desarrollo de Software', 'SaaS', 'PWA', 'Next.js'
+  ]
+
+  return {
+    metadataBase: new URL(getServerUrl()),
+    
+    title: {
+      default: title,
+      template: titleTemplate,
+    },
+    
+    description,
+    
+    keywords,
+    
+    authors: [{ name: 'OHCodex Team', url: getServerUrl() }],
+    creator: 'OHCodex',
+    
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-
-  // Canonical URL (Importante para Google)
-  alternates: {
-    canonical: './',
-  },
-
-  // Open Graph (Facebook, LinkedIn, WhatsApp)
-  openGraph: {
-    type: 'website',
-    locale: 'es_ES',
-    url: '/',
-    siteName: 'OHCodex',
-    title: 'OHCodex | Arquitectos de Ecosistemas Digitales',
-    description: 'Transformamos negocios con software a medida de alto rendimiento.',
-    images: [
-      {
-        url: SOCIAL_IMAGE_URL,
-        width: 1200,
-        height: 630,
-        alt: 'OHCodex Software Development',
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
-    ],
-  },
+    },
 
-  // Twitter Cards (X)
-  twitter: {
-    card: 'summary_large_image',
-    title: 'OHCodex | Desarrollo de Software Avanzado',
-    description: 'Ingeniería de software para empresas ambiciosas. PWA, SaaS y APIs.',
-    creator: '@ohcodex',
-    images: [SOCIAL_IMAGE_URL],
-  },
-  
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-  },
+    alternates: {
+      canonical: './',
+    },
+
+    openGraph: {
+      type: 'website',
+      locale: 'es_ES',
+      url: '/',
+      siteName: 'OHCodex',
+      title: title,
+      description: description,
+      images: [
+        {
+          url: SOCIAL_IMAGE_URL,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
+      creator: '@ohcodex',
+      images: [SOCIAL_IMAGE_URL],
+    },
+    
+    icons: {
+      icon: '/favicon.ico',
+      shortcut: '/favicon-16x16.png',
+      apple: '/apple-touch-icon.png',
+    },
+  }
 }
 
 export default function FrontendLayout({

@@ -9,49 +9,50 @@
 5. README.md
 6. components.json
 7. next-env.d.ts
-8. package-lock.json
-9. package.json
-10. postcss.config.js
-11. src/app/(frontend)/actions.ts
-12. src/app/(frontend)/aviso-legal/page.tsx
-13. src/app/(frontend)/layout.tsx
-14. src/app/(frontend)/not-found.tsx
-15. src/app/(frontend)/page.tsx
-16. src/app/(frontend)/privacidad/page.tsx
-17. src/app/(frontend)/products/[slug]/page.tsx
-18. src/app/(frontend)/terminos/page.tsx
-19. src/app/(payload)/admin/[[...segments]]/not-found.tsx
-20. src/app/(payload)/admin/[[...segments]]/page.tsx
-21. src/app/(payload)/admin/importMap.js
-22. src/app/(payload)/api/[...slug]/route.ts
-23. src/app/(payload)/api/graphql-playground/route.ts
-24. src/app/(payload)/api/graphql/route.ts
-25. src/app/(payload)/layout.tsx
-26. src/app/globals.css
-27. src/app/my-route/route.ts
-28. src/app/robots.ts
-29. src/app/sitemap.ts
-30. src/collections/ContactSubmissions.ts
-31. src/collections/Media.ts
-32. src/collections/Products.ts
-33. src/collections/Users.ts
-34. src/components/layout/Footer.tsx
-35. src/components/layout/Header.tsx
-36. src/components/sections/Contact.tsx
-37. src/components/sections/Features.tsx
-38. src/components/sections/Hero.tsx
-39. src/components/sections/Products.tsx
-40. src/components/ui/badge.tsx
-41. src/components/ui/button.tsx
-42. src/globals/Company.ts
-43. src/globals/Landing.ts
-44. src/globals/Legal.ts
-45. src/lib/cloudinaryAdapter.ts
-46. src/lib/utils.ts
-47. src/payload-types.ts
-48. src/payload.config.ts
-49. tailwind.config.js
-50. tsconfig.json
+8. next.config.ts
+9. package-lock.json
+10. package.json
+11. postcss.config.js
+12. src/app/(frontend)/actions.ts
+13. src/app/(frontend)/aviso-legal/page.tsx
+14. src/app/(frontend)/layout.tsx
+15. src/app/(frontend)/not-found.tsx
+16. src/app/(frontend)/page.tsx
+17. src/app/(frontend)/privacidad/page.tsx
+18. src/app/(frontend)/products/[slug]/page.tsx
+19. src/app/(frontend)/terminos/page.tsx
+20. src/app/(payload)/admin/[[...segments]]/not-found.tsx
+21. src/app/(payload)/admin/[[...segments]]/page.tsx
+22. src/app/(payload)/admin/importMap.js
+23. src/app/(payload)/api/[...slug]/route.ts
+24. src/app/(payload)/api/graphql-playground/route.ts
+25. src/app/(payload)/api/graphql/route.ts
+26. src/app/(payload)/layout.tsx
+27. src/app/globals.css
+28. src/app/my-route/route.ts
+29. src/app/robots.ts
+30. src/app/sitemap.ts
+31. src/collections/ContactSubmissions.ts
+32. src/collections/Media.ts
+33. src/collections/Products.ts
+34. src/collections/Users.ts
+35. src/components/layout/Footer.tsx
+36. src/components/layout/Header.tsx
+37. src/components/sections/Contact.tsx
+38. src/components/sections/Features.tsx
+39. src/components/sections/Hero.tsx
+40. src/components/sections/Products.tsx
+41. src/components/ui/badge.tsx
+42. src/components/ui/button.tsx
+43. src/globals/Company.ts
+44. src/globals/Landing.ts
+45. src/globals/Legal.ts
+46. src/lib/cloudinaryAdapter.ts
+47. src/lib/utils.ts
+48. src/payload-types.ts
+49. src/payload.config.ts
+50. tailwind.config.js
+51. tsconfig.json
 
 
 ==================================================
@@ -196,7 +197,13 @@ blank
 
 // ========== Fin de next-env.d.ts ========== //
 
-// ========== [8] package-lock.json ========== //
+// ========== [8] next.config.ts ========== //
+
+
+
+// ========== Fin de next.config.ts ========== //
+
+// ========== [9] package-lock.json ========== //
 
 {
   "name": "ohcodex",
@@ -13733,7 +13740,7 @@ blank
 
 // ========== Fin de package-lock.json ========== //
 
-// ========== [9] package.json ========== //
+// ========== [10] package.json ========== //
 
 {
 "name": "ohcodex",
@@ -13795,7 +13802,7 @@ blank
 
 // ========== Fin de package.json ========== //
 
-// ========== [10] postcss.config.js ========== //
+// ========== [11] postcss.config.js ========== //
 
 export default {
   plugins: {
@@ -13806,7 +13813,7 @@ export default {
 
 // ========== Fin de postcss.config.js ========== //
 
-// ========== [11] src/app/(frontend)/actions.ts ========== //
+// ========== [12] src/app/(frontend)/actions.ts ========== //
 
 'use server'
 
@@ -13872,27 +13879,32 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
 
 // ========== Fin de src/app/(frontend)/actions.ts ========== //
 
-// ========== [12] src/app/(frontend)/aviso-legal/page.tsx ========== //
-
-// ========== src/app/(frontend)/aviso-legal/page.tsx ========== //
+// ========== [13] src/app/(frontend)/aviso-legal/page.tsx ========== //
 
 import React from 'react'
 import { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-// CORRECCIÓN: Importamos 'LegalText' (singular) según sugiere el error
 import type { LegalText } from '@/payload-types'
-export const dynamic = 'force-dynamic'
+
+// ✅ CAMBIO: De 'force-dynamic' a ISR (mucho más rápido)
+export const revalidate = 3600 // 1 hora (el legal cambia poco)
 
 export const metadata: Metadata = {
   title: 'Aviso Legal',
   description: 'Información legal y titularidad del sitio web OHCodex.',
+  robots: {
+    index: false, // Opcional: A veces no interesa que Google indexe el texto legal para no "diluir" las keywords importantes, pero puedes dejarlo en true si prefieres.
+    follow: true,
+  },
 }
 
-// --- Helper para renderizar texto enriquecido del CMS ---
+// ... (El resto del componente SerializeLexical y AvisoLegalPage se queda igual)
+// Solo asegúrate de copiar el componente completo si no quieres editar solo la cabecera.
+// Aquí te dejo el componente completo para copiar/pegar y no fallar:
+
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
-
   return (
     <>
       {nodes.map((node, i) => {
@@ -13903,9 +13915,7 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
           if (node.format & 8) text = <u key={i} className="underline">{text}</u>
           return text
         }
-
         if (!node) return null
-
         switch (node.type) {
           case 'heading':
             const Tag = node.tag as any
@@ -13929,8 +13939,6 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
 
 export default async function AvisoLegalPage() {
   const payload = await getPayload({ config: configPromise })
-  
-  // CORRECCIÓN: Usamos 'LegalText' en el casting
   const legal = (await payload.findGlobal({
     slug: 'legal-texts' as any,
   })) as unknown as LegalText
@@ -13939,15 +13947,11 @@ export default async function AvisoLegalPage() {
     <div className="bg-black min-h-screen py-24">
       <div className="container px-4 mx-auto max-w-4xl">
         <h1 className="text-3xl font-bold text-white mb-8">Aviso Legal</h1>
-        
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* Renderizado condicional */}
           {legal?.legalNotice && 'root' in legal.legalNotice ? (
             <SerializeLexical nodes={(legal.legalNotice.root as any).children} />
           ) : (
-            <p className="text-zinc-500 italic">
-              Contenido pendiente de redacción en el panel de administración.
-            </p>
+            <p className="text-zinc-500 italic">Contenido pendiente...</p>
           )}
         </div>
       </div>
@@ -13957,18 +13961,7 @@ export default async function AvisoLegalPage() {
 
 // ========== Fin de src/app/(frontend)/aviso-legal/page.tsx ========== //
 
-// ========== Fin de src/app/(frontend)/aviso-legal/page.tsx ========== //
-
-// ========== [13] src/app/(frontend)/layout.tsx ========== //
-
-// ========== src/app/(frontend)/layout.tsx ========== //
-
-// -----------------------------------------------------------------------------
-// Archivo: src/app/(frontend)/layout.tsx
-// Versión: 1.2.0 - SEO & Open Graph
-// Descripción: Layout principal con configuración de metadatos robusta para
-// indexación en Google y tarjetas sociales (LinkedIn/WhatsApp).
-// -----------------------------------------------------------------------------
+// ========== [14] src/app/(frontend)/layout.tsx ========== //
 
 import React from 'react'
 import '../globals.css'
@@ -13979,29 +13972,88 @@ import { Footer } from '@/components/layout/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
+// URL base para producción
+const getServerUrl = () => process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
+
+// ✅ NUEVA IMAGEN (Optimizada para WhatsApp/LinkedIn)
+// Hemos añadido 'w_1200,h_630,c_fill,q_auto' para asegurar que pese poco y tenga el tamaño perfecto.
+const SOCIAL_IMAGE_URL = 'https://res.cloudinary.com/dpp6gyfao/image/upload/w_1200,h_630,c_fill,q_auto/v1765156811/ohcodex-media/jz9fdr3w83as6gxi40fq.jpg'
+
 // Configuración SEO Global
 export const metadata: Metadata = {
-  // IMPORTANTE: Cambia esta URL por tu dominio real cuando lo tengas (o la URL de Render)
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'),
+  metadataBase: new URL(getServerUrl()),
+  
   title: {
-    default: 'OHCodex | Arquitectos de Ecosistemas Digitales',
-    template: '%s | OHCodex', // Esto hace que las subpáginas sean "AquaClean | OHCodex"
+    default: 'OHCodex | Desarrollo de Software a Medida y Sistemas SaaS',
+    template: '%s | OHCodex - Ingeniería de Software',
   },
-  description: 'Desarrollo de software a medida, PWAs y sistemas SaaS. Especialistas en React, Next.js y arquitecturas escalables.',
-  keywords: ['Software Development', 'SaaS', 'PWA', 'Next.js', 'React', 'Payload CMS', 'Consultoría Tecnológica'],
-  authors: [{ name: 'OHCodex Team' }],
+  
+  description: 'Empresa de desarrollo de software especializada en PWAs, arquitecturas SaaS escalables y transformación digital. Expertos en React, Next.js y Cloud Native.',
+  
+  keywords: [
+    'Desarrollo de Software España',
+    'Agencia Desarrollo SaaS',
+    'Consultoría Tecnológica Alicante',
+    'Aplicaciones Web Progresivas (PWA)',
+    'Next.js Experts',
+    'Payload CMS Developers',
+    'Arquitectura de Software Escalable',
+    'Desarrollo Web a Medida',
+    'React',
+    'PostgreSQL'
+  ],
+  
+  authors: [{ name: 'OHCodex Team', url: 'https://ohcodex.com' }],
+  creator: 'OHCodex',
+  
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+
+  // Canonical URL (Importante para Google)
+  alternates: {
+    canonical: './',
+  },
+
+  // Open Graph (Facebook, LinkedIn, WhatsApp)
   openGraph: {
-    title: 'OHCodex | Software Development',
-    description: 'Transformamos negocios con software a medida de alto rendimiento.',
+    type: 'website',
+    locale: 'es_ES',
     url: '/',
     siteName: 'OHCodex',
-    locale: 'es_ES',
-    type: 'website',
+    title: 'OHCodex | Arquitectos de Ecosistemas Digitales',
+    description: 'Transformamos negocios con software a medida de alto rendimiento.',
+    images: [
+      {
+        url: SOCIAL_IMAGE_URL,
+        width: 1200,
+        height: 630,
+        alt: 'OHCodex Software Development',
+      },
+    ],
   },
+
+  // Twitter Cards (X)
   twitter: {
     card: 'summary_large_image',
-    title: 'OHCodex',
-    description: 'Arquitectos de Ecosistemas Digitales.',
+    title: 'OHCodex | Desarrollo de Software Avanzado',
+    description: 'Ingeniería de software para empresas ambiciosas. PWA, SaaS y APIs.',
+    creator: '@ohcodex',
+    images: [SOCIAL_IMAGE_URL],
+  },
+  
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
   },
 }
 
@@ -14032,9 +14084,7 @@ export default function FrontendLayout({
 
 // ========== Fin de src/app/(frontend)/layout.tsx ========== //
 
-// ========== Fin de src/app/(frontend)/layout.tsx ========== //
-
-// ========== [14] src/app/(frontend)/not-found.tsx ========== //
+// ========== [15] src/app/(frontend)/not-found.tsx ========== //
 
 // ========== src/app/(frontend)/not-found.tsx ========== //
 
@@ -14089,7 +14139,9 @@ export default function NotFound() {
 
 // ========== Fin de src/app/(frontend)/not-found.tsx ========== //
 
-// ========== [15] src/app/(frontend)/page.tsx ========== //
+// ========== [16] src/app/(frontend)/page.tsx ========== //
+
+// ========== src/app/(frontend)/page.tsx ========== //
 
 import React from 'react'
 import { getPayload } from 'payload'
@@ -14100,33 +14152,39 @@ import { FeaturesSection } from '@/components/sections/Features'
 import { ContactSection } from '@/components/sections/Contact'
 import type { CompanyInfo } from '@/payload-types'
 
-// Forzamos que la página se regenere en cada visita para tener datos frescos
-export const dynamic = 'force-dynamic'
+// --- CAMBIO IMPORTANTE PARA SEO Y VELOCIDAD ---
+// Antes: export const dynamic = 'force-dynamic' (Lento 🐢)
+// Ahora: Revalidación cada 600 segundos (10 minutos). (Rápido 🚀)
+// Google recibirá una respuesta instantánea (HTML estático) y tus datos se actualizarán solos.
+export const revalidate = 600 
 
 export default async function HomePage() {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Recuperamos los datos de la empresa
+  // 1. Recuperamos los datos de la empresa para el JSON-LD y el contacto
+  // Usamos 'as any' en el slug para evitar conflictos de tipado estricto si el tipo global no coincide perfectamente
   const company = (await payload.findGlobal({
     slug: 'company-info' as any,
   })) as unknown as CompanyInfo
 
+  // URL base para los metadatos
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
   
-  // Gestión segura del logo
+  // Gestión segura del logo para los datos estructurados
   const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
     ? company.logo.url 
-    : `${baseUrl}/logo.png`
+    : `${baseUrl}/logo.png` // Asegúrate de tener un logo.png en /public también si quieres que esto funcione perfecto
 
-  // Metadatos para Google
+  // 2. DATOS ESTRUCTURADOS (JSON-LD)
+  // Esto es lo que lee Google para mostrar "fichas ricas" a la derecha en los resultados
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
+    '@type': 'ProfessionalService', // O 'SoftwareHouse'
     name: 'OHCodex',
     url: baseUrl,
     logo: logoUrl,
     image: logoUrl,
-    description: company?.description || 'Ingeniería de software avanzada.',
+    description: company?.description || 'Ingeniería de software avanzada y desarrollo de productos digitales.',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Jávea',
@@ -14138,31 +14196,33 @@ export default async function HomePage() {
       '@type': 'ContactPoint',
       telephone: company?.phoneNumber,
       contactType: 'customer service',
-      email: company?.contactEmail, // Email para SEO
+      email: company?.contactEmail,
       areaServed: 'ES',
       availableLanguage: ['es', 'en'],
     },
+    // Enlaces a redes sociales para que Google conecte tu entidad
     sameAs: [
       company?.linkedin,
       company?.github,
       company?.twitter,
-    ].filter(Boolean),
-    priceRange: '$$$',
+    ].filter(Boolean), // Elimina los que estén vacíos
+    priceRange: '$$$', // Indica rango de precios (opcional)
   }
 
   return (
     <>
+      {/* Inyección del Script JSON-LD para Google */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      {/* Secciones Visuales */}
       <Hero />
       <ProductsSection />
       <FeaturesSection />
       
-      {/* --- AQUÍ ESTÁ LA CLAVE --- */}
-      {/* Pasamos el email recuperado de la BD al componente visual */}
+      {/* Pasamos el email real recuperado de la BD */}
       <ContactSection email={company?.contactEmail || 'info@ohcodex.com'} />
     </>
   )
@@ -14170,20 +14230,20 @@ export default async function HomePage() {
 
 // ========== Fin de src/app/(frontend)/page.tsx ========== //
 
-// ========== [16] src/app/(frontend)/privacidad/page.tsx ========== //
-
-// ========== src/app/(frontend)/privacidad/page.tsx ========== //
+// ========== [17] src/app/(frontend)/privacidad/page.tsx ========== //
 
 import React from 'react'
 import { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
-export const dynamic = 'force-dynamic'
+
+// ✅ CAMBIO: Optimización de velocidad
+export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidad',
-  description: 'Política de tratamiento de datos personales de OHCodex.',
+  title: 'Términos y Condiciones',
+  description: 'Condiciones de uso de los servicios y software de OHCodex.',
 }
 
 // --- Helper para renderizar texto enriquecido ---
@@ -14224,10 +14284,9 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   )
 }
 
-export default async function PrivacidadPage() {
+export default async function TerminosPage() {
   const payload = await getPayload({ config: configPromise })
   
-  // Obtenemos los textos legales globales
   const legal = (await payload.findGlobal({
     slug: 'legal-texts' as any,
   })) as unknown as LegalText
@@ -14235,15 +14294,14 @@ export default async function PrivacidadPage() {
   return (
     <div className="bg-black min-h-screen py-24">
       <div className="container px-4 mx-auto max-w-4xl">
-        <h1 className="text-3xl font-bold text-white mb-8">Política de Privacidad</h1>
+        <h1 className="text-3xl font-bold text-white mb-8">Términos y Condiciones</h1>
         
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* Campo: privacyPolicy */}
-          {legal?.privacyPolicy && 'root' in legal.privacyPolicy ? (
-            <SerializeLexical nodes={(legal.privacyPolicy.root as any).children} />
+          {legal?.termsConditions && 'root' in legal.termsConditions ? (
+            <SerializeLexical nodes={(legal.termsConditions.root as any).children} />
           ) : (
             <p className="text-zinc-500 italic">
-              Política de privacidad pendiente de redacción en el panel de administración.
+              Términos y condiciones pendientes de redacción en el panel de administración.
             </p>
           )}
         </div>
@@ -14254,9 +14312,7 @@ export default async function PrivacidadPage() {
 
 // ========== Fin de src/app/(frontend)/privacidad/page.tsx ========== //
 
-// ========== Fin de src/app/(frontend)/privacidad/page.tsx ========== //
-
-// ========== [17] src/app/(frontend)/products/[slug]/page.tsx ========== //
+// ========== [18] src/app/(frontend)/products/[slug]/page.tsx ========== //
 
 // ========== src/app/(frontend)/products/[slug]/page.tsx ========== //
 
@@ -14268,9 +14324,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ExternalLink, Layers } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image' // ✅ Importamos el componente optimizado
 import { Metadata } from 'next'
 
-// --- HELPER: Serializador Básico para Lexical (Rich Text) ---
+// --- ISR: Actualización en segundo plano cada 10 min ---
+export const revalidate = 600
+
+// --- HELPER: Serializador Básico para Rich Text ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
 
@@ -14279,7 +14339,6 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
       {nodes.map((node, i) => {
         if (node.type === 'text') {
           let text = <span key={i}>{node.text}</span>
-          // Bitwise checks for formatting (bold, italic, etc.)
           if (node.format & 1) text = <strong key={i} className="font-bold text-white">{text}</strong>
           if (node.format & 2) text = <em key={i} className="italic">{text}</em>
           if (node.format & 8) text = <u key={i} className="underline">{text}</u>
@@ -14290,7 +14349,6 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
 
         switch (node.type) {
           case 'heading':
-            // CORRECCIÓN: Usamos 'any' para evitar conflictos de tipado estricto con JSX dinámico
             const Tag = node.tag as any
             const sizes: Record<string, string> = { 
               h1: 'text-3xl mt-8 mb-4 text-white', 
@@ -14331,13 +14389,26 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   )
 }
 
+// --- GENERACIÓN DE RUTAS ESTÁTICAS (Súper Velocidad) ---
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  const { docs: products } = await payload.find({
+    collection: 'products',
+    depth: 0,
+    limit: 100,
+  })
+
+  return products.map((product) => ({
+    slug: product.slug,
+  }))
+}
+
 // --- LÓGICA DE PÁGINA ---
 
 interface Args {
   params: Promise<{ slug: string }>
 }
 
-// 1. Generar Metadatos Dinámicos (SEO)
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
@@ -14349,35 +14420,67 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   if (!docs[0]) return { title: 'Producto no encontrado' }
 
   return {
-    title: `${docs[0].name} | OHCodex`,
+    title: `${docs[0].name} | OHCodex Software`,
     description: docs[0].shortDescription,
+    openGraph: {
+      title: `${docs[0].name} - Solución de Software OHCodex`,
+      description: docs[0].shortDescription,
+      // Usamos la imagen hero si existe, o la default
+      images: typeof docs[0].heroImage === 'object' && docs[0].heroImage?.url 
+        ? [{ url: docs[0].heroImage.url }]
+        : undefined,
+    }
   }
 }
 
-// 2. Componente de Página
 export default async function ProductPage({ params }: Args) {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
 
-  // Buscar producto por slug
   const { docs } = await payload.find({
     collection: 'products',
     where: { slug: { equals: slug } },
-    depth: 1, // Traer imágenes completas
+    depth: 1,
   })
 
   const product = docs[0]
 
   if (!product) return notFound()
 
-  // Manejo seguro de imágenes
+  // Manejo seguro de URLs
   const heroUrl = typeof product.heroImage === 'object' && product.heroImage?.url ? product.heroImage.url : null
   const logoUrl = typeof product.logo === 'object' && product.logo?.url ? product.logo.url : null
+
+  // ✅ DATOS ESTRUCTURADOS (JSON-LD) para Aplicación de Software
+  const softwareJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: product.name,
+    description: product.shortDescription,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web, Cloud', // Ajustar según el caso
+    offers: {
+      '@type': 'Offer',
+      price: '0', // 0 si es a consultar o demo
+      priceCurrency: 'EUR',
+      availability: product.status === 'live' ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+    },
+    author: {
+        '@type': 'Organization',
+        name: 'OHCodex'
+    },
+    ...(heroUrl && { image: heroUrl }),
+  }
 
   return (
     <article className="min-h-screen bg-black pt-24 pb-16">
       
-      {/* HEADER DE PRODUCTO */}
+      {/* Inyectamos los datos para Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
+      />
+
       <div className="container px-4 mx-auto">
         <div className="mb-8">
           <Link href="/#productos" className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors">
@@ -14390,7 +14493,17 @@ export default async function ProductPage({ params }: Args) {
           {/* COLUMNA IZQUIERDA: Info Principal */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-4 mb-6">
-              {logoUrl && <img src={logoUrl} alt="Logo" className="h-16 w-16 object-contain rounded-xl bg-zinc-900/50 p-2 border border-white/10" />}
+              {logoUrl && (
+                <div className="relative h-16 w-16 shrink-0 rounded-xl bg-zinc-900/50 border border-white/10 overflow-hidden p-2">
+                    <Image 
+                        src={logoUrl} 
+                        alt={`Logo de ${product.name}`}
+                        fill
+                        className="object-contain p-1"
+                        sizes="64px"
+                    />
+                </div>
+              )}
               <div>
                 <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl mb-2">
                   {product.name}
@@ -14403,13 +14516,16 @@ export default async function ProductPage({ params }: Args) {
               </div>
             </div>
 
-            {/* HERO IMAGE (SCREENSHOT) */}
+            {/* ✅ HERO IMAGE OPTIMIZADA CON NEXT/IMAGE */}
             {heroUrl ? (
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl shadow-cyan-900/10 mb-10 group">
-                <img 
+              <div className="relative w-full aspect-video rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl shadow-cyan-900/10 mb-10 group">
+                <Image 
                   src={heroUrl} 
-                  alt={`Captura de ${product.name}`} 
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                  alt={`Interfaz o captura de ${product.name}`}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
+                  priority // Carga prioritaria para mejorar LCP
                 />
               </div>
             ) : (
@@ -14470,9 +14586,7 @@ export default async function ProductPage({ params }: Args) {
 
 // ========== Fin de src/app/(frontend)/products/[slug]/page.tsx ========== //
 
-// ========== Fin de src/app/(frontend)/products/[slug]/page.tsx ========== //
-
-// ========== [18] src/app/(frontend)/terminos/page.tsx ========== //
+// ========== [19] src/app/(frontend)/terminos/page.tsx ========== //
 
 // ========== src/app/(frontend)/terminos/page.tsx ========== //
 
@@ -14558,7 +14672,7 @@ export default async function TerminosPage() {
 
 // ========== Fin de src/app/(frontend)/terminos/page.tsx ========== //
 
-// ========== [19] src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
+// ========== [20] src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14588,7 +14702,7 @@ export default NotFound
 
 // ========== Fin de src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
 
-// ========== [20] src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
+// ========== [21] src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14618,7 +14732,7 @@ export default Page
 
 // ========== Fin de src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
 
-// ========== [21] src/app/(payload)/admin/importMap.js ========== //
+// ========== [22] src/app/(payload)/admin/importMap.js ========== //
 
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -14671,7 +14785,7 @@ export const importMap = {
 
 // ========== Fin de src/app/(payload)/admin/importMap.js ========== //
 
-// ========== [22] src/app/(payload)/api/[...slug]/route.ts ========== //
+// ========== [23] src/app/(payload)/api/[...slug]/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14696,7 +14810,7 @@ export const OPTIONS = REST_OPTIONS(config)
 
 // ========== Fin de src/app/(payload)/api/[...slug]/route.ts ========== //
 
-// ========== [23] src/app/(payload)/api/graphql-playground/route.ts ========== //
+// ========== [24] src/app/(payload)/api/graphql-playground/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14709,7 +14823,7 @@ export const GET = GRAPHQL_PLAYGROUND_GET(config)
 
 // ========== Fin de src/app/(payload)/api/graphql-playground/route.ts ========== //
 
-// ========== [24] src/app/(payload)/api/graphql/route.ts ========== //
+// ========== [25] src/app/(payload)/api/graphql/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14723,7 +14837,7 @@ export const OPTIONS = REST_OPTIONS(config)
 
 // ========== Fin de src/app/(payload)/api/graphql/route.ts ========== //
 
-// ========== [25] src/app/(payload)/layout.tsx ========== //
+// ========== [26] src/app/(payload)/layout.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -14760,7 +14874,7 @@ export default Layout
 
 // ========== Fin de src/app/(payload)/layout.tsx ========== //
 
-// ========== [26] src/app/globals.css ========== //
+// ========== [27] src/app/globals.css ========== //
 
 @tailwind base;
 @tailwind components;
@@ -14824,7 +14938,7 @@ export default Layout
 
 // ========== Fin de src/app/globals.css ========== //
 
-// ========== [27] src/app/my-route/route.ts ========== //
+// ========== [28] src/app/my-route/route.ts ========== //
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -14844,7 +14958,7 @@ export const GET = async () => {
 
 // ========== Fin de src/app/my-route/route.ts ========== //
 
-// ========== [28] src/app/robots.ts ========== //
+// ========== [29] src/app/robots.ts ========== //
 
 // ========== src/app/robots.ts ========== //
 
@@ -14879,7 +14993,7 @@ export default function robots(): MetadataRoute.Robots {
 
 // ========== Fin de src/app/robots.ts ========== //
 
-// ========== [29] src/app/sitemap.ts ========== //
+// ========== [30] src/app/sitemap.ts ========== //
 
 // ========== src/app/sitemap.ts ========== //
 
@@ -14948,7 +15062,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 // ========== Fin de src/app/sitemap.ts ========== //
 
-// ========== [30] src/collections/ContactSubmissions.ts ========== //
+// ========== [31] src/collections/ContactSubmissions.ts ========== //
 
 // src/collections/ContactSubmissions.ts
 import type { CollectionConfig } from 'payload'
@@ -15008,7 +15122,7 @@ export const ContactSubmissions: CollectionConfig = {
 
 // ========== Fin de src/collections/ContactSubmissions.ts ========== //
 
-// ========== [31] src/collections/Media.ts ========== //
+// ========== [32] src/collections/Media.ts ========== //
 
 // ========== src/collections/Media.ts ========== //
 
@@ -15064,7 +15178,7 @@ export const Media: CollectionConfig = {
 
 // ========== Fin de src/collections/Media.ts ========== //
 
-// ========== [32] src/collections/Products.ts ========== //
+// ========== [33] src/collections/Products.ts ========== //
 
 import type { CollectionConfig } from 'payload'
 
@@ -15169,7 +15283,7 @@ export const Products: CollectionConfig = {
 
 // ========== Fin de src/collections/Products.ts ========== //
 
-// ========== [33] src/collections/Users.ts ========== //
+// ========== [34] src/collections/Users.ts ========== //
 
 import type { CollectionConfig } from 'payload'
 
@@ -15188,7 +15302,7 @@ export const Users: CollectionConfig = {
 
 // ========== Fin de src/collections/Users.ts ========== //
 
-// ========== [34] src/components/layout/Footer.tsx ========== //
+// ========== [35] src/components/layout/Footer.tsx ========== //
 
 // ========== src/components/layout/Footer.tsx ========== //
 
@@ -15322,7 +15436,7 @@ export async function Footer() {
 
 // ========== Fin de src/components/layout/Footer.tsx ========== //
 
-// ========== [35] src/components/layout/Header.tsx ========== //
+// ========== [36] src/components/layout/Header.tsx ========== //
 
 // ========== src/components/layout/Header.tsx ========== //
 
@@ -15374,7 +15488,7 @@ export function Header() {
 
 // ========== Fin de src/components/layout/Header.tsx ========== //
 
-// ========== [36] src/components/sections/Contact.tsx ========== //
+// ========== [37] src/components/sections/Contact.tsx ========== //
 
 'use client'
 
@@ -15554,7 +15668,7 @@ export function ContactSection({ email }: { email: string }) {
 
 // ========== Fin de src/components/sections/Contact.tsx ========== //
 
-// ========== [37] src/components/sections/Features.tsx ========== //
+// ========== [38] src/components/sections/Features.tsx ========== //
 
 // ========== src/components/sections/Features.tsx ========== //
 
@@ -15687,7 +15801,7 @@ export async function FeaturesSection() {
 
 // ========== Fin de src/components/sections/Features.tsx ========== //
 
-// ========== [38] src/components/sections/Hero.tsx ========== //
+// ========== [39] src/components/sections/Hero.tsx ========== //
 
 // ========== src/components/sections/Hero.tsx ========== //
 
@@ -15805,7 +15919,7 @@ export async function Hero() {
 
 // ========== Fin de src/components/sections/Hero.tsx ========== //
 
-// ========== [39] src/components/sections/Products.tsx ========== //
+// ========== [40] src/components/sections/Products.tsx ========== //
 
 // ========== src/components/sections/Products.tsx ========== //
 
@@ -15817,8 +15931,8 @@ import { ArrowUpRight, CheckCircle2, FlaskConical, Rocket, Timer } from 'lucide-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { LandingPage } from '@/payload-types'
+import Image from 'next/image' // Importamos Image para el logo si se usa
 
-// Función auxiliar para obtener el icono según el estado
 const getStatusConfig = (status: string) => {
   switch (status) {
     case 'live':
@@ -15835,12 +15949,10 @@ const getStatusConfig = (status: string) => {
 export async function ProductsSection() {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. OBTENER CONFIGURACIÓN GLOBAL
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
   })) as unknown as LandingPage
 
-  // 2. OBTENER LISTA DE PRODUCTOS
   const { docs: products } = await payload.find({
     collection: 'products',
     depth: 1, 
@@ -15883,42 +15995,44 @@ export async function ProductsSection() {
                 key={product.id} 
                 className="group relative flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all hover:border-cyan-500/50 hover:bg-zinc-900 hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]"
               >
-                {/* --- ENLACE MAESTRO (Cubre toda la tarjeta) --- */}
-                <Link href={detailUrl} className="absolute inset-0 z-0" aria-label={`Ver detalles de ${product.name}`}>
-                  <span className="sr-only">Ver detalles</span>
-                </Link>
+                {/* --- ENLACE MAESTRO (CAPA SUPERIOR) --- */}
+                {/* Z-10 para asegurar que esté por encima del texto y capture el clic */}
+                <Link 
+                    href={detailUrl} 
+                    className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-black"
+                    aria-label={`Ver detalles de ${product.name}`}
+                />
 
-                {/* Cabecera Card */}
-                {/* z-10 para asegurar que el contenido se ve sobre el enlace, aunque el clic pasa a través si no hay interacción */}
-                <div className="relative z-10 flex items-start justify-between mb-6">
-                  {/* Icono (Ya no necesita Link propio) */}
+                {/* --- CONTENIDO DE LA TARJETA (CAPA INFERIOR) --- */}
+                {/* Quitamos z-10 de aquí para que el Link de arriba capture los eventos */}
+                
+                <div className="flex items-start justify-between mb-6 pointer-events-none"> {/* pointer-events-none evita bloqueos raros */}
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-colors">
                       {iconUrl ? (
-                        <img src={iconUrl} alt={product.name} className="h-8 w-8 object-contain" />
+                        <div className="relative w-8 h-8">
+                            <Image src={iconUrl} alt="logo" fill className="object-contain" />
+                        </div>
                       ) : (
                         <Rocket className="h-6 w-6 text-zinc-400 group-hover:text-cyan-400" />
                       )}
                   </div>
 
-                  {/* Badge Estado */}
                   <Badge variant="outline" className={`${status.color} capitalize flex gap-1.5`}>
                     <StatusIcon className="w-3 h-3" />
                     {status.label}
                   </Badge>
                 </div>
 
-                {/* Título (Ya no necesita Link propio) */}
-                <h3 className="relative z-10 text-xl font-bold text-white group-hover:text-cyan-400 transition-colors mb-2">
+                <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors mb-2 pointer-events-none">
                   {product.name}
                 </h3>
 
-                <p className="relative z-10 text-zinc-400 text-sm leading-relaxed mb-6 flex-1">
+                <p className="text-zinc-400 text-sm leading-relaxed mb-6 flex-1 pointer-events-none">
                   {product.shortDescription}
                 </p>
 
-                {/* Footer Card */}
-                <div className="relative z-10 mt-auto pt-6 border-t border-zinc-800/50 flex items-center justify-between">
-                  <div className="flex gap-2 flex-wrap">
+                <div className="mt-auto pt-6 border-t border-zinc-800/50 flex items-center justify-between">
+                  <div className="flex gap-2 flex-wrap pointer-events-none">
                     {product.technologies?.slice(0,3).map((tech, i) => (
                       <span key={i} className="text-xs font-mono text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">
                         {tech.name}
@@ -15926,7 +16040,8 @@ export async function ProductsSection() {
                     ))}
                   </div>
                   
-                  {/* BOTÓN EXTERNO: Importante z-20 para que esté "encima" del enlace maestro de la tarjeta */}
+                  {/* --- EXCEPCIÓN: BOTÓN EXTERNO --- */}
+                  {/* Z-20 para estar ENCIMA del enlace maestro (z-10) y ser clickable independientemente */}
                   {product.projectUrl && (
                     <div className="relative z-20">
                         <Button asChild size="sm" variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950 p-0 h-auto font-semibold ml-2">
@@ -15948,7 +16063,7 @@ export async function ProductsSection() {
 
 // ========== Fin de src/components/sections/Products.tsx ========== //
 
-// ========== [40] src/components/ui/badge.tsx ========== //
+// ========== [41] src/components/ui/badge.tsx ========== //
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -15990,7 +16105,7 @@ export { Badge, badgeVariants }
 
 // ========== Fin de src/components/ui/badge.tsx ========== //
 
-// ========== [41] src/components/ui/button.tsx ========== //
+// ========== [42] src/components/ui/button.tsx ========== //
 
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
@@ -16053,7 +16168,7 @@ export { Button, buttonVariants }
 
 // ========== Fin de src/components/ui/button.tsx ========== //
 
-// ========== [42] src/globals/Company.ts ========== //
+// ========== [43] src/globals/Company.ts ========== //
 
 // ========== src/globals/Company.ts ========== //
 
@@ -16158,7 +16273,7 @@ export const Company: GlobalConfig = {
 
 // ========== Fin de src/globals/Company.ts ========== //
 
-// ========== [43] src/globals/Landing.ts ========== //
+// ========== [44] src/globals/Landing.ts ========== //
 
 // ========== src/globals/Landing.ts ========== //
 
@@ -16286,7 +16401,7 @@ export const Landing: GlobalConfig = {
 
 // ========== Fin de src/globals/Landing.ts ========== //
 
-// ========== [44] src/globals/Legal.ts ========== //
+// ========== [45] src/globals/Legal.ts ========== //
 
 // ========== src/globals/Legal.ts ========== //
 
@@ -16344,7 +16459,7 @@ export const Legal: GlobalConfig = {
 
 // ========== Fin de src/globals/Legal.ts ========== //
 
-// ========== [45] src/lib/cloudinaryAdapter.ts ========== //
+// ========== [46] src/lib/cloudinaryAdapter.ts ========== //
 
 // ========== src/lib/cloudinaryAdapter.ts ========== //
 
@@ -16428,7 +16543,7 @@ export const deleteFromCloudinary: CollectionAfterDeleteHook = async ({ doc }) =
 
 // ========== Fin de src/lib/cloudinaryAdapter.ts ========== //
 
-// ========== [46] src/lib/utils.ts ========== //
+// ========== [47] src/lib/utils.ts ========== //
 
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -16440,7 +16555,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // ========== Fin de src/lib/utils.ts ========== //
 
-// ========== [47] src/payload-types.ts ========== //
+// ========== [48] src/payload-types.ts ========== //
 
 /* tslint:disable */
 /* eslint-disable */
@@ -16996,7 +17111,7 @@ declare module 'payload' {
 
 // ========== Fin de src/payload-types.ts ========== //
 
-// ========== [48] src/payload.config.ts ========== //
+// ========== [49] src/payload.config.ts ========== //
 
 // ========== src/payload.config.ts ========== //
 
@@ -17058,7 +17173,7 @@ export default buildConfig({
 
 // ========== Fin de src/payload.config.ts ========== //
 
-// ========== [49] tailwind.config.js ========== //
+// ========== [50] tailwind.config.js ========== //
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -17124,7 +17239,7 @@ export default {
 
 // ========== Fin de tailwind.config.js ========== //
 
-// ========== [50] tsconfig.json ========== //
+// ========== [51] tsconfig.json ========== //
 
 {
   "compilerOptions": {

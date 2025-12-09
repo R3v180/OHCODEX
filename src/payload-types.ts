@@ -93,6 +93,8 @@ export interface User {
 export interface Media {
   id: number;
   alt: string;
+  publicId?: string | null;
+  externalUrl?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -104,32 +106,6 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    hero?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -166,6 +142,9 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  relatedProducts?: (number | Product)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -269,6 +248,8 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  publicId?: T;
+  externalUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -280,40 +261,6 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        card?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        hero?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -335,6 +282,9 @@ export interface ProductsSelect<T extends boolean = true> {
         name?: T;
         id?: T;
       };
+  metaTitle?: T;
+  metaDescription?: T;
+  relatedProducts?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -389,10 +339,19 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface CompanyInfo {
   id: number;
-  logo: number | Media;
+  logo?: (number | null) | Media;
   logoDark?: (number | null) | Media;
   tagline?: string | null;
   description?: string | null;
+  defaultTitle: string;
+  titleTemplate: string;
+  defaultDescription: string;
+  keywords?:
+    | {
+        keyword?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   contactEmail: string;
   phoneNumber?: string | null;
   address?: string | null;
@@ -490,6 +449,15 @@ export interface CompanyInfoSelect<T extends boolean = true> {
   logoDark?: T;
   tagline?: T;
   description?: T;
+  defaultTitle?: T;
+  titleTemplate?: T;
+  defaultDescription?: T;
+  keywords?:
+    | T
+    | {
+        keyword?: T;
+        id?: T;
+      };
   contactEmail?: T;
   phoneNumber?: T;
   address?: T;

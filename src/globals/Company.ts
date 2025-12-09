@@ -19,7 +19,7 @@ export const Company: GlobalConfig = {
               name: 'logo',
               type: 'upload',
               relationTo: 'media',
-              required: false, // <--- CAMBIO: Ahora es opcional
+              required: false,
               label: 'Logo Principal (Imagen Opcional)',
               admin: {
                 description: 'Sube una imagen solo si quieres reemplazar el texto OHCODEX del header.',
@@ -40,8 +40,59 @@ export const Company: GlobalConfig = {
             {
               name: 'description',
               type: 'textarea',
-              label: 'Descripción Breve (Footer/SEO)',
+              label: 'Descripción Breve (Footer)',
               defaultValue: 'Ingeniería de software avanzada para empresas que buscan escalabilidad.',
+            },
+          ],
+        },
+        {
+          label: 'SEO Global',
+          description: 'Configuración por defecto para buscadores (Google)',
+          fields: [
+            {
+              name: 'defaultTitle',
+              type: 'text',
+              required: true,
+              label: 'Título por defecto (Home)',
+              defaultValue: 'OHCodex | Desarrollo de Software a Medida y Sistemas SaaS',
+              admin: {
+                description: 'Se usará en la página principal y como fallback.',
+              },
+            },
+            {
+              name: 'titleTemplate',
+              type: 'text',
+              required: true,
+              label: 'Plantilla de Título',
+              defaultValue: '%s | OHCodex',
+              admin: {
+                description: 'El %s se reemplazará por el título de la página actual (ej: "Aviso Legal | OHCodex").',
+              },
+            },
+            {
+              name: 'defaultDescription',
+              type: 'textarea',
+              required: true,
+              label: 'Meta Descripción Global',
+              defaultValue: 'Empresa de desarrollo de software especializada en PWAs, arquitecturas SaaS escalables y transformación digital.',
+              minLength: 50,
+              maxLength: 160,
+            },
+            {
+              name: 'keywords',
+              type: 'array',
+              label: 'Palabras Clave Globales',
+              labels: {
+                singular: 'Keyword',
+                plural: 'Keywords',
+              },
+              fields: [
+                {
+                  name: 'keyword',
+                  type: 'text',
+                  label: 'Palabra clave',
+                },
+              ],
             },
           ],
         },

@@ -18,7 +18,7 @@ const iconMap: Record<string, LucideIcon> = {
 export async function FeaturesSection() {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Obtener datos globales con tipado
+  // 1. Obtener datos globales con tipado seguro
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
   })) as unknown as LandingPage
@@ -71,7 +71,7 @@ export async function FeaturesSection() {
         <div className={align === 'center' ? 'flex flex-col items-center' : 'grid grid-cols-1 lg:grid-cols-2 gap-16 items-center'}>
           
           {/* BLOQUE DE TEXTO */}
-          <div className={align === 'center' ? 'text-center max-w-3xl mb-16' : 'text-left'}>
+          <div className={align === 'center' ? 'text-center max-w-3xl mb-16 mx-auto' : 'text-left'}>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
               {titleMain} <span className="text-cyan-500">{titleLast}</span>
             </h2>
@@ -79,17 +79,23 @@ export async function FeaturesSection() {
               {description}
             </p>
             
-            {/* Lista extra (solo se muestra si está alineado a la izquierda para rellenar espacio) */}
-            {align === 'left' && (
-              <div className="flex flex-col gap-4">
-                 {['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros'].map((item, i) => (
-                   <div key={i} className="flex items-center gap-3">
-                     <div className="h-2 w-2 rounded-full bg-cyan-500" />
-                     <span className="text-zinc-300 font-medium">{item}</span>
-                   </div>
-                 ))}
-              </div>
-            )}
+            {/* --- LISTA DE VENTAJAS ADAPTATIVA --- */}
+            {/* Se muestra siempre, pero cambia de forma según la alineación */}
+            <div className={`flex mt-8 ${align === 'center' ? 'flex-wrap justify-center gap-3' : 'flex-col gap-4'}`}>
+               {['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros'].map((item, i) => (
+                 <div 
+                   key={i} 
+                   className={`flex items-center gap-3 ${
+                     align === 'center' 
+                       ? 'bg-zinc-900/50 border border-zinc-800 px-4 py-2 rounded-full backdrop-blur-sm hover:border-cyan-500/30 transition-colors' 
+                       : ''
+                   }`}
+                 >
+                   <div className="h-2 w-2 rounded-full bg-cyan-500 shrink-0" />
+                   <span className="text-zinc-300 font-medium text-sm">{item}</span>
+                 </div>
+               ))}
+            </div>
           </div>
 
           {/* GRID DE ICONOS */}

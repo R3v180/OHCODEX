@@ -11,7 +11,7 @@ import { Metadata } from 'next'
 import type { Post } from '@/payload-types'
 
 // CAMBIO: Ponemos 0 para forzar la actualización inmediata y ver los posts
-export const revalidate = 0
+export const revalidate = 600
 
 export const metadata: Metadata = {
   title: 'Blog de Ingeniería y Software | OHCodex',

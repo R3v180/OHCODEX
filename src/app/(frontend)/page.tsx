@@ -13,7 +13,7 @@ import { ContactSection } from '@/components/sections/Contact'
 import type { CompanyInfo, LandingPage } from '@/payload-types'
 
 // Revalidación rápida (10 min) para mantener el SEO fresco pero rápido
-export const revalidate = 0 
+export const revalidate = 600 
 
 export default async function HomePage() {
   const payload = await getPayload({ config: configPromise })

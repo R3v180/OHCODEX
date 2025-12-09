@@ -12,7 +12,7 @@ import { Metadata } from 'next'
 import type { Post } from '@/payload-types'
 
 // CAMBIO: 0 segundos para que la actualización sea inmediata al editar
-export const revalidate = 0
+export const revalidate = 3600
 
 // --- Serializador de Texto Rico (Rich Text) ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {

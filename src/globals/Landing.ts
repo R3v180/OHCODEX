@@ -1,12 +1,5 @@
 // ========== src/globals/Landing.ts ========== //
 
-// -----------------------------------------------------------------------------
-// Archivo: src/globals/Landing.ts
-// Versión: 1.0.0
-// Descripción: Configuración global para los textos y contenidos de la página de inicio.
-// Permite al administrador cambiar el marketing sin tocar código.
-// -----------------------------------------------------------------------------
-
 import type { GlobalConfig } from 'payload'
 
 export const Landing: GlobalConfig = {
@@ -19,6 +12,7 @@ export const Landing: GlobalConfig = {
     {
       type: 'tabs',
       tabs: [
+        // --- TAB 1: HERO (Ya existía) ---
         {
           label: 'Sección Hero',
           fields: [
@@ -44,6 +38,31 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
+
+        // --- TAB 2: BARRA DE CONFIANZA (NUEVO) ---
+        {
+          label: 'Barra de Confianza',
+          fields: [
+            {
+              name: 'trustBarTitle',
+              type: 'text',
+              label: 'Título pequeño (sobre los logos)',
+              defaultValue: 'Tecnologías que impulsan nuestros productos',
+            },
+            {
+              name: 'trustLogos',
+              type: 'relationship',
+              relationTo: 'media',
+              hasMany: true,
+              label: 'Logos Tecnológicos o Clientes',
+              admin: {
+                description: 'Selecciona los logos que aparecerán en la barra gris (se mostrarán en escala de grises automáticamente).',
+              },
+            },
+          ],
+        },
+
+        // --- TAB 3: PRODUCTOS (Ya existía) ---
         {
           label: 'Sección Productos',
           fields: [
@@ -61,6 +80,8 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
+
+        // --- TAB 4: METODOLOGÍA (Ya existía) ---
         {
           label: 'Sección Metodología',
           fields: [
@@ -115,9 +136,116 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
+
+        // --- TAB 5: TESTIMONIOS (NUEVO) ---
+        {
+          label: 'Testimonios',
+          fields: [
+            {
+              name: 'testimonialsTitle',
+              type: 'text',
+              label: 'Título Sección Testimonios',
+              defaultValue: 'Confianza que se construye con código',
+            },
+            {
+              name: 'testimonialsSubtitle',
+              type: 'textarea',
+              label: 'Subtítulo',
+              defaultValue: 'Lo que dicen los líderes técnicos que ya escalan con nuestra arquitectura.',
+            },
+            {
+              name: 'testimonials',
+              type: 'array',
+              label: 'Lista de Reseñas',
+              labels: {
+                singular: 'Testimonio',
+                plural: 'Testimonios',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'authorName',
+                      type: 'text',
+                      label: 'Nombre Autor',
+                      required: true,
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'authorRole',
+                      type: 'text',
+                      label: 'Cargo (ej: CTO)',
+                      required: true,
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+                {
+                  name: 'companyName',
+                  type: 'text',
+                  label: 'Empresa',
+                  required: true,
+                },
+                {
+                  name: 'quote',
+                  type: 'textarea',
+                  label: 'La Cita / Opinión',
+                  required: true,
+                },
+                {
+                  name: 'authorImage',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Foto del Autor',
+                },
+              ],
+            },
+          ],
+        },
+
+        // --- TAB 6: FAQ (NUEVO) ---
+        {
+          label: 'FAQs',
+          fields: [
+            {
+              name: 'faqTitle',
+              type: 'text',
+              label: 'Título Sección FAQ',
+              defaultValue: 'Preguntas Frecuentes',
+            },
+            {
+              name: 'faqSubtitle',
+              type: 'textarea',
+              label: 'Subtítulo',
+              defaultValue: 'Todo lo que necesitas saber sobre nuestra forma de trabajar.',
+            },
+            {
+              name: 'faqs',
+              type: 'array',
+              label: 'Lista de Preguntas',
+              labels: {
+                singular: 'Pregunta',
+                plural: 'Preguntas',
+              },
+              fields: [
+                {
+                  name: 'question',
+                  type: 'text',
+                  label: 'Pregunta',
+                  required: true,
+                },
+                {
+                  name: 'answer',
+                  type: 'textarea',
+                  label: 'Respuesta',
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],
 }
-
-// ========== Fin de src/globals/Landing.ts ========== //

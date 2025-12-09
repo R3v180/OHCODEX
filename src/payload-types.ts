@@ -509,6 +509,8 @@ export interface LandingPage {
   heroBadge?: string | null;
   heroTitle: string;
   heroSubtitle: string;
+  trustBarTitle?: string | null;
+  trustLogos?: (number | Media)[] | null;
   productsTitle?: string | null;
   productsDescription?: string | null;
   featuresTitle?: string | null;
@@ -518,6 +520,27 @@ export interface LandingPage {
         icon?: ('smartphone' | 'zap' | 'database' | 'shield') | null;
         title: string;
         description: string;
+        id?: string | null;
+      }[]
+    | null;
+  testimonialsTitle?: string | null;
+  testimonialsSubtitle?: string | null;
+  testimonials?:
+    | {
+        authorName: string;
+        authorRole: string;
+        companyName: string;
+        quote: string;
+        authorImage?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqTitle?: string | null;
+  faqSubtitle?: string | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
         id?: string | null;
       }[]
     | null;
@@ -573,6 +596,8 @@ export interface LandingPageSelect<T extends boolean = true> {
   heroBadge?: T;
   heroTitle?: T;
   heroSubtitle?: T;
+  trustBarTitle?: T;
+  trustLogos?: T;
   productsTitle?: T;
   productsDescription?: T;
   featuresTitle?: T;
@@ -583,6 +608,27 @@ export interface LandingPageSelect<T extends boolean = true> {
         icon?: T;
         title?: T;
         description?: T;
+        id?: T;
+      };
+  testimonialsTitle?: T;
+  testimonialsSubtitle?: T;
+  testimonials?:
+    | T
+    | {
+        authorName?: T;
+        authorRole?: T;
+        companyName?: T;
+        quote?: T;
+        authorImage?: T;
+        id?: T;
+      };
+  faqTitle?: T;
+  faqSubtitle?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
         id?: T;
       };
   updatedAt?: T;

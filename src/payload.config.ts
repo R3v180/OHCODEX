@@ -9,13 +9,17 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { es } from 'payload/i18n/es'
 
-// Importamos Colecciones
+// 1. Importamos Colecciones Existentes
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { ContactSubmissions } from './collections/ContactSubmissions'
 
-// Importamos Globales (NUEVO)
+// 2. Importamos Colecciones Nuevas (BLOG)
+import { Posts } from './collections/Posts'
+import { Categories } from './collections/Categories'
+
+// 3. Importamos Globales
 import { Company } from './globals/Company'
 import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
@@ -34,9 +38,16 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  // Registramos Colecciones y Globales
-  collections: [Users, Media, Products, ContactSubmissions],
-  globals: [Company, Legal, Landing], // <--- AQUÍ SE REGISTRAN
+  // --- AQUÍ ESTÁ LA CLAVE: TIENEN QUE ESTAR LAS 6 ---
+  collections: [
+    Users, 
+    Media, 
+    Products, 
+    ContactSubmissions,
+    Posts,      // <--- IMPORTANTE: Asegúrate de que esto está aquí
+    Categories  // <--- IMPORTANTE: Asegúrate de que esto está aquí
+  ],
+  globals: [Company, Legal, Landing],
   
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -53,5 +64,3 @@ export default buildConfig({
     payloadCloudPlugin(),
   ],
 })
-
-// ========== Fin de src/payload.config.ts ========== //

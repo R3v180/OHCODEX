@@ -15,6 +15,8 @@ export interface Config {
     media: Media;
     products: Product;
     'contact-submissions': ContactSubmission;
+    posts: Post;
+    categories: Category;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -25,6 +27,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -164,6 +168,50 @@ export interface ContactSubmission {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  publishedDate: string;
+  author: number | User;
+  category: number | Category;
+  coverImage: number | Media;
+  excerpt: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -184,6 +232,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'contact-submissions';
         value: number | ContactSubmission;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -298,6 +354,34 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
   serviceType?: T;
   message?: T;
   privacyAccepted?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  publishedDate?: T;
+  author?: T;
+  category?: T;
+  coverImage?: T;
+  excerpt?: T;
+  content?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }

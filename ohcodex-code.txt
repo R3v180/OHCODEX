@@ -17,46 +17,50 @@
 13. src/app/(frontend)/aviso-legal/page.tsx
 14. src/app/(frontend)/blog/[slug]/page.tsx
 15. src/app/(frontend)/blog/page.tsx
-16. src/app/(frontend)/layout.tsx
-17. src/app/(frontend)/not-found.tsx
-18. src/app/(frontend)/page.tsx
-19. src/app/(frontend)/privacidad/page.tsx
-20. src/app/(frontend)/products/[slug]/page.tsx
-21. src/app/(frontend)/terminos/page.tsx
-22. src/app/(payload)/admin/[[...segments]]/not-found.tsx
-23. src/app/(payload)/admin/[[...segments]]/page.tsx
-24. src/app/(payload)/admin/importMap.js
-25. src/app/(payload)/api/[...slug]/route.ts
-26. src/app/(payload)/api/graphql-playground/route.ts
-27. src/app/(payload)/api/graphql/route.ts
-28. src/app/(payload)/layout.tsx
-29. src/app/globals.css
-30. src/app/my-route/route.ts
-31. src/app/robots.ts
-32. src/app/sitemap.ts
-33. src/collections/Categories.ts
-34. src/collections/ContactSubmissions.ts
-35. src/collections/Media.ts
-36. src/collections/Posts.ts
-37. src/collections/Products.ts
-38. src/collections/Users.ts
-39. src/components/layout/Footer.tsx
-40. src/components/layout/Header.tsx
-41. src/components/sections/Contact.tsx
-42. src/components/sections/Features.tsx
-43. src/components/sections/Hero.tsx
-44. src/components/sections/Products.tsx
-45. src/components/ui/badge.tsx
-46. src/components/ui/button.tsx
-47. src/globals/Company.ts
-48. src/globals/Landing.ts
-49. src/globals/Legal.ts
-50. src/lib/cloudinaryAdapter.ts
-51. src/lib/utils.ts
-52. src/payload-types.ts
-53. src/payload.config.ts
-54. tailwind.config.js
-55. tsconfig.json
+16. src/app/(frontend)/icon.tsx
+17. src/app/(frontend)/layout.tsx
+18. src/app/(frontend)/not-found.tsx
+19. src/app/(frontend)/page.tsx
+20. src/app/(frontend)/privacidad/page.tsx
+21. src/app/(frontend)/products/[slug]/page.tsx
+22. src/app/(frontend)/terminos/page.tsx
+23. src/app/(payload)/admin/[[...segments]]/not-found.tsx
+24. src/app/(payload)/admin/[[...segments]]/page.tsx
+25. src/app/(payload)/admin/importMap.js
+26. src/app/(payload)/api/[...slug]/route.ts
+27. src/app/(payload)/api/graphql-playground/route.ts
+28. src/app/(payload)/api/graphql/route.ts
+29. src/app/(payload)/layout.tsx
+30. src/app/globals.css
+31. src/app/my-route/route.ts
+32. src/app/robots.ts
+33. src/app/sitemap.ts
+34. src/collections/Categories.ts
+35. src/collections/ContactSubmissions.ts
+36. src/collections/Media.ts
+37. src/collections/Posts.ts
+38. src/collections/Products.ts
+39. src/collections/Users.ts
+40. src/components/layout/Footer.tsx
+41. src/components/layout/Header.tsx
+42. src/components/sections/Contact.tsx
+43. src/components/sections/FAQ.tsx
+44. src/components/sections/Features.tsx
+45. src/components/sections/Hero.tsx
+46. src/components/sections/Products.tsx
+47. src/components/sections/Testimonials.tsx
+48. src/components/sections/TrustBar.tsx
+49. src/components/ui/badge.tsx
+50. src/components/ui/button.tsx
+51. src/globals/Company.ts
+52. src/globals/Landing.ts
+53. src/globals/Legal.ts
+54. src/lib/cloudinaryAdapter.ts
+55. src/lib/utils.ts
+56. src/payload-types.ts
+57. src/payload.config.ts
+58. tailwind.config.js
+59. tsconfig.json
 
 
 ==================================================
@@ -13980,11 +13984,10 @@ import { Badge } from '@/components/ui/badge'
 import { Metadata } from 'next'
 import type { Post } from '@/payload-types'
 
-// ISR: Actualizar contenido cada 10 minutos
-export const revalidate = 600
+// CAMBIO: 0 segundos para que la actualización sea inmediata al editar
+export const revalidate = 0
 
 // --- Serializador de Texto Rico (Rich Text) ---
-// Convierte el JSON de Payload en HTML con estilos Tailwind
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
 
@@ -14006,8 +14009,8 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
           case 'heading':
             const Tag = node.tag as any
             const sizes: Record<string, string> = { 
-              h1: 'text-3xl sm:text-4xl mt-10 mb-6 text-white font-bold', 
-              h2: 'text-2xl sm:text-3xl mt-10 mb-5 text-white font-bold', 
+              h1: 'text-3xl sm:text-4xl mt-12 mb-6 text-white font-bold tracking-tight', 
+              h2: 'text-2xl sm:text-3xl mt-10 mb-5 text-white font-bold tracking-tight', 
               h3: 'text-xl sm:text-2xl mt-8 mb-4 text-white font-semibold', 
               h4: 'text-lg sm:text-xl mt-6 mb-3 text-white font-semibold'
             }
@@ -14042,7 +14045,6 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
 }
 
 // --- Generación de Rutas Estáticas ---
-// Esto hace que el blog cargue instantáneo en producción
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const { docs: posts } = await payload.find({
@@ -14093,7 +14095,7 @@ export default async function BlogPostPage({ params }: Args) {
   const { docs } = await payload.find({
     collection: 'posts',
     where: { slug: { equals: slug } },
-    depth: 2, // Profundidad 2 para traer datos completos de autor y categoría
+    depth: 2, 
   })
 
   const post = docs[0] as Post
@@ -14348,9 +14350,49 @@ export default async function BlogPage() {
 
 // ========== Fin de src/app/(frontend)/blog/page.tsx ========== //
 
-// ========== [16] src/app/(frontend)/layout.tsx ========== //
+// ========== [16] src/app/(frontend)/icon.tsx ========== //
 
-// ========== src/app/(frontend)/layout.tsx ========== //
+import { ImageResponse } from 'next/og'
+
+// Dimensiones de la imagen
+export const size = {
+  width: 32,
+  height: 32,
+}
+export const contentType = 'image/png'
+
+// Generación del icono
+export default function Icon() {
+  return new ImageResponse(
+    (
+      // Elemento JSX que representa el icono
+      <div
+        style={{
+          fontSize: 20,
+          background: 'black',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#06b6d4', // Tu color Cyan-500 corporativo
+          fontWeight: 800,
+          borderRadius: '20%', // Bordes ligeramente redondeados (estilo App)
+          border: '1px solid #1e293b', // Borde sutil gris oscuro
+        }}
+      >
+        OH
+      </div>
+    ),
+    {
+      ...size,
+    }
+  )
+}
+
+// ========== Fin de src/app/(frontend)/icon.tsx ========== //
+
+// ========== [17] src/app/(frontend)/layout.tsx ========== //
 
 import React from 'react'
 import '../globals.css'
@@ -14370,7 +14412,6 @@ const getServerUrl = () => process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcode
 // Imagen Social por defecto (Fallback)
 const SOCIAL_IMAGE_URL = 'https://res.cloudinary.com/dpp6gyfao/image/upload/w_1200,h_630,c_fill,q_auto/v1765156811/ohcodex-media/jz9fdr3w83as6gxi40fq.jpg'
 
-// ✅ CAMBIO: Ahora es una función asíncrona que lee de la BD
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config: configPromise })
   
@@ -14445,11 +14486,8 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [SOCIAL_IMAGE_URL],
     },
     
-    icons: {
-      icon: '/favicon.ico',
-      shortcut: '/favicon-16x16.png',
-      apple: '/apple-touch-icon.png',
-    },
+    // NOTA: Hemos eliminado la sección 'icons' manual.
+    // Next.js ahora usará automáticamente el archivo src/app/(frontend)/icon.tsx
   }
 }
 
@@ -14480,7 +14518,7 @@ export default function FrontendLayout({
 
 // ========== Fin de src/app/(frontend)/layout.tsx ========== //
 
-// ========== [17] src/app/(frontend)/not-found.tsx ========== //
+// ========== [18] src/app/(frontend)/not-found.tsx ========== //
 
 // ========== src/app/(frontend)/not-found.tsx ========== //
 
@@ -14535,7 +14573,7 @@ export default function NotFound() {
 
 // ========== Fin de src/app/(frontend)/not-found.tsx ========== //
 
-// ========== [18] src/app/(frontend)/page.tsx ========== //
+// ========== [19] src/app/(frontend)/page.tsx ========== //
 
 // ========== src/app/(frontend)/page.tsx ========== //
 
@@ -14543,39 +14581,42 @@ import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { Hero } from '@/components/sections/Hero'
+import { TrustBar } from '@/components/sections/TrustBar'
 import { ProductsSection } from '@/components/sections/Products'
 import { FeaturesSection } from '@/components/sections/Features'
+import { Testimonials } from '@/components/sections/Testimonials'
+import { FAQ } from '@/components/sections/FAQ'
 import { ContactSection } from '@/components/sections/Contact'
-import type { CompanyInfo } from '@/payload-types'
+import type { CompanyInfo, LandingPage } from '@/payload-types'
 
-// --- CAMBIO IMPORTANTE PARA SEO Y VELOCIDAD ---
-// Antes: export const dynamic = 'force-dynamic' (Lento 🐢)
-// Ahora: Revalidación cada 600 segundos (10 minutos). (Rápido 🚀)
-// Google recibirá una respuesta instantánea (HTML estático) y tus datos se actualizarán solos.
+// Revalidación rápida (10 min) para mantener el SEO fresco pero rápido
 export const revalidate = 600 
 
 export default async function HomePage() {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Recuperamos los datos de la empresa para el JSON-LD y el contacto
-  // Usamos 'as any' en el slug para evitar conflictos de tipado estricto si el tipo global no coincide perfectamente
-  const company = (await payload.findGlobal({
-    slug: 'company-info' as any,
-  })) as unknown as CompanyInfo
+  // 1. Carga de datos (Paralela para mayor velocidad)
+  const [company, landing] = await Promise.all([
+    payload.findGlobal({
+      slug: 'company-info' as any,
+    }) as unknown as CompanyInfo,
+    payload.findGlobal({
+      slug: 'landing-page' as any,
+    }) as unknown as LandingPage
+  ])
 
-  // URL base para los metadatos
+  // URL base para metadatos
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
   
-  // Gestión segura del logo para los datos estructurados
+  // Gestión del Logo para JSON-LD
   const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
     ? company.logo.url 
-    : `${baseUrl}/logo.png` // Asegúrate de tener un logo.png en /public también si quieres que esto funcione perfecto
+    : `${baseUrl}/logo.png`
 
-  // 2. DATOS ESTRUCTURADOS (JSON-LD)
-  // Esto es lo que lee Google para mostrar "fichas ricas" a la derecha en los resultados
+  // 2. DATOS ESTRUCTURADOS (JSON-LD - Organization)
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService', // O 'SoftwareHouse'
+    '@type': 'ProfessionalService',
     name: 'OHCodex',
     url: baseUrl,
     logo: logoUrl,
@@ -14596,29 +14637,70 @@ export default async function HomePage() {
       areaServed: 'ES',
       availableLanguage: ['es', 'en'],
     },
-    // Enlaces a redes sociales para que Google conecte tu entidad
     sameAs: [
       company?.linkedin,
       company?.github,
       company?.twitter,
-    ].filter(Boolean), // Elimina los que estén vacíos
-    priceRange: '$$$', // Indica rango de precios (opcional)
+    ].filter(Boolean),
+    priceRange: '$$$',
   }
+
+  // Preparar datos para los componentes (Mapeo seguro)
+  // Convertimos los datos de Payload al formato que esperan nuestros componentes
+  
+  const testimonialData = landing.testimonials?.map(t => ({
+    id: t.id,
+    authorName: t.authorName,
+    authorRole: t.authorRole,
+    companyName: t.companyName,
+    quote: t.quote,
+    authorImage: t.authorImage
+  })) || []
+
+  const faqData = landing.faqs?.map(f => ({
+    id: f.id,
+    question: f.question,
+    answer: f.answer
+  })) || []
 
   return (
     <>
-      {/* Inyección del Script JSON-LD para Google */}
+      {/* Script JSON-LD Principal */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Secciones Visuales */}
+      {/* 1. HERO (Portada) */}
       <Hero />
+
+      {/* 2. TRUST BAR (Logos Tecnológicos) - NUEVO */}
+      <TrustBar 
+        logos={landing.trustLogos as any} 
+        title={landing.trustBarTitle || undefined}
+      />
+
+      {/* 3. PRODUCTOS (Portfolio) */}
       <ProductsSection />
+
+      {/* 4. METODOLOGÍA (Features) */}
       <FeaturesSection />
       
-      {/* Pasamos el email real recuperado de la BD */}
+      {/* 5. TESTIMONIOS (Prueba Social) - NUEVO */}
+      <Testimonials 
+        testimonials={testimonialData}
+        title={landing.testimonialsTitle || undefined}
+        subtitle={landing.testimonialsSubtitle || undefined}
+      />
+
+      {/* 6. FAQ (Preguntas Frecuentes) - NUEVO */}
+      <FAQ 
+        faqs={faqData}
+        title={landing.faqTitle || undefined}
+        subtitle={landing.faqSubtitle || undefined}
+      />
+
+      {/* 7. CONTACTO (Formulario) */}
       <ContactSection email={company?.contactEmail || 'info@ohcodex.com'} />
     </>
   )
@@ -14626,7 +14708,7 @@ export default async function HomePage() {
 
 // ========== Fin de src/app/(frontend)/page.tsx ========== //
 
-// ========== [19] src/app/(frontend)/privacidad/page.tsx ========== //
+// ========== [20] src/app/(frontend)/privacidad/page.tsx ========== //
 
 import React from 'react'
 import { Metadata } from 'next'
@@ -14708,7 +14790,7 @@ export default async function TerminosPage() {
 
 // ========== Fin de src/app/(frontend)/privacidad/page.tsx ========== //
 
-// ========== [20] src/app/(frontend)/products/[slug]/page.tsx ========== //
+// ========== [21] src/app/(frontend)/products/[slug]/page.tsx ========== //
 
 // ========== src/app/(frontend)/products/[slug]/page.tsx ========== //
 
@@ -15007,7 +15089,7 @@ export default async function ProductPage({ params }: Args) {
 
 // ========== Fin de src/app/(frontend)/products/[slug]/page.tsx ========== //
 
-// ========== [21] src/app/(frontend)/terminos/page.tsx ========== //
+// ========== [22] src/app/(frontend)/terminos/page.tsx ========== //
 
 // ========== src/app/(frontend)/terminos/page.tsx ========== //
 
@@ -15093,7 +15175,7 @@ export default async function TerminosPage() {
 
 // ========== Fin de src/app/(frontend)/terminos/page.tsx ========== //
 
-// ========== [22] src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
+// ========== [23] src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15123,7 +15205,7 @@ export default NotFound
 
 // ========== Fin de src/app/(payload)/admin/[[...segments]]/not-found.tsx ========== //
 
-// ========== [23] src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
+// ========== [24] src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15153,7 +15235,7 @@ export default Page
 
 // ========== Fin de src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
 
-// ========== [24] src/app/(payload)/admin/importMap.js ========== //
+// ========== [25] src/app/(payload)/admin/importMap.js ========== //
 
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -15206,7 +15288,7 @@ export const importMap = {
 
 // ========== Fin de src/app/(payload)/admin/importMap.js ========== //
 
-// ========== [25] src/app/(payload)/api/[...slug]/route.ts ========== //
+// ========== [26] src/app/(payload)/api/[...slug]/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15231,7 +15313,7 @@ export const OPTIONS = REST_OPTIONS(config)
 
 // ========== Fin de src/app/(payload)/api/[...slug]/route.ts ========== //
 
-// ========== [26] src/app/(payload)/api/graphql-playground/route.ts ========== //
+// ========== [27] src/app/(payload)/api/graphql-playground/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15244,7 +15326,7 @@ export const GET = GRAPHQL_PLAYGROUND_GET(config)
 
 // ========== Fin de src/app/(payload)/api/graphql-playground/route.ts ========== //
 
-// ========== [27] src/app/(payload)/api/graphql/route.ts ========== //
+// ========== [28] src/app/(payload)/api/graphql/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15258,7 +15340,7 @@ export const OPTIONS = REST_OPTIONS(config)
 
 // ========== Fin de src/app/(payload)/api/graphql/route.ts ========== //
 
-// ========== [28] src/app/(payload)/layout.tsx ========== //
+// ========== [29] src/app/(payload)/layout.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15295,7 +15377,7 @@ export default Layout
 
 // ========== Fin de src/app/(payload)/layout.tsx ========== //
 
-// ========== [29] src/app/globals.css ========== //
+// ========== [30] src/app/globals.css ========== //
 
 @tailwind base;
 @tailwind components;
@@ -15359,7 +15441,7 @@ export default Layout
 
 // ========== Fin de src/app/globals.css ========== //
 
-// ========== [30] src/app/my-route/route.ts ========== //
+// ========== [31] src/app/my-route/route.ts ========== //
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -15379,7 +15461,7 @@ export const GET = async () => {
 
 // ========== Fin de src/app/my-route/route.ts ========== //
 
-// ========== [31] src/app/robots.ts ========== //
+// ========== [32] src/app/robots.ts ========== //
 
 // ========== src/app/robots.ts ========== //
 
@@ -15414,7 +15496,7 @@ export default function robots(): MetadataRoute.Robots {
 
 // ========== Fin de src/app/robots.ts ========== //
 
-// ========== [32] src/app/sitemap.ts ========== //
+// ========== [33] src/app/sitemap.ts ========== //
 
 // ========== src/app/sitemap.ts ========== //
 
@@ -15503,7 +15585,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 // ========== Fin de src/app/sitemap.ts ========== //
 
-// ========== [33] src/collections/Categories.ts ========== //
+// ========== [34] src/collections/Categories.ts ========== //
 
     // ========== src/collections/Categories.ts ========== //
 
@@ -15541,7 +15623,7 @@ export const Categories: CollectionConfig = {
 
 // ========== Fin de src/collections/Categories.ts ========== //
 
-// ========== [34] src/collections/ContactSubmissions.ts ========== //
+// ========== [35] src/collections/ContactSubmissions.ts ========== //
 
 // src/collections/ContactSubmissions.ts
 import type { CollectionConfig } from 'payload'
@@ -15601,7 +15683,7 @@ export const ContactSubmissions: CollectionConfig = {
 
 // ========== Fin de src/collections/ContactSubmissions.ts ========== //
 
-// ========== [35] src/collections/Media.ts ========== //
+// ========== [36] src/collections/Media.ts ========== //
 
 // ========== src/collections/Media.ts ========== //
 
@@ -15657,7 +15739,7 @@ export const Media: CollectionConfig = {
 
 // ========== Fin de src/collections/Media.ts ========== //
 
-// ========== [36] src/collections/Posts.ts ========== //
+// ========== [37] src/collections/Posts.ts ========== //
 
 // ========== src/collections/Posts.ts ========== //
 
@@ -15787,7 +15869,7 @@ export const Posts: CollectionConfig = {
 
 // ========== Fin de src/collections/Posts.ts ========== //
 
-// ========== [37] src/collections/Products.ts ========== //
+// ========== [38] src/collections/Products.ts ========== //
 
 // ========== src/collections/Products.ts ========== //
 
@@ -15958,7 +16040,7 @@ export const Products: CollectionConfig = {
 
 // ========== Fin de src/collections/Products.ts ========== //
 
-// ========== [38] src/collections/Users.ts ========== //
+// ========== [39] src/collections/Users.ts ========== //
 
 import type { CollectionConfig } from 'payload'
 
@@ -15977,7 +16059,7 @@ export const Users: CollectionConfig = {
 
 // ========== Fin de src/collections/Users.ts ========== //
 
-// ========== [39] src/components/layout/Footer.tsx ========== //
+// ========== [40] src/components/layout/Footer.tsx ========== //
 
 // ========== src/components/layout/Footer.tsx ========== //
 
@@ -16111,7 +16193,7 @@ export async function Footer() {
 
 // ========== Fin de src/components/layout/Footer.tsx ========== //
 
-// ========== [40] src/components/layout/Header.tsx ========== //
+// ========== [41] src/components/layout/Header.tsx ========== //
 
 // ========== src/components/layout/Header.tsx ========== //
 
@@ -16161,7 +16243,7 @@ export function Header() {
 
 // ========== Fin de src/components/layout/Header.tsx ========== //
 
-// ========== [41] src/components/sections/Contact.tsx ========== //
+// ========== [42] src/components/sections/Contact.tsx ========== //
 
 'use client'
 
@@ -16341,7 +16423,94 @@ export function ContactSection({ email }: { email: string }) {
 
 // ========== Fin de src/components/sections/Contact.tsx ========== //
 
-// ========== [42] src/components/sections/Features.tsx ========== //
+// ========== [43] src/components/sections/FAQ.tsx ========== //
+
+import React from 'react'
+import { Plus } from 'lucide-react'
+
+// Definimos la estructura de una pregunta (coincidirá con el Backend)
+export interface FAQItem {
+  id?: string | null
+  question: string
+  answer: string
+}
+
+interface FAQProps {
+  faqs?: FAQItem[] | null
+  title?: string
+  subtitle?: string
+}
+
+export function FAQ({ 
+  faqs, 
+  title = "Preguntas Frecuentes",
+  subtitle = "Todo lo que necesitas saber sobre nuestra forma de trabajar."
+}: FAQProps) {
+  
+  if (!faqs || faqs.length === 0) return null
+
+  // Generamos el Schema.org para Google (FAQPage)
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  }
+
+  return (
+    <section className="bg-black py-24 relative overflow-hidden border-b border-white/5">
+      {/* Inyección de datos para Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
+      <div className="container px-4 mx-auto max-w-3xl">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
+            {title}
+          </h2>
+          <p className="text-lg text-zinc-400">
+            {subtitle}
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, i) => (
+            <div 
+              key={faq.id || i} 
+              className="rounded-2xl border border-zinc-800 bg-zinc-900/20 overflow-hidden transition-all hover:border-zinc-700"
+            >
+              {/* Usamos el elemento nativo <details> para máxima accesibilidad y SEO */}
+              <details className="group [&_summary::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-white font-medium hover:bg-zinc-900/40 transition-colors">
+                  <span className="text-lg">{faq.question}</span>
+                  <span className="shrink-0 rounded-full border border-zinc-700 bg-zinc-800 p-1.5 text-zinc-400 transition duration-300 group-open:-rotate-45 group-open:text-cyan-500 group-open:border-cyan-500/50">
+                    <Plus className="h-5 w-5" />
+                  </span>
+                </summary>
+
+                <div className="px-6 pb-6 pt-2 leading-relaxed text-zinc-400 animate-in slide-in-from-top-2 fade-in duration-200">
+                  {faq.answer}
+                </div>
+              </details>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ========== Fin de src/components/sections/FAQ.tsx ========== //
+
+// ========== [44] src/components/sections/Features.tsx ========== //
 
 // ========== src/components/sections/Features.tsx ========== //
 
@@ -16474,7 +16643,7 @@ export async function FeaturesSection() {
 
 // ========== Fin de src/components/sections/Features.tsx ========== //
 
-// ========== [43] src/components/sections/Hero.tsx ========== //
+// ========== [45] src/components/sections/Hero.tsx ========== //
 
 // ========== src/components/sections/Hero.tsx ========== //
 
@@ -16592,7 +16761,7 @@ export async function Hero() {
 
 // ========== Fin de src/components/sections/Hero.tsx ========== //
 
-// ========== [44] src/components/sections/Products.tsx ========== //
+// ========== [46] src/components/sections/Products.tsx ========== //
 
 // ========== src/components/sections/Products.tsx ========== //
 
@@ -16736,7 +16905,184 @@ export async function ProductsSection() {
 
 // ========== Fin de src/components/sections/Products.tsx ========== //
 
-// ========== [45] src/components/ui/badge.tsx ========== //
+// ========== [47] src/components/sections/Testimonials.tsx ========== //
+
+import React from 'react'
+import Image from 'next/image'
+import { Quote } from 'lucide-react'
+import type { Media } from '@/payload-types'
+
+// Definimos la estructura de un testimonio (coincidirá con el Backend luego)
+export interface TestimonialItem {
+  id?: string | null
+  authorName: string
+  authorRole: string
+  companyName: string
+  quote: string
+  authorImage?: (Media | number) | null
+}
+
+interface TestimonialsProps {
+  testimonials?: TestimonialItem[] | null
+  title?: string
+  subtitle?: string
+}
+
+export function Testimonials({ 
+  testimonials, 
+  title = "Confianza que se construye con código",
+  subtitle = "Lo que dicen los líderes técnicos que ya escalan con nuestra arquitectura."
+}: TestimonialsProps) {
+  
+  if (!testimonials || testimonials.length === 0) return null
+
+  // Generamos el Schema.org para Google (Review Snippet)
+  const reviewsJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'OHCodex',
+    review: testimonials.map((t) => ({
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: t.authorName,
+      },
+      reviewBody: t.quote,
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5', // Asumimos 5 estrellas para testimonios destacados
+        bestRating: '5',
+      },
+    })),
+  }
+
+  return (
+    <section className="bg-black py-24 border-b border-white/5 relative overflow-hidden">
+      {/* Inyección de datos para Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsJsonLd) }}
+      />
+
+      {/* Decoración de fondo */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 -ml-20 h-[400px] w-[400px] rounded-full bg-cyan-900/10 blur-[100px] pointer-events-none" />
+
+      <div className="container px-4 mx-auto relative z-10">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
+            {title}
+          </h2>
+          <p className="text-lg text-zinc-400">
+            {subtitle}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {testimonials.map((item, i) => {
+            const imageUrl = typeof item.authorImage === 'object' && item.authorImage?.url 
+              ? item.authorImage.url 
+              : null
+
+            return (
+              <div 
+                key={item.id || i} 
+                className="flex flex-col justify-between rounded-2xl border border-zinc-800 bg-zinc-900/30 p-8 hover:border-cyan-500/20 transition-colors"
+              >
+                <div>
+                  <Quote className="h-8 w-8 text-cyan-500/50 mb-6" />
+                  {/* CORRECCIÓN AQUÍ: Usamos &quot; en lugar de " */}
+                  <p className="text-zinc-300 text-lg leading-relaxed italic mb-8">
+                    &quot;{item.quote}&quot;
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="relative h-12 w-12 shrink-0 rounded-full overflow-hidden bg-zinc-800 border border-zinc-700">
+                    {imageUrl ? (
+                      <Image 
+                        src={imageUrl} 
+                        alt={item.authorName} 
+                        fill 
+                        className="object-cover" 
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center text-zinc-500 font-bold text-xl">
+                        {item.authorName.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-sm">
+                      {item.authorName}
+                    </h4>
+                    <p className="text-zinc-500 text-xs">
+                      {item.authorRole} en <span className="text-cyan-500">{item.companyName}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ========== Fin de src/components/sections/Testimonials.tsx ========== //
+
+// ========== [48] src/components/sections/TrustBar.tsx ========== //
+
+import React from 'react'
+import Image from 'next/image'
+import type { Media } from '@/payload-types'
+
+interface TrustBarProps {
+  logos?: (Media | number)[] | null
+  title?: string
+}
+
+export function TrustBar({ logos, title = "Tecnologías que impulsan nuestros productos" }: TrustBarProps) {
+  // Si no hay logos, no renderizamos nada para no dejar un hueco vacío
+  if (!logos || logos.length === 0) return null
+
+  return (
+    <section className="border-b border-white/5 bg-black py-10">
+      <div className="container px-4 mx-auto">
+        <p className="text-center text-sm font-mono text-zinc-600 mb-8 uppercase tracking-widest">
+          {title}
+        </p>
+        
+        <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 opacity-60 hover:opacity-100 transition-opacity duration-500">
+          {logos.map((logo, index) => {
+            // Verificación de tipo segura para Payload
+            if (typeof logo === 'number') return null
+            const url = logo.url
+            const alt = logo.alt || 'Logo tecnológico'
+
+            if (!url) return null
+
+            return (
+              <div key={index} className="relative h-8 w-auto min-w-[100px] grayscale hover:grayscale-0 transition-all duration-300">
+                <Image
+                  src={url}
+                  alt={alt}
+                  height={40}
+                  width={120}
+                  className="h-full w-auto object-contain object-center brightness-200 invert-0" // Efecto para que se vean bien sobre negro
+                />
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ========== Fin de src/components/sections/TrustBar.tsx ========== //
+
+// ========== [49] src/components/ui/badge.tsx ========== //
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -16778,7 +17124,7 @@ export { Badge, badgeVariants }
 
 // ========== Fin de src/components/ui/badge.tsx ========== //
 
-// ========== [46] src/components/ui/button.tsx ========== //
+// ========== [50] src/components/ui/button.tsx ========== //
 
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
@@ -16841,7 +17187,7 @@ export { Button, buttonVariants }
 
 // ========== Fin de src/components/ui/button.tsx ========== //
 
-// ========== [47] src/globals/Company.ts ========== //
+// ========== [51] src/globals/Company.ts ========== //
 
 // ========== src/globals/Company.ts ========== //
 
@@ -16997,16 +17343,9 @@ export const Company: GlobalConfig = {
 
 // ========== Fin de src/globals/Company.ts ========== //
 
-// ========== [48] src/globals/Landing.ts ========== //
+// ========== [52] src/globals/Landing.ts ========== //
 
 // ========== src/globals/Landing.ts ========== //
-
-// -----------------------------------------------------------------------------
-// Archivo: src/globals/Landing.ts
-// Versión: 1.0.0
-// Descripción: Configuración global para los textos y contenidos de la página de inicio.
-// Permite al administrador cambiar el marketing sin tocar código.
-// -----------------------------------------------------------------------------
 
 import type { GlobalConfig } from 'payload'
 
@@ -17020,6 +17359,7 @@ export const Landing: GlobalConfig = {
     {
       type: 'tabs',
       tabs: [
+        // --- TAB 1: HERO (Ya existía) ---
         {
           label: 'Sección Hero',
           fields: [
@@ -17045,6 +17385,31 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
+
+        // --- TAB 2: BARRA DE CONFIANZA (NUEVO) ---
+        {
+          label: 'Barra de Confianza',
+          fields: [
+            {
+              name: 'trustBarTitle',
+              type: 'text',
+              label: 'Título pequeño (sobre los logos)',
+              defaultValue: 'Tecnologías que impulsan nuestros productos',
+            },
+            {
+              name: 'trustLogos',
+              type: 'relationship',
+              relationTo: 'media',
+              hasMany: true,
+              label: 'Logos Tecnológicos o Clientes',
+              admin: {
+                description: 'Selecciona los logos que aparecerán en la barra gris (se mostrarán en escala de grises automáticamente).',
+              },
+            },
+          ],
+        },
+
+        // --- TAB 3: PRODUCTOS (Ya existía) ---
         {
           label: 'Sección Productos',
           fields: [
@@ -17062,6 +17427,8 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
+
+        // --- TAB 4: METODOLOGÍA (Ya existía) ---
         {
           label: 'Sección Metodología',
           fields: [
@@ -17116,6 +17483,115 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
+
+        // --- TAB 5: TESTIMONIOS (NUEVO) ---
+        {
+          label: 'Testimonios',
+          fields: [
+            {
+              name: 'testimonialsTitle',
+              type: 'text',
+              label: 'Título Sección Testimonios',
+              defaultValue: 'Confianza que se construye con código',
+            },
+            {
+              name: 'testimonialsSubtitle',
+              type: 'textarea',
+              label: 'Subtítulo',
+              defaultValue: 'Lo que dicen los líderes técnicos que ya escalan con nuestra arquitectura.',
+            },
+            {
+              name: 'testimonials',
+              type: 'array',
+              label: 'Lista de Reseñas',
+              labels: {
+                singular: 'Testimonio',
+                plural: 'Testimonios',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'authorName',
+                      type: 'text',
+                      label: 'Nombre Autor',
+                      required: true,
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'authorRole',
+                      type: 'text',
+                      label: 'Cargo (ej: CTO)',
+                      required: true,
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+                {
+                  name: 'companyName',
+                  type: 'text',
+                  label: 'Empresa',
+                  required: true,
+                },
+                {
+                  name: 'quote',
+                  type: 'textarea',
+                  label: 'La Cita / Opinión',
+                  required: true,
+                },
+                {
+                  name: 'authorImage',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Foto del Autor',
+                },
+              ],
+            },
+          ],
+        },
+
+        // --- TAB 6: FAQ (NUEVO) ---
+        {
+          label: 'FAQs',
+          fields: [
+            {
+              name: 'faqTitle',
+              type: 'text',
+              label: 'Título Sección FAQ',
+              defaultValue: 'Preguntas Frecuentes',
+            },
+            {
+              name: 'faqSubtitle',
+              type: 'textarea',
+              label: 'Subtítulo',
+              defaultValue: 'Todo lo que necesitas saber sobre nuestra forma de trabajar.',
+            },
+            {
+              name: 'faqs',
+              type: 'array',
+              label: 'Lista de Preguntas',
+              labels: {
+                singular: 'Pregunta',
+                plural: 'Preguntas',
+              },
+              fields: [
+                {
+                  name: 'question',
+                  type: 'text',
+                  label: 'Pregunta',
+                  required: true,
+                },
+                {
+                  name: 'answer',
+                  type: 'textarea',
+                  label: 'Respuesta',
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],
@@ -17123,9 +17599,7 @@ export const Landing: GlobalConfig = {
 
 // ========== Fin de src/globals/Landing.ts ========== //
 
-// ========== Fin de src/globals/Landing.ts ========== //
-
-// ========== [49] src/globals/Legal.ts ========== //
+// ========== [53] src/globals/Legal.ts ========== //
 
 // ========== src/globals/Legal.ts ========== //
 
@@ -17183,7 +17657,7 @@ export const Legal: GlobalConfig = {
 
 // ========== Fin de src/globals/Legal.ts ========== //
 
-// ========== [50] src/lib/cloudinaryAdapter.ts ========== //
+// ========== [54] src/lib/cloudinaryAdapter.ts ========== //
 
 // ========== src/lib/cloudinaryAdapter.ts ========== //
 
@@ -17267,7 +17741,7 @@ export const deleteFromCloudinary: CollectionAfterDeleteHook = async ({ doc }) =
 
 // ========== Fin de src/lib/cloudinaryAdapter.ts ========== //
 
-// ========== [51] src/lib/utils.ts ========== //
+// ========== [55] src/lib/utils.ts ========== //
 
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -17279,7 +17753,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // ========== Fin de src/lib/utils.ts ========== //
 
-// ========== [52] src/payload-types.ts ========== //
+// ========== [56] src/payload-types.ts ========== //
 
 /* tslint:disable */
 /* eslint-disable */
@@ -17792,6 +18266,8 @@ export interface LandingPage {
   heroBadge?: string | null;
   heroTitle: string;
   heroSubtitle: string;
+  trustBarTitle?: string | null;
+  trustLogos?: (number | Media)[] | null;
   productsTitle?: string | null;
   productsDescription?: string | null;
   featuresTitle?: string | null;
@@ -17801,6 +18277,27 @@ export interface LandingPage {
         icon?: ('smartphone' | 'zap' | 'database' | 'shield') | null;
         title: string;
         description: string;
+        id?: string | null;
+      }[]
+    | null;
+  testimonialsTitle?: string | null;
+  testimonialsSubtitle?: string | null;
+  testimonials?:
+    | {
+        authorName: string;
+        authorRole: string;
+        companyName: string;
+        quote: string;
+        authorImage?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqTitle?: string | null;
+  faqSubtitle?: string | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
         id?: string | null;
       }[]
     | null;
@@ -17856,6 +18353,8 @@ export interface LandingPageSelect<T extends boolean = true> {
   heroBadge?: T;
   heroTitle?: T;
   heroSubtitle?: T;
+  trustBarTitle?: T;
+  trustLogos?: T;
   productsTitle?: T;
   productsDescription?: T;
   featuresTitle?: T;
@@ -17866,6 +18365,27 @@ export interface LandingPageSelect<T extends boolean = true> {
         icon?: T;
         title?: T;
         description?: T;
+        id?: T;
+      };
+  testimonialsTitle?: T;
+  testimonialsSubtitle?: T;
+  testimonials?:
+    | T
+    | {
+        authorName?: T;
+        authorRole?: T;
+        companyName?: T;
+        quote?: T;
+        authorImage?: T;
+        id?: T;
+      };
+  faqTitle?: T;
+  faqSubtitle?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
         id?: T;
       };
   updatedAt?: T;
@@ -17887,7 +18407,7 @@ declare module 'payload' {
 
 // ========== Fin de src/payload-types.ts ========== //
 
-// ========== [53] src/payload.config.ts ========== //
+// ========== [57] src/payload.config.ts ========== //
 
 // ========== src/payload.config.ts ========== //
 
@@ -17958,7 +18478,7 @@ export default buildConfig({
 
 // ========== Fin de src/payload.config.ts ========== //
 
-// ========== [54] tailwind.config.js ========== //
+// ========== [58] tailwind.config.js ========== //
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -18024,7 +18544,7 @@ export default {
 
 // ========== Fin de tailwind.config.js ========== //
 
-// ========== [55] tsconfig.json ========== //
+// ========== [59] tsconfig.json ========== //
 
 {
   "compilerOptions": {

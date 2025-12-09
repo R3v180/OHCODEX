@@ -46,8 +46,12 @@ export function FAQ({
 
       <div className="container px-4 mx-auto max-w-3xl">
         <div className="text-center mb-16">
+          {/* TÍTULO CON ÚLTIMA PALABRA EN CYAN */}
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
-            {title}
+            {title.split(' ').slice(0, -1).join(' ')}{' '}
+            <span className="text-cyan-500">
+              {title.split(' ').slice(-1)}
+            </span>
           </h2>
           <p className="text-lg text-zinc-400">
             {subtitle}

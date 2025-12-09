@@ -60,8 +60,12 @@ export function Testimonials({
 
       <div className="container px-4 mx-auto relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16">
+          {/* TÍTULO CON ÚLTIMA PALABRA EN CYAN */}
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
-            {title}
+            {title.split(' ').slice(0, -1).join(' ')}{' '}
+            <span className="text-cyan-500">
+              {title.split(' ').slice(-1)}
+            </span>
           </h2>
           <p className="text-lg text-zinc-400">
             {subtitle}
@@ -81,7 +85,7 @@ export function Testimonials({
               >
                 <div>
                   <Quote className="h-8 w-8 text-cyan-500/50 mb-6" />
-                  {/* CORRECCIÓN AQUÍ: Usamos &quot; en lugar de " */}
+                  {/* Cita con comillas escapadas correctamente */}
                   <p className="text-zinc-300 text-lg leading-relaxed italic mb-8">
                     &quot;{item.quote}&quot;
                   </p>

@@ -17,23 +17,23 @@ export function Header() {
 
         {/* NAVEGACIÓN DESKTOP */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400">
-          {/* CORRECCIÓN: Añadida la barra '/' antes de '#' para navegar desde cualquier página */}
           <Link href="/#productos" className="hover:text-cyan-400 transition-colors">
             Productos
           </Link>
-          {/* Apuntamos Servicios a Metodología si no hay sección específica, o a /#servicios si la creaste */}
-          <Link href="/#metodologia" className="hover:text-cyan-400 transition-colors">
-            Servicios
-          </Link>
+          
           <Link href="/#metodologia" className="hover:text-cyan-400 transition-colors">
             Metodología
+          </Link>
+
+          {/* ✅ NUEVO ENLACE: Blog */}
+          <Link href="/blog" className="hover:text-cyan-400 transition-colors font-semibold text-zinc-100">
+            Blog
           </Link>
         </nav>
 
         {/* BOTÓN CONTACTO */}
         <div className="flex items-center gap-4">
           <Button asChild variant="outline" className="border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/10 hover:text-cyan-300">
-            {/* CORRECCIÓN: Añadida la barra '/' */}
             <Link href="/#contacto">
               Contactar
             </Link>
@@ -43,5 +43,3 @@ export function Header() {
     </header>
   )
 }
-
-// ========== Fin de src/components/layout/Header.tsx ========== //

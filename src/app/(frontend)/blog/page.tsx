@@ -8,11 +8,10 @@ import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { CalendarDays, User } from 'lucide-react'
 import { Metadata } from 'next'
-// Si este import da error, ejecuta 'npm run generate:types'
 import type { Post } from '@/payload-types'
 
-// ISR: Refrescar cada hora (3600 segundos)
-export const revalidate = 3600
+// CAMBIO: Ponemos 0 para forzar la actualización inmediata y ver los posts
+export const revalidate = 0
 
 export const metadata: Metadata = {
   title: 'Blog de Ingeniería y Software | OHCodex',
@@ -69,7 +68,7 @@ export default async function BlogPage() {
                 : 'General'
 
               // Manejo seguro del autor
-              const authorName = typeof post.author === 'object' && post.author?.email // Fallback al email si no hay nombre
+              const authorName = typeof post.author === 'object' && post.author?.email 
                 ? 'Equipo OHCodex' 
                 : 'OHCodex'
 

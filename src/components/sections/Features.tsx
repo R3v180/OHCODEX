@@ -1,14 +1,5 @@
-// ========== src/components/sections/Features.tsx ========== //
-
-// -----------------------------------------------------------------------------
-// Archivo: src/components/sections/Features.tsx
-// Versión: 2.0.0 - Lista Dinámica
-// Descripción: Muestra las características clave. El título, descripción y la
-// propia lista de items (icono + texto) se gestionan desde el Global 'landing-page'.
-// -----------------------------------------------------------------------------
-
 import React from 'react'
-import { Smartphone, Zap, Database, ShieldCheck, LucideIcon } from 'lucide-react'
+import { Smartphone, Zap, Database, ShieldCheck, LucideIcon, Code2, Users, Rocket } from 'lucide-react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LandingPage } from '@/payload-types'
@@ -19,21 +10,27 @@ const iconMap: Record<string, LucideIcon> = {
   zap: Zap,
   database: Database,
   shield: ShieldCheck,
+  code: Code2,
+  users: Users,
+  rocket: Rocket
 }
 
 export async function FeaturesSection() {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Obtener datos globales
+  // 1. Obtener datos globales con tipado
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
   })) as unknown as LandingPage
 
-  // 2. Textos con Fallback
+  // 2. Configuración Visual
+  const align = landing.featuresAlign || 'left' // 'left' | 'center'
+  
+  // Textos con Fallback
   const title = landing?.featuresTitle || 'Más allá del código: Ingeniería de Producto'
   const description = landing?.featuresDescription || 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.'
   
-  // 3. Lista de Características (Si está vacía en el CMS, usamos una por defecto para que no quede feo)
+  // Lista de Características (Fallback si está vacío)
   const featuresList = landing?.featuresList || [
     {
       icon: 'smartphone',
@@ -57,53 +54,55 @@ export async function FeaturesSection() {
     },
   ]
 
+  // Lógica para el Título (Última palabra en Cyan)
+  const titleWords = title.split(' ')
+  const titleMain = titleWords.slice(0, -1).join(' ')
+  const titleLast = titleWords.slice(-1)
+
   return (
-    <section id="metodologia" className="bg-black py-24 relative overflow-hidden">
+    <section id="metodologia" className="bg-black py-24 relative overflow-hidden border-b border-white/5">
       
-      {/* Círculo de fondo decorativo */}
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[100px]" />
+      {/* Decoración de fondo */}
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[100px] pointer-events-none" />
 
       <div className="container px-4 mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        
+        {/* --- LAYOUT CONDICIONAL --- */}
+        <div className={align === 'center' ? 'flex flex-col items-center' : 'grid grid-cols-1 lg:grid-cols-2 gap-16 items-center'}>
           
-          {/* COLUMNA IZQUIERDA: Texto */}
-          <div>
+          {/* BLOQUE DE TEXTO */}
+          <div className={align === 'center' ? 'text-center max-w-3xl mb-16' : 'text-left'}>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
-              {/* Coloreamos la segunda mitad del título */}
-              {title.split(':').length > 1 ? (
-                <>
-                  {title.split(':')[0]}: <br />
-                  <span className="text-cyan-500">{title.split(':')[1]}</span>
-                </>
-              ) : (
-                title
-              )}
+              {titleMain} <span className="text-cyan-500">{titleLast}</span>
             </h2>
             <p className="text-lg text-zinc-400 mb-8 leading-relaxed">
               {description}
             </p>
             
-            <div className="flex flex-col gap-4">
-               {/* Lista de ventajas visuales (Estáticas por diseño, o podrías añadirlas al CMS si quisieras) */}
-               {['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros'].map((item, i) => (
-                 <div key={i} className="flex items-center gap-3">
-                   <div className="h-2 w-2 rounded-full bg-cyan-500" />
-                   <span className="text-zinc-300 font-medium">{item}</span>
-                 </div>
-               ))}
-            </div>
+            {/* Lista extra (solo se muestra si está alineado a la izquierda para rellenar espacio) */}
+            {align === 'left' && (
+              <div className="flex flex-col gap-4">
+                 {['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros'].map((item, i) => (
+                   <div key={i} className="flex items-center gap-3">
+                     <div className="h-2 w-2 rounded-full bg-cyan-500" />
+                     <span className="text-zinc-300 font-medium">{item}</span>
+                   </div>
+                 ))}
+              </div>
+            )}
           </div>
 
-          {/* COLUMNA DERECHA: Grid de Iconos Dinámico */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* GRID DE ICONOS */}
+          <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 ${align === 'center' ? 'w-full lg:grid-cols-4' : ''}`}>
             {featuresList.map((feature, index) => {
-              // Resolver el icono desde el mapa, si no existe usamos 'Zap' por defecto
-              const IconComponent = iconMap[feature.icon || 'zap'] || Zap
+              // Resolver el icono desde el mapa (Tipado seguro)
+              const iconKey = (feature.icon as string) || 'zap'
+              const IconComponent = iconMap[iconKey] || Zap
               
               return (
                 <div 
                   key={index} 
-                  className="group rounded-2xl border border-white/10 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all hover:bg-zinc-800 hover:border-cyan-500/30"
+                  className="group rounded-2xl border border-white/10 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all hover:bg-zinc-800 hover:border-cyan-500/30 h-full"
                 >
                   <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
                     <IconComponent className="h-6 w-6" />
@@ -124,5 +123,3 @@ export async function FeaturesSection() {
     </section>
   )
 }
-
-// ========== Fin de src/components/sections/Features.tsx ========== //

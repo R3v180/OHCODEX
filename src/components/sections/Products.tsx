@@ -1,5 +1,3 @@
-// ========== src/components/sections/Products.tsx ========== //
-
 import React from 'react'
 import Link from 'next/link'
 import { getPayload } from 'payload'
@@ -8,7 +6,7 @@ import { ArrowUpRight, CheckCircle2, FlaskConical, Rocket, Timer } from 'lucide-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { LandingPage } from '@/payload-types'
-import Image from 'next/image' // Importamos Image para el logo si se usa
+import Image from 'next/image'
 
 const getStatusConfig = (status: string) => {
   switch (status) {
@@ -26,6 +24,7 @@ const getStatusConfig = (status: string) => {
 export async function ProductsSection() {
   const payload = await getPayload({ config: configPromise })
   
+  // 1. Obtenemos la configuración de la Landing (Tipado seguro)
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
   })) as unknown as LandingPage
@@ -36,8 +35,21 @@ export async function ProductsSection() {
     sort: '-isFeatured',
   })
 
+  // 2. Extraer configuración visual con Fallbacks
   const title = landing?.productsTitle || 'Soluciones OHCodex'
-  const description = landing?.productsDescription || 'Software diseñado para resolver problemas reales. Desde la automatización de infraestructura hasta la gestión comercial.'
+  const description = landing?.productsDescription || 'Software diseñado para resolver problemas reales.'
+  
+  // Configuración de Rejilla (2, 3 o 4 columnas)
+  const gridColsOption = landing.productsGridCols || '3'
+  const gridClass = {
+    '2': 'lg:grid-cols-2',
+    '3': 'lg:grid-cols-3',
+    '4': 'lg:grid-cols-4',
+  }[gridColsOption]
+
+  // Configuración de Alineación (Izquierda o Centro)
+  const alignOption = landing.productsAlign || 'center'
+  const headerAlignClass = alignOption === 'center' ? 'text-center mx-auto' : 'text-left mr-auto'
 
   if (!products || products.length === 0) {
     return null 
@@ -47,16 +59,18 @@ export async function ProductsSection() {
     <section id="productos" className="bg-zinc-950 py-24 border-b border-white/5">
       <div className="container px-4 mx-auto">
         
-        <div className="mb-16 text-center">
+        {/* CABECERA CONFIGURABLE */}
+        <div className={`mb-16 max-w-3xl ${headerAlignClass}`}>
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             {title.split(' ').slice(0, -1).join(' ')} <span className="text-cyan-500">{title.split(' ').slice(-1)}</span>
           </h2>
-          <p className="mt-4 text-lg text-zinc-400 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-zinc-400">
             {description}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* REJILLA CONFIGURABLE */}
+        <div className={`grid grid-cols-1 md:grid-cols-2 ${gridClass} gap-8`}>
           {products.map((product) => {
             const status = getStatusConfig(product.status)
             const StatusIcon = status.icon
@@ -72,18 +86,14 @@ export async function ProductsSection() {
                 key={product.id} 
                 className="group relative flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all hover:border-cyan-500/50 hover:bg-zinc-900 hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]"
               >
-                {/* --- ENLACE MAESTRO (CAPA SUPERIOR) --- */}
-                {/* Z-10 para asegurar que esté por encima del texto y capture el clic */}
+                {/* Enlace Maestro */}
                 <Link 
                     href={detailUrl} 
                     className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-black"
                     aria-label={`Ver detalles de ${product.name}`}
                 />
 
-                {/* --- CONTENIDO DE LA TARJETA (CAPA INFERIOR) --- */}
-                {/* Quitamos z-10 de aquí para que el Link de arriba capture los eventos */}
-                
-                <div className="flex items-start justify-between mb-6 pointer-events-none"> {/* pointer-events-none evita bloqueos raros */}
+                <div className="flex items-start justify-between mb-6 pointer-events-none">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-colors">
                       {iconUrl ? (
                         <div className="relative w-8 h-8">
@@ -117,8 +127,6 @@ export async function ProductsSection() {
                     ))}
                   </div>
                   
-                  {/* --- EXCEPCIÓN: BOTÓN EXTERNO --- */}
-                  {/* Z-20 para estar ENCIMA del enlace maestro (z-10) y ser clickable independientemente */}
                   {product.projectUrl && (
                     <div className="relative z-20">
                         <Button asChild size="sm" variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950 p-0 h-auto font-semibold ml-2">

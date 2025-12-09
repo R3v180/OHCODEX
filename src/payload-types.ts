@@ -513,8 +513,11 @@ export interface LandingPage {
   trustLogos?: (number | Media)[] | null;
   productsTitle?: string | null;
   productsDescription?: string | null;
+  productsGridCols?: ('2' | '3' | '4') | null;
+  productsAlign?: ('center' | 'left') | null;
   featuresTitle?: string | null;
   featuresDescription?: string | null;
+  featuresAlign?: ('left' | 'center') | null;
   featuresList?:
     | {
         icon?: ('smartphone' | 'zap' | 'database' | 'shield') | null;
@@ -600,8 +603,11 @@ export interface LandingPageSelect<T extends boolean = true> {
   trustLogos?: T;
   productsTitle?: T;
   productsDescription?: T;
+  productsGridCols?: T;
+  productsAlign?: T;
   featuresTitle?: T;
   featuresDescription?: T;
+  featuresAlign?: T;
   featuresList?:
     | T
     | {

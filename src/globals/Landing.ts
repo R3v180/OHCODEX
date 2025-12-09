@@ -1,5 +1,3 @@
-// ========== src/globals/Landing.ts ========== //
-
 import type { GlobalConfig } from 'payload'
 
 export const Landing: GlobalConfig = {
@@ -12,7 +10,7 @@ export const Landing: GlobalConfig = {
     {
       type: 'tabs',
       tabs: [
-        // --- TAB 1: HERO (Ya existía) ---
+        // --- TAB 1: HERO ---
         {
           label: 'Sección Hero',
           fields: [
@@ -39,7 +37,7 @@ export const Landing: GlobalConfig = {
           ],
         },
 
-        // --- TAB 2: BARRA DE CONFIANZA (NUEVO) ---
+        // --- TAB 2: BARRA DE CONFIANZA ---
         {
           label: 'Barra de Confianza',
           fields: [
@@ -55,14 +53,11 @@ export const Landing: GlobalConfig = {
               relationTo: 'media',
               hasMany: true,
               label: 'Logos Tecnológicos o Clientes',
-              admin: {
-                description: 'Selecciona los logos que aparecerán en la barra gris (se mostrarán en escala de grises automáticamente).',
-              },
             },
           ],
         },
 
-        // --- TAB 3: PRODUCTOS (Ya existía) ---
+        // --- TAB 3: PRODUCTOS (CONFIGURABLE) ---
         {
           label: 'Sección Productos',
           fields: [
@@ -78,10 +73,39 @@ export const Landing: GlobalConfig = {
               label: 'Descripción Sección Productos',
               defaultValue: 'Software diseñado para resolver problemas reales. Desde la automatización de infraestructura hasta la gestión comercial.',
             },
+            // --- NUEVO: CONFIGURACIÓN DE DISEÑO ---
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'productsGridCols',
+                  type: 'select',
+                  label: 'Columnas en PC',
+                  defaultValue: '3',
+                  options: [
+                    { label: '2 Columnas (Ideal para 2 o 4 items)', value: '2' },
+                    { label: '3 Columnas (Estándar)', value: '3' },
+                    { label: '4 Columnas (Compacto)', value: '4' },
+                  ],
+                  admin: { width: '50%' },
+                },
+                {
+                  name: 'productsAlign',
+                  type: 'select',
+                  label: 'Alineación de Texto',
+                  defaultValue: 'center',
+                  options: [
+                    { label: 'Centrado', value: 'center' },
+                    { label: 'Izquierda', value: 'left' },
+                  ],
+                  admin: { width: '50%' },
+                },
+              ],
+            },
           ],
         },
 
-        // --- TAB 4: METODOLOGÍA (Ya existía) ---
+        // --- TAB 4: METODOLOGÍA (CONFIGURABLE) ---
         {
           label: 'Sección Metodología',
           fields: [
@@ -96,6 +120,17 @@ export const Landing: GlobalConfig = {
               type: 'textarea',
               label: 'Descripción Metodología',
               defaultValue: 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.',
+            },
+            // --- NUEVO: CONFIGURACIÓN DE DISEÑO ---
+            {
+              name: 'featuresAlign',
+              type: 'select',
+              label: 'Diseño de la Sección',
+              defaultValue: 'left',
+              options: [
+                { label: 'Izquierda (Texto Izq + Grid Der)', value: 'left' },
+                { label: 'Centro (Texto Arriba + Grid Abajo)', value: 'center' },
+              ],
             },
             {
               name: 'featuresList',
@@ -137,7 +172,7 @@ export const Landing: GlobalConfig = {
           ],
         },
 
-        // --- TAB 5: TESTIMONIOS (NUEVO) ---
+        // --- TAB 5: TESTIMONIOS ---
         {
           label: 'Testimonios',
           fields: [
@@ -204,7 +239,7 @@ export const Landing: GlobalConfig = {
           ],
         },
 
-        // --- TAB 6: FAQ (NUEVO) ---
+        // --- TAB 6: FAQ ---
         {
           label: 'FAQs',
           fields: [

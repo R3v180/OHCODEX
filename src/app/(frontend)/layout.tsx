@@ -1,5 +1,3 @@
-// ========== src/app/(frontend)/layout.tsx ========== //
-
 import React from 'react'
 import '../globals.css'
 import { Inter } from 'next/font/google'
@@ -18,7 +16,6 @@ const getServerUrl = () => process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcode
 // Imagen Social por defecto (Fallback)
 const SOCIAL_IMAGE_URL = 'https://res.cloudinary.com/dpp6gyfao/image/upload/w_1200,h_630,c_fill,q_auto/v1765156811/ohcodex-media/jz9fdr3w83as6gxi40fq.jpg'
 
-// ✅ CAMBIO: Ahora es una función asíncrona que lee de la BD
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config: configPromise })
   
@@ -93,11 +90,8 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [SOCIAL_IMAGE_URL],
     },
     
-    icons: {
-      icon: '/favicon.ico',
-      shortcut: '/favicon-16x16.png',
-      apple: '/apple-touch-icon.png',
-    },
+    // NOTA: Hemos eliminado la sección 'icons' manual.
+    // Next.js ahora usará automáticamente el archivo src/app/(frontend)/icon.tsx
   }
 }
 

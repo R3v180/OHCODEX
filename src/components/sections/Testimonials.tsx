@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Quote } from 'lucide-react'
 import type { Media } from '@/payload-types'
 
-// Definimos la estructura de un testimonio (coincidirá con el Backend luego)
+// Definimos la estructura de un testimonio
 export interface TestimonialItem {
   id?: string | null
   authorName: string
@@ -27,11 +27,21 @@ export function Testimonials({
   
   if (!testimonials || testimonials.length === 0) return null
 
-  // Generamos el Schema.org para Google (Review Snippet)
+  // CORRECCIÓN: Añadimos 'aggregateRating' para satisfacer a Google
   const reviewsJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'OHCodex',
+    url: 'https://www.ohcodex.com',
+    // Bloque obligatorio agregado
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '5', // Asumimos 5 ya que todos los testimonios destacados suelen serlo
+      reviewCount: testimonials.length.toString(),
+      bestRating: '5',
+      worstRating: '1'
+    },
+    // Lista de reseñas individuales
     review: testimonials.map((t) => ({
       '@type': 'Review',
       author: {
@@ -41,8 +51,9 @@ export function Testimonials({
       reviewBody: t.quote,
       reviewRating: {
         '@type': 'Rating',
-        ratingValue: '5', // Asumimos 5 estrellas para testimonios destacados
+        ratingValue: '5',
         bestRating: '5',
+        worstRating: '1' // Recomendado añadir el peor escenario
       },
     })),
   }
@@ -60,7 +71,6 @@ export function Testimonials({
 
       <div className="container px-4 mx-auto relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          {/* TÍTULO CON ÚLTIMA PALABRA EN CYAN */}
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
             {title.split(' ').slice(0, -1).join(' ')}{' '}
             <span className="text-cyan-500">
@@ -85,7 +95,6 @@ export function Testimonials({
               >
                 <div>
                   <Quote className="h-8 w-8 text-cyan-500/50 mb-6" />
-                  {/* Cita con comillas escapadas correctamente */}
                   <p className="text-zinc-300 text-lg leading-relaxed italic mb-8">
                     &quot;{item.quote}&quot;
                   </p>

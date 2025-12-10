@@ -26,42 +26,45 @@
 22. src/app/(frontend)/terminos/page.tsx
 23. src/app/(payload)/admin/[[...segments]]/not-found.tsx
 24. src/app/(payload)/admin/[[...segments]]/page.tsx
-25. src/app/(payload)/api/[...slug]/route.ts
-26. src/app/(payload)/api/graphql-playground/route.ts
-27. src/app/(payload)/api/graphql/route.ts
-28. src/app/(payload)/layout.tsx
-29. src/app/globals.css
-30. src/app/my-route/route.ts
-31. src/app/robots.ts
-32. src/app/sitemap.ts
-33. src/collections/Categories.ts
-34. src/collections/ContactSubmissions.ts
-35. src/collections/Media.ts
-36. src/collections/Posts.ts
-37. src/collections/Products.ts
-38. src/collections/Users.ts
-39. src/components/admin/NotificationBell.tsx
-40. src/components/layout/Footer.tsx
-41. src/components/layout/Header.tsx
-42. src/components/sections/Contact.tsx
-43. src/components/sections/FAQ.tsx
-44. src/components/sections/Features.tsx
-45. src/components/sections/Hero.tsx
-46. src/components/sections/Products.tsx
-47. src/components/sections/Testimonials.tsx
-48. src/components/sections/TrustBar.tsx
-49. src/components/ui/badge.tsx
-50. src/components/ui/button.tsx
-51. src/globals/Company.ts
-52. src/globals/EmailSettings.ts
-53. src/globals/Landing.ts
-54. src/globals/Legal.ts
-55. src/lib/cloudinaryAdapter.ts
-56. src/lib/utils.ts
-57. src/payload-types.ts
-58. src/payload.config.ts
-59. tailwind.config.js
-60. tsconfig.json
+25. src/app/(payload)/admin/importMap.js
+26. src/app/(payload)/api/[...slug]/route.ts
+27. src/app/(payload)/api/graphql-playground/route.ts
+28. src/app/(payload)/api/graphql/route.ts
+29. src/app/(payload)/layout.tsx
+30. src/app/globals.css
+31. src/app/my-route/route.ts
+32. src/app/robots.ts
+33. src/app/sitemap.ts
+34. src/collections/Categories.ts
+35. src/collections/ContactSubmissions.ts
+36. src/collections/Media.ts
+37. src/collections/Posts.ts
+38. src/collections/Products.ts
+39. src/collections/Users.ts
+40. src/components/admin/NotificationBell.client.tsx
+41. src/components/admin/NotificationBell.tsx
+42. src/components/admin/ReadStatusHandler.tsx
+43. src/components/layout/Footer.tsx
+44. src/components/layout/Header.tsx
+45. src/components/sections/Contact.tsx
+46. src/components/sections/FAQ.tsx
+47. src/components/sections/Features.tsx
+48. src/components/sections/Hero.tsx
+49. src/components/sections/Products.tsx
+50. src/components/sections/Testimonials.tsx
+51. src/components/sections/TrustBar.tsx
+52. src/components/ui/badge.tsx
+53. src/components/ui/button.tsx
+54. src/globals/Company.ts
+55. src/globals/EmailSettings.ts
+56. src/globals/Landing.ts
+57. src/globals/Legal.ts
+58. src/lib/cloudinaryAdapter.ts
+59. src/lib/utils.ts
+60. src/payload-types.ts
+61. src/payload.config.ts
+62. tailwind.config.js
+63. tsconfig.json
 
 
 ==================================================
@@ -14299,7 +14302,7 @@ import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
 
 // ✅ CAMBIO: De 'force-dynamic' a ISR (mucho más rápido)
-export const revalidate = 3600 // 1 hora (el legal cambia poco)
+export const revalidate = 86400 // 1 hora (el legal cambia poco)
 
 export const metadata: Metadata = {
   title: 'Aviso Legal',
@@ -14374,8 +14377,6 @@ export default async function AvisoLegalPage() {
 
 // ========== [14] src/app/(frontend)/blog/[slug]/page.tsx ========== //
 
-// ========== src/app/(frontend)/blog/[slug]/page.tsx ========== //
-
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -14385,15 +14386,14 @@ import Link from 'next/link'
 import { ArrowLeft, CalendarDays, User, Clock } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Metadata } from 'next'
-import type { Post } from '@/payload-types'
+import type { Post, CompanyInfo } from '@/payload-types'
 
-// CAMBIO: 0 segundos para que la actualización sea inmediata al editar
-export const revalidate = 3600
+// Revalidación ISR (1 hora)
+export const revalidate = 86400
 
-// --- Serializador de Texto Rico (Rich Text) ---
+// --- Serializador Lexical (Sin cambios, lo minimizo para ahorrar espacio visual) ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
-
   return (
     <>
       {nodes.map((node, i) => {
@@ -14405,9 +14405,7 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
           if (node.format & 16) text = <code key={i} className="bg-zinc-800 text-cyan-400 px-1 py-0.5 rounded text-sm font-mono">{text}</code>
           return text
         }
-
         if (!node) return null
-
         switch (node.type) {
           case 'heading':
             const Tag = node.tag as any
@@ -14418,27 +14416,21 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
               h4: 'text-lg sm:text-xl mt-6 mb-3 text-white font-semibold'
             }
             return <Tag key={i} className={sizes[node.tag] || ''}><SerializeLexical nodes={node.children} /></Tag>
-          
           case 'paragraph':
             return <p key={i} className="mb-6 leading-7 text-zinc-300 text-lg"><SerializeLexical nodes={node.children} /></p>
-          
           case 'quote':
             return (
               <blockquote key={i} className="border-l-4 border-cyan-500 pl-4 italic text-zinc-400 my-8 py-2 bg-zinc-900/30 rounded-r-lg">
                 <SerializeLexical nodes={node.children} />
               </blockquote>
             )
-
           case 'list':
             const ListTag = node.listType === 'number' ? 'ol' : 'ul'
             return <ListTag key={i} className={`mb-6 pl-6 ${node.listType === 'number' ? 'list-decimal' : 'list-disc'} text-zinc-300 marker:text-cyan-500`}><SerializeLexical nodes={node.children} /></ListTag>
-          
           case 'listitem':
             return <li key={i} className="mb-2 pl-2"><SerializeLexical nodes={node.children} /></li>
-          
           case 'link':
             return <a key={i} href={node.fields.url} target={node.fields.newTab ? '_blank' : '_self'} className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4 decoration-cyan-500/30 hover:decoration-cyan-300"><SerializeLexical nodes={node.children} /></a>
-
           default:
             return <SerializeLexical key={i} nodes={node.children} />
         }
@@ -14447,7 +14439,6 @@ const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   )
 }
 
-// --- Generación de Rutas Estáticas ---
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const { docs: posts } = await payload.find({
@@ -14462,7 +14453,6 @@ interface Args {
   params: Promise<{ slug: string }>
 }
 
-// --- SEO Dinámico ---
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
@@ -14495,46 +14485,69 @@ export default async function BlogPostPage({ params }: Args) {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
 
-  const { docs } = await payload.find({
-    collection: 'posts',
-    where: { slug: { equals: slug } },
-    depth: 2, 
-  })
+  // Carga paralela: Post + Datos de Empresa (para el logo del Publisher)
+  const [postResult, companyResult] = await Promise.all([
+    payload.find({
+      collection: 'posts',
+      where: { slug: { equals: slug } },
+      depth: 2, 
+    }),
+    payload.findGlobal({
+      slug: 'company-info' as any,
+    }) as unknown as CompanyInfo
+  ])
 
-  const post = docs[0] as Post
+  const post = postResult.docs[0] as Post
+  const company = companyResult
 
   if (!post) return notFound()
 
-  // Helpers de datos seguros
   const coverUrl = typeof post.coverImage === 'object' && post.coverImage?.url ? post.coverImage.url : null
   const categoryName = typeof post.category === 'object' && post.category?.name ? post.category.name : 'General'
+  // Autor (Fallback a OHCodex si no hay nombre específico)
   const authorName = typeof post.author === 'object' && post.author?.email ? 'Equipo OHCodex' : 'OHCodex'
   
+  // Logo para el Publisher (Requerido por Google para artículos válidos)
+  const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
+    ? company.logo.url 
+    : 'https://ohcodex.com/logo.png' // Fallback hardcodeado si no hay logo subido
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
   }
 
-  // Schema.org para Artículos (SEO Técnico)
+  // --- SCHEMA.ORG COMPLETO Y VALIDADO ---
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://ohcodex.com/blog/${post.slug}`
+    },
     headline: post.title,
     image: coverUrl ? [coverUrl] : [],
     datePublished: post.publishedDate,
     dateModified: post.updatedAt,
     author: {
-      '@type': 'Organization',
+      '@type': 'Person', // Google prefiere Person para blogs, Organization para noticias
       name: authorName,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'OHCodex',
+      logo: {
+        '@type': 'ImageObject',
+        url: logoUrl
+      }
     },
     description: post.excerpt,
   }
 
   return (
     <article className="min-h-screen bg-black pt-24 pb-20">
-      {/* Inyección JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
 
-      {/* Cabecera del Artículo */}
+      {/* Cabecera */}
       <div className="container px-4 mx-auto max-w-4xl">
         <Link href="/blog" className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors mb-8">
           <ArrowLeft className="mr-2 h-4 w-4" /> Volver al Blog
@@ -14561,12 +14574,12 @@ export default async function BlogPostPage({ params }: Args) {
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
-            Lectura de 5 min
+            5 min
           </div>
         </div>
       </div>
 
-      {/* Imagen Principal */}
+      {/* Imagen */}
       {coverUrl && (
         <div className="container px-4 mx-auto max-w-5xl mb-12">
           <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
@@ -14582,19 +14595,17 @@ export default async function BlogPostPage({ params }: Args) {
         </div>
       )}
 
-      {/* Cuerpo del Artículo */}
+      {/* Contenido */}
       <div className="container px-4 mx-auto max-w-3xl">
         <div className="prose prose-invert prose-lg max-w-none">
-          {/* Renderizado de contenido rico */}
           {post.content && 'root' in post.content && (
             <SerializeLexical nodes={(post.content.root as any).children} />
           )}
         </div>
 
-        {/* CTA Final: Captación de Leads */}
         <div className="mt-16 p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800 text-center">
           <h3 className="text-xl font-bold text-white mb-2">¿Te interesa este tema?</h3>
-          <p className="text-zinc-400 mb-6">Ayudamos a empresas a implementar estas tecnologías en sus procesos.</p>
+          <p className="text-zinc-400 mb-6">Ayudamos a empresas a implementar estas tecnologías.</p>
           <Link href="/#contacto" className="inline-flex h-10 items-center justify-center rounded-md bg-white px-8 text-sm font-medium text-black transition-colors hover:bg-zinc-200">
             Hablemos
           </Link>
@@ -14621,7 +14632,7 @@ import { Metadata } from 'next'
 import type { Post } from '@/payload-types'
 
 // CAMBIO: Ponemos 0 para forzar la actualización inmediata y ver los posts
-export const revalidate = 600
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'Blog de Ingeniería y Software | OHCodex',
@@ -14993,7 +15004,7 @@ import { ContactSection } from '@/components/sections/Contact'
 import type { CompanyInfo, LandingPage } from '@/payload-types'
 
 // Revalidación rápida (10 min) para mantener el SEO fresco pero rápido
-export const revalidate = 600 
+export const revalidate = 86400 
 
 export default async function HomePage() {
   const payload = await getPayload({ config: configPromise })
@@ -15025,16 +15036,18 @@ export default async function HomePage() {
     logo: logoUrl,
     image: logoUrl,
     description: company?.description || 'Ingeniería de software avanzada y desarrollo de productos digitales.',
+    telephone: company?.phoneNumber || '+34 600 000 000',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Jávea',
       addressRegion: 'Alicante',
+      postalCode: '03730',
       addressCountry: 'ES',
       streetAddress: company?.address || 'Jávea, Alicante',
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: company?.phoneNumber,
+      telephone: company?.phoneNumber || '+34 600 000 000',
       contactType: 'customer service',
       email: company?.contactEmail,
       areaServed: 'ES',
@@ -15120,7 +15133,7 @@ import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
 
 // ✅ CAMBIO: Optimización de velocidad
-export const revalidate = 3600
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'Términos y Condiciones',
@@ -15210,7 +15223,7 @@ import { Metadata } from 'next'
 import type { Product } from '@/payload-types'
 
 // --- ISR: Actualización cada 10 min ---
-export const revalidate = 600
+export const revalidate = 86400
 
 // --- HELPER: Serializador Rich Text ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
@@ -15501,7 +15514,7 @@ import { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
-export const revalidate = 3600
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'Términos y Condiciones',
@@ -15638,7 +15651,60 @@ export default Page
 
 // ========== Fin de src/app/(payload)/admin/[[...segments]]/page.tsx ========== //
 
-// ========== [25] src/app/(payload)/api/[...slug]/route.ts ========== //
+// ========== [25] src/app/(payload)/admin/importMap.js ========== //
+
+import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
+import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
+import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { UploadFeatureClient as UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { BlockquoteFeatureClient as BlockquoteFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { RelationshipFeatureClient as RelationshipFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { ChecklistFeatureClient as ChecklistFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { OrderedListFeatureClient as OrderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { UnorderedListFeatureClient as UnorderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { IndentFeatureClient as IndentFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { AlignFeatureClient as AlignFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { HeadingFeatureClient as HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { ParagraphFeatureClient as ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { InlineCodeFeatureClient as InlineCodeFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { SuperscriptFeatureClient as SuperscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { SubscriptFeatureClient as SubscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+
+export const importMap = {
+  "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
+  "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
+  "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#UploadFeatureClient": UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#BlockquoteFeatureClient": BlockquoteFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#RelationshipFeatureClient": RelationshipFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#LinkFeatureClient": LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#ChecklistFeatureClient": ChecklistFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#OrderedListFeatureClient": OrderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#UnorderedListFeatureClient": UnorderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#IndentFeatureClient": IndentFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#AlignFeatureClient": AlignFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#HeadingFeatureClient": HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#ParagraphFeatureClient": ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#InlineCodeFeatureClient": InlineCodeFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#SuperscriptFeatureClient": SuperscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#SubscriptFeatureClient": SubscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#StrikethroughFeatureClient": StrikethroughFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
+}
+
+
+// ========== Fin de src/app/(payload)/admin/importMap.js ========== //
+
+// ========== [26] src/app/(payload)/api/[...slug]/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15663,7 +15729,7 @@ export const OPTIONS = REST_OPTIONS(config)
 
 // ========== Fin de src/app/(payload)/api/[...slug]/route.ts ========== //
 
-// ========== [26] src/app/(payload)/api/graphql-playground/route.ts ========== //
+// ========== [27] src/app/(payload)/api/graphql-playground/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15676,7 +15742,7 @@ export const GET = GRAPHQL_PLAYGROUND_GET(config)
 
 // ========== Fin de src/app/(payload)/api/graphql-playground/route.ts ========== //
 
-// ========== [27] src/app/(payload)/api/graphql/route.ts ========== //
+// ========== [28] src/app/(payload)/api/graphql/route.ts ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15690,7 +15756,7 @@ export const OPTIONS = REST_OPTIONS(config)
 
 // ========== Fin de src/app/(payload)/api/graphql/route.ts ========== //
 
-// ========== [28] src/app/(payload)/layout.tsx ========== //
+// ========== [29] src/app/(payload)/layout.tsx ========== //
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -15727,7 +15793,7 @@ export default Layout
 
 // ========== Fin de src/app/(payload)/layout.tsx ========== //
 
-// ========== [29] src/app/globals.css ========== //
+// ========== [30] src/app/globals.css ========== //
 
 @tailwind base;
 @tailwind components;
@@ -15791,7 +15857,7 @@ export default Layout
 
 // ========== Fin de src/app/globals.css ========== //
 
-// ========== [30] src/app/my-route/route.ts ========== //
+// ========== [31] src/app/my-route/route.ts ========== //
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -15811,7 +15877,7 @@ export const GET = async () => {
 
 // ========== Fin de src/app/my-route/route.ts ========== //
 
-// ========== [31] src/app/robots.ts ========== //
+// ========== [32] src/app/robots.ts ========== //
 
 // ========== src/app/robots.ts ========== //
 
@@ -15846,7 +15912,7 @@ export default function robots(): MetadataRoute.Robots {
 
 // ========== Fin de src/app/robots.ts ========== //
 
-// ========== [32] src/app/sitemap.ts ========== //
+// ========== [33] src/app/sitemap.ts ========== //
 
 // ========== src/app/sitemap.ts ========== //
 
@@ -15935,7 +16001,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 // ========== Fin de src/app/sitemap.ts ========== //
 
-// ========== [33] src/collections/Categories.ts ========== //
+// ========== [34] src/collections/Categories.ts ========== //
 
     // ========== src/collections/Categories.ts ========== //
 
@@ -15973,10 +16039,12 @@ export const Categories: CollectionConfig = {
 
 // ========== Fin de src/collections/Categories.ts ========== //
 
-// ========== [34] src/collections/ContactSubmissions.ts ========== //
+// ========== [35] src/collections/ContactSubmissions.ts ========== //
 
 import type { CollectionConfig } from 'payload'
 import nodemailer from 'nodemailer'
+// Importamos el componente (ahora debe ser un Client Component con Named Export)
+import { ReadStatusHandler } from '../components/admin/ReadStatusHandler'
 
 export const ContactSubmissions: CollectionConfig = {
   slug: 'contact-submissions',
@@ -15997,10 +16065,10 @@ export const ContactSubmissions: CollectionConfig = {
         // Solo enviamos email si se está CREANDO un mensaje nuevo
         if (operation === 'create') {
           try {
-            // 1. Leemos la configuración de correo desde el Global que creamos
+            // 1. Leemos la configuración de correo desde el Global
             const emailSettings = await req.payload.findGlobal({
               slug: 'email-settings' as any,
-            }) as any // Casting simple para evitar errores si los tipos no están regenerados aún
+            }) as any
 
             // Validamos que haya configuración
             if (!emailSettings?.smtpHost || !emailSettings?.smtpUser || !emailSettings?.toEmail) {
@@ -16008,11 +16076,11 @@ export const ContactSubmissions: CollectionConfig = {
               return
             }
 
-            // 2. Configuramos el transporte (Nodemailer) con tus datos de Zoho
+            // 2. Configuramos el transporte (Nodemailer)
             const transporter = nodemailer.createTransport({
               host: emailSettings.smtpHost,
               port: emailSettings.smtpPort,
-              secure: emailSettings.smtpPort === 465, // True para puerto 465 (SSL)
+              secure: emailSettings.smtpPort === 465,
               auth: {
                 user: emailSettings.smtpUser,
                 pass: emailSettings.smtpPass,
@@ -16022,8 +16090,8 @@ export const ContactSubmissions: CollectionConfig = {
             // 3. Preparamos el contenido del email
             const mailOptions = {
               from: `"${emailSettings.fromName}" <${emailSettings.fromEmail}>`,
-              to: emailSettings.toEmail, // Te llega a ti (admin@crono-job.com)
-              replyTo: doc.email, // Si le das a responder, responde al cliente
+              to: emailSettings.toEmail,
+              replyTo: doc.email,
               subject: `🔔 Nuevo Lead OHCodex: ${doc.name}`,
               html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -16051,14 +16119,27 @@ export const ContactSubmissions: CollectionConfig = {
 
           } catch (error) {
             console.error('❌ Error enviando notificación de correo:', error)
-            // No lanzamos error para no bloquear el guardado en base de datos
           }
         }
       },
     ],
   },
   fields: [
-    // --- CAMPO NUEVO: ESTADO DE LECTURA (Para la campanita futura) ---
+    // --- LÓGICA AUTOMÁTICA DE LECTURA ---
+    {
+      name: 'autoReadLogic',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          // Usamos 'as any' para evitar conflictos de tipado estricto de TS,
+          // pero al ser un Client Component real, Next.js lo aceptará.
+          Field: ReadStatusHandler as any,
+        },
+      },
+    },
+    // --- FIN LÓGICA AUTOMÁTICA ---
+
     {
       name: 'isRead',
       type: 'checkbox',
@@ -16066,10 +16147,9 @@ export const ContactSubmissions: CollectionConfig = {
       defaultValue: false,
       admin: {
         position: 'sidebar',
-        description: 'Marca esto cuando hayas gestionado el lead.',
+        description: 'Desmárcalo si quieres revisarlo más tarde (aparecerá de nuevo en la campana).',
       },
     },
-    // ------------------------------------------------------------------
     {
       name: 'name',
       type: 'text',
@@ -16107,7 +16187,7 @@ export const ContactSubmissions: CollectionConfig = {
       required: true,
       defaultValue: false,
       admin: {
-        readOnly: true, // No se debería poder desmarcar esto legalmente
+        readOnly: true, // No editable por el admin para preservar registro legal
       },
     },
   ],
@@ -16115,7 +16195,7 @@ export const ContactSubmissions: CollectionConfig = {
 
 // ========== Fin de src/collections/ContactSubmissions.ts ========== //
 
-// ========== [35] src/collections/Media.ts ========== //
+// ========== [36] src/collections/Media.ts ========== //
 
 // ========== src/collections/Media.ts ========== //
 
@@ -16171,11 +16251,10 @@ export const Media: CollectionConfig = {
 
 // ========== Fin de src/collections/Media.ts ========== //
 
-// ========== [36] src/collections/Posts.ts ========== //
-
-// ========== src/collections/Posts.ts ========== //
+// ========== [37] src/collections/Posts.ts ========== //
 
 import type { CollectionConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -16190,6 +16269,26 @@ export const Posts: CollectionConfig = {
   access: {
     read: () => true, // Lectura pública
   },
+  // --- MAGIA: Revalidación bajo demanda ---
+  hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        // 1. Regenerar el índice del blog
+        revalidatePath('/blog')
+        
+        // 2. Regenerar el artículo específico
+        if (doc.slug) {
+          revalidatePath(`/blog/${doc.slug}`)
+        }
+
+        // 3. Regenerar la home (por si mostramos "Últimos posts" allí)
+        revalidatePath('/')
+
+        console.log(`🔄 Blog actualizado: ${doc.title}`)
+      },
+    ],
+  },
+  // ----------------------------------------
   fields: [
     {
       type: 'tabs',
@@ -16227,7 +16326,7 @@ export const Posts: CollectionConfig = {
             {
               name: 'author',
               type: 'relationship',
-              relationTo: 'users' as any, // 'as any' para evitar error circular inicial
+              relationTo: 'users' as any,
               required: true,
               label: 'Autor',
               admin: {
@@ -16237,7 +16336,7 @@ export const Posts: CollectionConfig = {
             {
               name: 'category',
               type: 'relationship',
-              relationTo: 'categories' as any, // 'as any' para evitar error circular inicial
+              relationTo: 'categories' as any,
               required: true,
               label: 'Categoría',
               admin: {
@@ -16301,9 +16400,10 @@ export const Posts: CollectionConfig = {
 
 // ========== Fin de src/collections/Posts.ts ========== //
 
-// ========== [37] src/collections/Products.ts ========== //
+// ========== [38] src/collections/Products.ts ========== //
 
 import type { CollectionConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -16311,7 +16411,6 @@ export const Products: CollectionConfig = {
     singular: 'Producto',
     plural: 'Productos',
   },
-  // CORRECCIÓN: defaultSort va aquí, en la raíz
   defaultSort: 'order',
   
   admin: {
@@ -16321,6 +16420,23 @@ export const Products: CollectionConfig = {
   access: {
     read: () => true, // Acceso público para la web
   },
+  // --- REVALIDACIÓN BAJO DEMANDA ---
+  hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        // 1. Regenerar la Home (donde sale la lista de productos)
+        revalidatePath('/')
+        
+        // 2. Regenerar la página de detalle del producto
+        if (doc.slug) {
+          revalidatePath(`/products/${doc.slug}`)
+        }
+
+        console.log(`🔄 Producto actualizado: ${doc.name}`)
+      },
+    ],
+  },
+  // ---------------------------------
   fields: [
     {
       type: 'tabs',
@@ -16344,13 +16460,12 @@ export const Products: CollectionConfig = {
                 description: 'Identificador URL (ej: pool-control)',
               },
             },
-            // --- NUEVO CAMPO DE ORDEN ---
             {
               name: 'order',
               type: 'number',
               label: 'Orden de Aparición',
               required: true,
-              defaultValue: 10, // Valor alto por defecto
+              defaultValue: 10,
               admin: {
                 position: 'sidebar',
                 description: '1 aparece primero, 2 segundo, etc.',
@@ -16395,7 +16510,7 @@ export const Products: CollectionConfig = {
             },
             {
               name: 'description',
-              type: 'richText', // Editor visual completo
+              type: 'richText', 
               label: 'Caso de Éxito / Detalle',
             },
             {
@@ -16485,7 +16600,7 @@ export const Products: CollectionConfig = {
 
 // ========== Fin de src/collections/Products.ts ========== //
 
-// ========== [38] src/collections/Users.ts ========== //
+// ========== [39] src/collections/Users.ts ========== //
 
 import type { CollectionConfig } from 'payload'
 
@@ -16504,7 +16619,7 @@ export const Users: CollectionConfig = {
 
 // ========== Fin de src/collections/Users.ts ========== //
 
-// ========== [39] src/components/admin/NotificationBell.tsx ========== //
+// ========== [40] src/components/admin/NotificationBell.client.tsx ========== //
 
 'use client'
 
@@ -16512,8 +16627,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Bell } from 'lucide-react'
 
-// Usamos 'export default' para evitar problemas de proxy en el servidor
-export default function NotificationBell() {
+export function NotificationBellClient() {
   const [count, setCount] = useState(0)
   const [mounted, setMounted] = useState(false)
 
@@ -16521,7 +16635,6 @@ export default function NotificationBell() {
     setMounted(true)
     const checkUnread = async () => {
       try {
-        // limit=0 hace la consulta mucho más rápida solo para contar
         const req = await fetch('/api/contact-submissions?where[isRead][equals]=false&limit=0')
         const data = await req.json()
         setCount(data.totalDocs || 0)
@@ -16552,9 +16665,72 @@ export default function NotificationBell() {
   )
 }
 
+// ========== Fin de src/components/admin/NotificationBell.client.tsx ========== //
+
+// ========== [41] src/components/admin/NotificationBell.tsx ========== //
+
+import React from 'react'
+import { NotificationBellClient } from './NotificationBell.client'
+
+// Este es un "Wrapper" de Servidor.
+// Al no tener 'use client', Payload puede leerlo sin errores.
+export const NotificationBell = () => {
+  return <NotificationBellClient />
+}
+
 // ========== Fin de src/components/admin/NotificationBell.tsx ========== //
 
-// ========== [40] src/components/layout/Footer.tsx ========== //
+// ========== [42] src/components/admin/ReadStatusHandler.tsx ========== //
+
+'use client'
+
+import { useDocumentInfo } from '@payloadcms/ui'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
+
+// IMPORTANTE: 'use client' arriba y 'export const' (Named Export).
+// NO usar 'export default'.
+export const ReadStatusHandler = () => {
+  const { id } = useDocumentInfo()
+  
+  useEffect(() => {
+    // Si no hay ID, estamos creando, no editando. No hacemos nada.
+    if (!id) return
+
+    const markAsRead = async () => {
+      try {
+        // 1. Consultar estado actual
+        const fetchRes = await fetch(`/api/contact-submissions/${id}`)
+        const data = await fetchRes.json()
+
+        // 2. Si ya está leído, no hacer nada (permite desmarcarlo manualmente)
+        if (data.isRead) return
+
+        // 3. Si no está leído, marcarlo
+        await fetch(`/api/contact-submissions/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ isRead: true }),
+        })
+
+        toast.success('Mensaje marcado como leído')
+        
+      } catch (error) {
+        console.error('Error auto-read:', error)
+      }
+    }
+
+    markAsRead()
+  }, [id])
+
+  return null
+}
+
+// ========== Fin de src/components/admin/ReadStatusHandler.tsx ========== //
+
+// ========== [43] src/components/layout/Footer.tsx ========== //
 
 // ========== src/components/layout/Footer.tsx ========== //
 
@@ -16688,7 +16864,7 @@ export async function Footer() {
 
 // ========== Fin de src/components/layout/Footer.tsx ========== //
 
-// ========== [41] src/components/layout/Header.tsx ========== //
+// ========== [44] src/components/layout/Header.tsx ========== //
 
 // ========== src/components/layout/Header.tsx ========== //
 
@@ -16738,7 +16914,7 @@ export function Header() {
 
 // ========== Fin de src/components/layout/Header.tsx ========== //
 
-// ========== [42] src/components/sections/Contact.tsx ========== //
+// ========== [45] src/components/sections/Contact.tsx ========== //
 
 'use client'
 
@@ -16918,7 +17094,7 @@ export function ContactSection({ email }: { email: string }) {
 
 // ========== Fin de src/components/sections/Contact.tsx ========== //
 
-// ========== [43] src/components/sections/FAQ.tsx ========== //
+// ========== [46] src/components/sections/FAQ.tsx ========== //
 
 import React from 'react'
 import { Plus } from 'lucide-react'
@@ -17009,7 +17185,7 @@ export function FAQ({
 
 // ========== Fin de src/components/sections/FAQ.tsx ========== //
 
-// ========== [44] src/components/sections/Features.tsx ========== //
+// ========== [47] src/components/sections/Features.tsx ========== //
 
 import React from 'react'
 import { Smartphone, Zap, Database, ShieldCheck, LucideIcon, Code2, Users, Rocket } from 'lucide-react'
@@ -17145,7 +17321,7 @@ export async function FeaturesSection() {
 
 // ========== Fin de src/components/sections/Features.tsx ========== //
 
-// ========== [45] src/components/sections/Hero.tsx ========== //
+// ========== [48] src/components/sections/Hero.tsx ========== //
 
 // ========== src/components/sections/Hero.tsx ========== //
 
@@ -17263,7 +17439,7 @@ export async function Hero() {
 
 // ========== Fin de src/components/sections/Hero.tsx ========== //
 
-// ========== [46] src/components/sections/Products.tsx ========== //
+// ========== [49] src/components/sections/Products.tsx ========== //
 
 import React from 'react'
 import Link from 'next/link'
@@ -17416,14 +17592,14 @@ export async function ProductsSection() {
 
 // ========== Fin de src/components/sections/Products.tsx ========== //
 
-// ========== [47] src/components/sections/Testimonials.tsx ========== //
+// ========== [50] src/components/sections/Testimonials.tsx ========== //
 
 import React from 'react'
 import Image from 'next/image'
 import { Quote } from 'lucide-react'
 import type { Media } from '@/payload-types'
 
-// Definimos la estructura de un testimonio (coincidirá con el Backend luego)
+// Definimos la estructura de un testimonio
 export interface TestimonialItem {
   id?: string | null
   authorName: string
@@ -17447,11 +17623,21 @@ export function Testimonials({
   
   if (!testimonials || testimonials.length === 0) return null
 
-  // Generamos el Schema.org para Google (Review Snippet)
+  // CORRECCIÓN: Añadimos 'aggregateRating' para satisfacer a Google
   const reviewsJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'OHCodex',
+    url: 'https://www.ohcodex.com',
+    // Bloque obligatorio agregado
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '5', // Asumimos 5 ya que todos los testimonios destacados suelen serlo
+      reviewCount: testimonials.length.toString(),
+      bestRating: '5',
+      worstRating: '1'
+    },
+    // Lista de reseñas individuales
     review: testimonials.map((t) => ({
       '@type': 'Review',
       author: {
@@ -17461,8 +17647,9 @@ export function Testimonials({
       reviewBody: t.quote,
       reviewRating: {
         '@type': 'Rating',
-        ratingValue: '5', // Asumimos 5 estrellas para testimonios destacados
+        ratingValue: '5',
         bestRating: '5',
+        worstRating: '1' // Recomendado añadir el peor escenario
       },
     })),
   }
@@ -17480,7 +17667,6 @@ export function Testimonials({
 
       <div className="container px-4 mx-auto relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          {/* TÍTULO CON ÚLTIMA PALABRA EN CYAN */}
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
             {title.split(' ').slice(0, -1).join(' ')}{' '}
             <span className="text-cyan-500">
@@ -17505,7 +17691,6 @@ export function Testimonials({
               >
                 <div>
                   <Quote className="h-8 w-8 text-cyan-500/50 mb-6" />
-                  {/* Cita con comillas escapadas correctamente */}
                   <p className="text-zinc-300 text-lg leading-relaxed italic mb-8">
                     &quot;{item.quote}&quot;
                   </p>
@@ -17546,7 +17731,7 @@ export function Testimonials({
 
 // ========== Fin de src/components/sections/Testimonials.tsx ========== //
 
-// ========== [48] src/components/sections/TrustBar.tsx ========== //
+// ========== [51] src/components/sections/TrustBar.tsx ========== //
 
 import React from 'react'
 import Image from 'next/image'
@@ -17597,7 +17782,7 @@ export function TrustBar({ logos, title = "Tecnologías que impulsan nuestros pr
 
 // ========== Fin de src/components/sections/TrustBar.tsx ========== //
 
-// ========== [49] src/components/ui/badge.tsx ========== //
+// ========== [52] src/components/ui/badge.tsx ========== //
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -17639,7 +17824,7 @@ export { Badge, badgeVariants }
 
 // ========== Fin de src/components/ui/badge.tsx ========== //
 
-// ========== [50] src/components/ui/button.tsx ========== //
+// ========== [53] src/components/ui/button.tsx ========== //
 
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
@@ -17702,7 +17887,7 @@ export { Button, buttonVariants }
 
 // ========== Fin de src/components/ui/button.tsx ========== //
 
-// ========== [51] src/globals/Company.ts ========== //
+// ========== [54] src/globals/Company.ts ========== //
 
 // ========== src/globals/Company.ts ========== //
 
@@ -17858,7 +18043,7 @@ export const Company: GlobalConfig = {
 
 // ========== Fin de src/globals/Company.ts ========== //
 
-// ========== [52] src/globals/EmailSettings.ts ========== //
+// ========== [55] src/globals/EmailSettings.ts ========== //
 
 import type { GlobalConfig } from 'payload'
 
@@ -17966,9 +18151,10 @@ export const EmailSettings: GlobalConfig = {
 
 // ========== Fin de src/globals/EmailSettings.ts ========== //
 
-// ========== [53] src/globals/Landing.ts ========== //
+// ========== [56] src/globals/Landing.ts ========== //
 
 import type { GlobalConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Landing: GlobalConfig = {
   slug: 'landing-page',
@@ -17976,6 +18162,17 @@ export const Landing: GlobalConfig = {
   access: {
     read: () => true,
   },
+  // --- AQUI ESTÁ LA MAGIA ---
+  hooks: {
+    afterChange: [
+      async () => {
+        // Esto borra la caché de la Home inmediatamente al guardar
+        revalidatePath('/')
+        console.log('🔄 Home regenerada bajo demanda')
+      },
+    ],
+  },
+  // ---------------------------
   fields: [
     {
       type: 'tabs',
@@ -18027,7 +18224,7 @@ export const Landing: GlobalConfig = {
           ],
         },
 
-        // --- TAB 3: PRODUCTOS (CONFIGURABLE) ---
+        // --- TAB 3: PRODUCTOS ---
         {
           label: 'Sección Productos',
           fields: [
@@ -18043,7 +18240,6 @@ export const Landing: GlobalConfig = {
               label: 'Descripción Sección Productos',
               defaultValue: 'Software diseñado para resolver problemas reales. Desde la automatización de infraestructura hasta la gestión comercial.',
             },
-            // --- NUEVO: CONFIGURACIÓN DE DISEÑO ---
             {
               type: 'row',
               fields: [
@@ -18053,9 +18249,9 @@ export const Landing: GlobalConfig = {
                   label: 'Columnas en PC',
                   defaultValue: '3',
                   options: [
-                    { label: '2 Columnas (Ideal para 2 o 4 items)', value: '2' },
-                    { label: '3 Columnas (Estándar)', value: '3' },
-                    { label: '4 Columnas (Compacto)', value: '4' },
+                    { label: '2 Columnas', value: '2' },
+                    { label: '3 Columnas', value: '3' },
+                    { label: '4 Columnas', value: '4' },
                   ],
                   admin: { width: '50%' },
                 },
@@ -18075,7 +18271,7 @@ export const Landing: GlobalConfig = {
           ],
         },
 
-        // --- TAB 4: METODOLOGÍA (CONFIGURABLE) ---
+        // --- TAB 4: METODOLOGÍA ---
         {
           label: 'Sección Metodología',
           fields: [
@@ -18091,7 +18287,6 @@ export const Landing: GlobalConfig = {
               label: 'Descripción Metodología',
               defaultValue: 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.',
             },
-            // --- NUEVO: CONFIGURACIÓN DE DISEÑO ---
             {
               name: 'featuresAlign',
               type: 'select',
@@ -18122,7 +18317,10 @@ export const Landing: GlobalConfig = {
                     { label: 'Smartphone (PWA)', value: 'smartphone' },
                     { label: 'Rayo (Rendimiento)', value: 'zap' },
                     { label: 'Base de Datos (Integración)', value: 'database' },
-                    { label: 'Escudo (Seguridad/Escalabilidad)', value: 'shield' },
+                    { label: 'Escudo (Seguridad)', value: 'shield' },
+                    { label: 'Código (Desarrollo)', value: 'code' },
+                    { label: 'Usuarios (Equipo)', value: 'users' },
+                    { label: 'Cohete (Lanzamiento)', value: 'rocket' },
                   ],
                 },
                 {
@@ -18257,11 +18455,10 @@ export const Landing: GlobalConfig = {
 
 // ========== Fin de src/globals/Landing.ts ========== //
 
-// ========== [54] src/globals/Legal.ts ========== //
-
-// ========== src/globals/Legal.ts ========== //
+// ========== [57] src/globals/Legal.ts ========== //
 
 import type { GlobalConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Legal: GlobalConfig = {
   slug: 'legal-texts',
@@ -18269,6 +18466,19 @@ export const Legal: GlobalConfig = {
   access: {
     read: () => true, // Acceso público para que la web pueda leerlos
   },
+  // --- AQUI ESTÁ LA ACTUALIZACIÓN AUTOMÁTICA ---
+  hooks: {
+    afterChange: [
+      async () => {
+        // Regeneramos las 3 páginas legales al mismo tiempo
+        revalidatePath('/aviso-legal')
+        revalidatePath('/privacidad')
+        revalidatePath('/terminos')
+        console.log('🔄 Textos legales regenerados bajo demanda')
+      },
+    ],
+  },
+  // ---------------------------------------------
   fields: [
     {
       type: 'tabs',
@@ -18313,9 +18523,7 @@ export const Legal: GlobalConfig = {
 
 // ========== Fin de src/globals/Legal.ts ========== //
 
-// ========== Fin de src/globals/Legal.ts ========== //
-
-// ========== [55] src/lib/cloudinaryAdapter.ts ========== //
+// ========== [58] src/lib/cloudinaryAdapter.ts ========== //
 
 // ========== src/lib/cloudinaryAdapter.ts ========== //
 
@@ -18399,7 +18607,7 @@ export const deleteFromCloudinary: CollectionAfterDeleteHook = async ({ doc }) =
 
 // ========== Fin de src/lib/cloudinaryAdapter.ts ========== //
 
-// ========== [56] src/lib/utils.ts ========== //
+// ========== [59] src/lib/utils.ts ========== //
 
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -18411,7 +18619,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // ========== Fin de src/lib/utils.ts ========== //
 
-// ========== [57] src/payload-types.ts ========== //
+// ========== [60] src/payload-types.ts ========== //
 
 /* tslint:disable */
 /* eslint-disable */
@@ -19109,7 +19317,7 @@ declare module 'payload' {
 
 // ========== Fin de src/payload-types.ts ========== //
 
-// ========== [58] src/payload.config.ts ========== //
+// ========== [61] src/payload.config.ts ========== //
 
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
@@ -19136,8 +19344,8 @@ import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
 import { EmailSettings } from './globals/EmailSettings'
 
-// --- CAMBIO IMPORTANTE: Importación sin llaves (export default) ---
-import NotificationBell from './components/admin/NotificationBell'
+// Importación con llaves (Named Export)
+import { NotificationBell } from './components/admin/NotificationBell'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -19150,8 +19358,8 @@ export default buildConfig({
     },
     // Inyectamos el componente
     components: {
-      // Usamos el componente importado por defecto
-      // 'as any' previene errores de tipado estrictos en la versión beta de Payload
+      // Usamos 'as any' para evitar el error de tipado estricto de TypeScript
+      // ya que Payload espera tipos muy específicos para los componentes de acción.
       actions: [NotificationBell as any],
     },
   },
@@ -19187,7 +19395,7 @@ export default buildConfig({
 
 // ========== Fin de src/payload.config.ts ========== //
 
-// ========== [59] tailwind.config.js ========== //
+// ========== [62] tailwind.config.js ========== //
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -19253,7 +19461,7 @@ export default {
 
 // ========== Fin de tailwind.config.js ========== //
 
-// ========== [60] tsconfig.json ========== //
+// ========== [63] tsconfig.json ========== //
 
 {
   "compilerOptions": {

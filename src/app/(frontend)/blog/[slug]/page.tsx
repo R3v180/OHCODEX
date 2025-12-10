@@ -9,10 +9,9 @@ import { Badge } from '@/components/ui/badge'
 import { Metadata } from 'next'
 import type { Post, CompanyInfo } from '@/payload-types'
 
-// Revalidación ISR (1 hora)
-export const revalidate = 86400
+export const revalidate = 86400 // 24 horas (se actualiza con el hook)
 
-// --- Serializador Lexical (Sin cambios, lo minimizo para ahorrar espacio visual) ---
+// --- Serializador Lexical (Minimizado para lectura) ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
   return (
@@ -106,7 +105,6 @@ export default async function BlogPostPage({ params }: Args) {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
 
-  // Carga paralela: Post + Datos de Empresa (para el logo del Publisher)
   const [postResult, companyResult] = await Promise.all([
     payload.find({
       collection: 'posts',
@@ -125,47 +123,75 @@ export default async function BlogPostPage({ params }: Args) {
 
   const coverUrl = typeof post.coverImage === 'object' && post.coverImage?.url ? post.coverImage.url : null
   const categoryName = typeof post.category === 'object' && post.category?.name ? post.category.name : 'General'
-  // Autor (Fallback a OHCodex si no hay nombre específico)
   const authorName = typeof post.author === 'object' && post.author?.email ? 'Equipo OHCodex' : 'OHCodex'
   
-  // Logo para el Publisher (Requerido por Google para artículos válidos)
   const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
     ? company.logo.url 
-    : 'https://ohcodex.com/logo.png' // Fallback hardcodeado si no hay logo subido
+    : 'https://ohcodex.com/logo.png'
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
   }
 
-  // --- SCHEMA.ORG COMPLETO Y VALIDADO ---
+  // --- SCHEMA.ORG CON BREADCRUMBS ---
   const articleJsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://ohcodex.com/blog/${post.slug}`
-    },
-    headline: post.title,
-    image: coverUrl ? [coverUrl] : [],
-    datePublished: post.publishedDate,
-    dateModified: post.updatedAt,
-    author: {
-      '@type': 'Person', // Google prefiere Person para blogs, Organization para noticias
-      name: authorName,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'OHCodex',
-      logo: {
-        '@type': 'ImageObject',
-        url: logoUrl
+    '@graph': [
+      // 1. Breadcrumb List (Migas de pan) - NUEVO
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Inicio',
+            item: 'https://ohcodex.com'
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Blog',
+            item: 'https://ohcodex.com/blog'
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: post.title,
+            item: `https://ohcodex.com/blog/${post.slug}`
+          }
+        ]
+      },
+      // 2. Blog Posting (Artículo)
+      {
+        '@type': 'BlogPosting',
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `https://ohcodex.com/blog/${post.slug}`
+        },
+        headline: post.title,
+        image: coverUrl ? [coverUrl] : [],
+        datePublished: post.publishedDate,
+        dateModified: post.updatedAt,
+        author: {
+          '@type': 'Person',
+          name: authorName,
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'OHCodex',
+          logo: {
+            '@type': 'ImageObject',
+            url: logoUrl
+          }
+        },
+        description: post.excerpt,
       }
-    },
-    description: post.excerpt,
+    ]
   }
 
   return (
     <article className="min-h-screen bg-black pt-24 pb-20">
+      {/* Inyección JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
 
       {/* Cabecera */}

@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import nodemailer from 'nodemailer'
+// Importamos el componente (ahora debe ser un Client Component con Named Export)
+import { ReadStatusHandler } from '../components/admin/ReadStatusHandler'
 
 export const ContactSubmissions: CollectionConfig = {
   slug: 'contact-submissions',
@@ -20,10 +22,10 @@ export const ContactSubmissions: CollectionConfig = {
         // Solo enviamos email si se está CREANDO un mensaje nuevo
         if (operation === 'create') {
           try {
-            // 1. Leemos la configuración de correo desde el Global que creamos
+            // 1. Leemos la configuración de correo desde el Global
             const emailSettings = await req.payload.findGlobal({
               slug: 'email-settings' as any,
-            }) as any // Casting simple para evitar errores si los tipos no están regenerados aún
+            }) as any
 
             // Validamos que haya configuración
             if (!emailSettings?.smtpHost || !emailSettings?.smtpUser || !emailSettings?.toEmail) {
@@ -31,11 +33,11 @@ export const ContactSubmissions: CollectionConfig = {
               return
             }
 
-            // 2. Configuramos el transporte (Nodemailer) con tus datos de Zoho
+            // 2. Configuramos el transporte (Nodemailer)
             const transporter = nodemailer.createTransport({
               host: emailSettings.smtpHost,
               port: emailSettings.smtpPort,
-              secure: emailSettings.smtpPort === 465, // True para puerto 465 (SSL)
+              secure: emailSettings.smtpPort === 465,
               auth: {
                 user: emailSettings.smtpUser,
                 pass: emailSettings.smtpPass,
@@ -45,8 +47,8 @@ export const ContactSubmissions: CollectionConfig = {
             // 3. Preparamos el contenido del email
             const mailOptions = {
               from: `"${emailSettings.fromName}" <${emailSettings.fromEmail}>`,
-              to: emailSettings.toEmail, // Te llega a ti (admin@crono-job.com)
-              replyTo: doc.email, // Si le das a responder, responde al cliente
+              to: emailSettings.toEmail,
+              replyTo: doc.email,
               subject: `🔔 Nuevo Lead OHCodex: ${doc.name}`,
               html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -74,14 +76,27 @@ export const ContactSubmissions: CollectionConfig = {
 
           } catch (error) {
             console.error('❌ Error enviando notificación de correo:', error)
-            // No lanzamos error para no bloquear el guardado en base de datos
           }
         }
       },
     ],
   },
   fields: [
-    // --- CAMPO NUEVO: ESTADO DE LECTURA (Para la campanita futura) ---
+    // --- LÓGICA AUTOMÁTICA DE LECTURA ---
+    {
+      name: 'autoReadLogic',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          // Usamos 'as any' para evitar conflictos de tipado estricto de TS,
+          // pero al ser un Client Component real, Next.js lo aceptará.
+          Field: ReadStatusHandler as any,
+        },
+      },
+    },
+    // --- FIN LÓGICA AUTOMÁTICA ---
+
     {
       name: 'isRead',
       type: 'checkbox',
@@ -89,10 +104,9 @@ export const ContactSubmissions: CollectionConfig = {
       defaultValue: false,
       admin: {
         position: 'sidebar',
-        description: 'Marca esto cuando hayas gestionado el lead.',
+        description: 'Desmárcalo si quieres revisarlo más tarde (aparecerá de nuevo en la campana).',
       },
     },
-    // ------------------------------------------------------------------
     {
       name: 'name',
       type: 'text',
@@ -130,7 +144,7 @@ export const ContactSubmissions: CollectionConfig = {
       required: true,
       defaultValue: false,
       admin: {
-        readOnly: true, // No se debería poder desmarcar esto legalmente
+        readOnly: true, // No editable por el admin para preservar registro legal
       },
     },
   ],

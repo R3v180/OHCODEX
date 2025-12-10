@@ -21,8 +21,10 @@ import { Categories } from './collections/Categories'
 import { Company } from './globals/Company'
 import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
-// --- NUEVO: Importamos la configuración de email ---
 import { EmailSettings } from './globals/EmailSettings'
+
+// Importación con llaves (Named Export)
+import { NotificationBell } from './components/admin/NotificationBell'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -32,6 +34,12 @@ export default buildConfig({
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
+    },
+    // Inyectamos el componente
+    components: {
+      // Usamos 'as any' para evitar el error de tipado estricto de TypeScript
+      // ya que Payload espera tipos muy específicos para los componentes de acción.
+      actions: [NotificationBell as any],
     },
   },
   i18n: {
@@ -46,7 +54,6 @@ export default buildConfig({
     Posts,      
     Categories  
   ],
-  // --- AÑADIMOS EmailSettings AQUÍ ---
   globals: [Company, Legal, Landing, EmailSettings],
   
   editor: lexicalEditor(),

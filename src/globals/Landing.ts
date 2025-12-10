@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Landing: GlobalConfig = {
   slug: 'landing-page',
@@ -6,6 +7,17 @@ export const Landing: GlobalConfig = {
   access: {
     read: () => true,
   },
+  // --- AQUI ESTÁ LA MAGIA ---
+  hooks: {
+    afterChange: [
+      async () => {
+        // Esto borra la caché de la Home inmediatamente al guardar
+        revalidatePath('/')
+        console.log('🔄 Home regenerada bajo demanda')
+      },
+    ],
+  },
+  // ---------------------------
   fields: [
     {
       type: 'tabs',
@@ -57,7 +69,7 @@ export const Landing: GlobalConfig = {
           ],
         },
 
-        // --- TAB 3: PRODUCTOS (CONFIGURABLE) ---
+        // --- TAB 3: PRODUCTOS ---
         {
           label: 'Sección Productos',
           fields: [
@@ -73,7 +85,6 @@ export const Landing: GlobalConfig = {
               label: 'Descripción Sección Productos',
               defaultValue: 'Software diseñado para resolver problemas reales. Desde la automatización de infraestructura hasta la gestión comercial.',
             },
-            // --- NUEVO: CONFIGURACIÓN DE DISEÑO ---
             {
               type: 'row',
               fields: [
@@ -83,9 +94,9 @@ export const Landing: GlobalConfig = {
                   label: 'Columnas en PC',
                   defaultValue: '3',
                   options: [
-                    { label: '2 Columnas (Ideal para 2 o 4 items)', value: '2' },
-                    { label: '3 Columnas (Estándar)', value: '3' },
-                    { label: '4 Columnas (Compacto)', value: '4' },
+                    { label: '2 Columnas', value: '2' },
+                    { label: '3 Columnas', value: '3' },
+                    { label: '4 Columnas', value: '4' },
                   ],
                   admin: { width: '50%' },
                 },
@@ -105,7 +116,7 @@ export const Landing: GlobalConfig = {
           ],
         },
 
-        // --- TAB 4: METODOLOGÍA (CONFIGURABLE) ---
+        // --- TAB 4: METODOLOGÍA ---
         {
           label: 'Sección Metodología',
           fields: [
@@ -121,7 +132,6 @@ export const Landing: GlobalConfig = {
               label: 'Descripción Metodología',
               defaultValue: 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.',
             },
-            // --- NUEVO: CONFIGURACIÓN DE DISEÑO ---
             {
               name: 'featuresAlign',
               type: 'select',
@@ -152,7 +162,10 @@ export const Landing: GlobalConfig = {
                     { label: 'Smartphone (PWA)', value: 'smartphone' },
                     { label: 'Rayo (Rendimiento)', value: 'zap' },
                     { label: 'Base de Datos (Integración)', value: 'database' },
-                    { label: 'Escudo (Seguridad/Escalabilidad)', value: 'shield' },
+                    { label: 'Escudo (Seguridad)', value: 'shield' },
+                    { label: 'Código (Desarrollo)', value: 'code' },
+                    { label: 'Usuarios (Equipo)', value: 'users' },
+                    { label: 'Cohete (Lanzamiento)', value: 'rocket' },
                   ],
                 },
                 {

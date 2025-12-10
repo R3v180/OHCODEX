@@ -10,7 +10,7 @@ import { Metadata } from 'next'
 import type { Post, CompanyInfo } from '@/payload-types'
 
 // Revalidación ISR (1 hora)
-export const revalidate = 3600
+export const revalidate = 86400
 
 // --- Serializador Lexical (Sin cambios, lo minimizo para ahorrar espacio visual) ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {

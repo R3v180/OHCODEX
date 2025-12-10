@@ -1,6 +1,5 @@
-// ========== src/globals/Legal.ts ========== //
-
 import type { GlobalConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Legal: GlobalConfig = {
   slug: 'legal-texts',
@@ -8,6 +7,19 @@ export const Legal: GlobalConfig = {
   access: {
     read: () => true, // Acceso público para que la web pueda leerlos
   },
+  // --- AQUI ESTÁ LA ACTUALIZACIÓN AUTOMÁTICA ---
+  hooks: {
+    afterChange: [
+      async () => {
+        // Regeneramos las 3 páginas legales al mismo tiempo
+        revalidatePath('/aviso-legal')
+        revalidatePath('/privacidad')
+        revalidatePath('/terminos')
+        console.log('🔄 Textos legales regenerados bajo demanda')
+      },
+    ],
+  },
+  // ---------------------------------------------
   fields: [
     {
       type: 'tabs',
@@ -49,5 +61,3 @@ export const Legal: GlobalConfig = {
     },
   ],
 }
-
-// ========== Fin de src/globals/Legal.ts ========== //

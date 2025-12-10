@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -6,7 +7,6 @@ export const Products: CollectionConfig = {
     singular: 'Producto',
     plural: 'Productos',
   },
-  // CORRECCIÓN: defaultSort va aquí, en la raíz
   defaultSort: 'order',
   
   admin: {
@@ -16,6 +16,23 @@ export const Products: CollectionConfig = {
   access: {
     read: () => true, // Acceso público para la web
   },
+  // --- REVALIDACIÓN BAJO DEMANDA ---
+  hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        // 1. Regenerar la Home (donde sale la lista de productos)
+        revalidatePath('/')
+        
+        // 2. Regenerar la página de detalle del producto
+        if (doc.slug) {
+          revalidatePath(`/products/${doc.slug}`)
+        }
+
+        console.log(`🔄 Producto actualizado: ${doc.name}`)
+      },
+    ],
+  },
+  // ---------------------------------
   fields: [
     {
       type: 'tabs',
@@ -39,13 +56,12 @@ export const Products: CollectionConfig = {
                 description: 'Identificador URL (ej: pool-control)',
               },
             },
-            // --- NUEVO CAMPO DE ORDEN ---
             {
               name: 'order',
               type: 'number',
               label: 'Orden de Aparición',
               required: true,
-              defaultValue: 10, // Valor alto por defecto
+              defaultValue: 10,
               admin: {
                 position: 'sidebar',
                 description: '1 aparece primero, 2 segundo, etc.',
@@ -90,7 +106,7 @@ export const Products: CollectionConfig = {
             },
             {
               name: 'description',
-              type: 'richText', // Editor visual completo
+              type: 'richText', 
               label: 'Caso de Éxito / Detalle',
             },
             {

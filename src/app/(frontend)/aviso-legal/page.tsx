@@ -5,7 +5,7 @@ import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
 
 // ✅ CAMBIO: De 'force-dynamic' a ISR (mucho más rápido)
-export const revalidate = 3600 // 1 hora (el legal cambia poco)
+export const revalidate = 86400 // 1 hora (el legal cambia poco)
 
 export const metadata: Metadata = {
   title: 'Aviso Legal',

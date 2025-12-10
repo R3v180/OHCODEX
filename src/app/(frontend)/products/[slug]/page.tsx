@@ -13,7 +13,7 @@ import { Metadata } from 'next'
 import type { Product } from '@/payload-types'
 
 // --- ISR: Actualización cada 10 min ---
-export const revalidate = 600
+export const revalidate = 86400
 
 // --- HELPER: Serializador Rich Text ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {

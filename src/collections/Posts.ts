@@ -1,6 +1,5 @@
-// ========== src/collections/Posts.ts ========== //
-
 import type { CollectionConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -15,6 +14,26 @@ export const Posts: CollectionConfig = {
   access: {
     read: () => true, // Lectura pública
   },
+  // --- MAGIA: Revalidación bajo demanda ---
+  hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        // 1. Regenerar el índice del blog
+        revalidatePath('/blog')
+        
+        // 2. Regenerar el artículo específico
+        if (doc.slug) {
+          revalidatePath(`/blog/${doc.slug}`)
+        }
+
+        // 3. Regenerar la home (por si mostramos "Últimos posts" allí)
+        revalidatePath('/')
+
+        console.log(`🔄 Blog actualizado: ${doc.title}`)
+      },
+    ],
+  },
+  // ----------------------------------------
   fields: [
     {
       type: 'tabs',
@@ -52,7 +71,7 @@ export const Posts: CollectionConfig = {
             {
               name: 'author',
               type: 'relationship',
-              relationTo: 'users' as any, // 'as any' para evitar error circular inicial
+              relationTo: 'users' as any,
               required: true,
               label: 'Autor',
               admin: {
@@ -62,7 +81,7 @@ export const Posts: CollectionConfig = {
             {
               name: 'category',
               type: 'relationship',
-              relationTo: 'categories' as any, // 'as any' para evitar error circular inicial
+              relationTo: 'categories' as any,
               required: true,
               label: 'Categoría',
               admin: {

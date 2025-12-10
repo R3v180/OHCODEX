@@ -5,7 +5,7 @@ import configPromise from '@payload-config'
 import type { LegalText } from '@/payload-types'
 
 // ✅ CAMBIO: Optimización de velocidad
-export const revalidate = 3600
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'Términos y Condiciones',

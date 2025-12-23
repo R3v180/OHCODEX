@@ -2,40 +2,54 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
-// 👇 Importamos la librería de geoip
-import geoip from 'geoip-lite'
+
+// ⚠️ No importamos geoip-lite aquí arriba para evitar el error de build
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
     const { page, referrer, device, browser } = body
 
-    // 1. Obtener la IP real en Heroku (vía cabecera x-forwarded-for)
-    // Si estamos en local, usamos una IP ficticia
+    // 1. Obtener la IP real
     const forwardedFor = req.headers.get('x-forwarded-for')
     let ip = forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1'
 
-    // 2. Geolocalizar la IP usando la librería
-    const geo = geoip.lookup(ip)
-    
-    // Si geo existe, usamos sus datos. Si no (ej: localhost), ponemos Unknown.
-    const country = geo ? geo.country : 'Unknown'
-    const city = geo ? geo.city : 'Unknown'
+    // 2. Geolocalización (Lazy Loading / Importación Dinámica)
+    let country = 'Unknown'
+    let city = 'Unknown'
 
-    // 3. Anonimizar IP (Hash SHA-256) - Cumplimiento RGPD
+    try {
+      // 👇 Importamos la librería SOLO cuando se ejecuta esta función
+      // Esto evita que rompa el build si faltan archivos .dat en tiempo de construcción
+      const geoipModule = await import('geoip-lite')
+      // Soporte para CommonJS/ESM interop
+      const geoip = geoipModule.default || geoipModule
+      
+      const geo = geoip.lookup(ip)
+      
+      if (geo) {
+        country = geo.country || 'Unknown'
+        city = geo.city || 'Unknown'
+      }
+    } catch (e) {
+      console.warn('GeoIP lookup failed:', e)
+      // Si falla, seguimos con "Unknown" pero no rompemos la petición
+    }
+
+    // 3. Anonimizar IP
     const ipHash = crypto.createHash('sha256').update(ip).digest('hex')
 
     // 4. Inicializar Payload
     const payload = await getPayload({ config: configPromise })
 
-    // 5. Guardar la visita con los datos reales
+    // 5. Guardar
     await payload.create({
       collection: 'analytics', 
       data: {
         timestamp: new Date().toISOString(),
         page: page || '/',
-        country, // Ahora guardamos ES, US, MX, etc.
-        city,    // Madrid, Barcelona, etc.
+        country,
+        city,
         device: device || 'Desktop',
         browser: browser || 'Chrome',
         source: referrer || 'Direct',

@@ -7,6 +7,8 @@ import configPromise from '@payload-config'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import type { CompanyInfo } from '@/payload-types'
+// 👇 1. IMPORTAR EL RASTREADOR
+import { AnalyticsTracker } from '@/components/AnalyticsTracker'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -89,9 +91,6 @@ export async function generateMetadata(): Promise<Metadata> {
       creator: '@ohcodex',
       images: [SOCIAL_IMAGE_URL],
     },
-    
-    // NOTA: Hemos eliminado la sección 'icons' manual.
-    // Next.js ahora usará automáticamente el archivo src/app/(frontend)/icon.tsx
   }
 }
 
@@ -104,6 +103,9 @@ export default function FrontendLayout({
     <html lang="es" className="dark scroll-smooth">
       <body className={`${inter.className} min-h-screen bg-black font-sans antialiased text-foreground selection:bg-cyan-500/30 flex flex-col`}>
         
+        {/* 👇 2. AÑADIR EL TRACKER AQUÍ (Invisible) */}
+        <AnalyticsTracker />
+
         {/* NAVEGACIÓN SUPERIOR */}
         <Header />
         

@@ -21,7 +21,6 @@ interface DeviceData {
   name: string
   value: number
   color: string
-  // 👇 SOLUCIÓN: Esto permite que Recharts lea el objeto sin quejas de TS
   [key: string]: any 
 }
 
@@ -45,7 +44,7 @@ const AnalyticsView = () => {
       const res = await fetch('/api/analytics?limit=500&sort=-timestamp')
       const data = await res.json()
       
-      // 1. Filtrado de datos "basura" (favicon, admin, api, etc.)
+      // 1. Filtrado de datos "basura"
       const rawDocs = data.docs || []
       const cleanDocs = rawDocs.filter((doc: any) => {
         const p = doc.page || ''
@@ -65,12 +64,13 @@ const AnalyticsView = () => {
       setStats({
         totalVisits: cleanDocs.length,
         activeUsers: active,
-        avgTime: '1m 32s', // Dato simulado por ahora
+        avgTime: '1m 32s', 
         conversionRate: 2.4
       })
 
       // 3. Tabla Reciente (Mapeo)
-      setVisits(cleanDocs.slice(0, 10).map((doc: any) => ({
+      // Tomamos los últimos 15 para tener más contexto
+      setVisits(cleanDocs.slice(0, 15).map((doc: any) => ({
         id: doc.id,
         timestamp: doc.timestamp,
         page: doc.page,
@@ -119,7 +119,7 @@ const AnalyticsView = () => {
 
   useEffect(() => {
     fetchData()
-    const interval = setInterval(fetchData, 15000) // Refresco cada 15s
+    const interval = setInterval(fetchData, 15000)
     return () => clearInterval(interval)
   }, [])
 
@@ -189,7 +189,7 @@ const AnalyticsView = () => {
                 <XAxis dataKey="date" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} />
                 <RechartsTooltip 
                   contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '8px', color: '#fff' }}
-                  itemStyle={{ color: '#06b6d4' }}
+                  itemStyle={{ color: '#fff' }}
                 />
                 <Area type="monotone" dataKey="visits" stroke="#06b6d4" strokeWidth={2} fillOpacity={1} fill="url(#colorVisits)" />
               </AreaChart>
@@ -214,7 +214,8 @@ const AnalyticsView = () => {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-zinc-900 text-zinc-500">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Hora</th>
+                  {/* CAMBIO: Columna ahora se llama Fecha */}
+                  <th className="px-4 py-3 font-medium">Fecha</th>
                   <th className="px-4 py-3 font-medium">Ubicación</th>
                   <th className="px-4 py-3 font-medium">Página</th>
                   <th className="px-4 py-3 font-medium text-right">Disp.</th>
@@ -223,8 +224,16 @@ const AnalyticsView = () => {
               <tbody className="divide-y divide-zinc-800">
                 {visits.map((visit) => (
                   <tr key={visit.id} className="hover:bg-zinc-800/30">
-                    <td className="px-4 py-3 text-zinc-400 whitespace-nowrap">
-                      {new Date(visit.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {/* CAMBIO: Mostramos Hora y Fecha en dos líneas */}
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex flex-col">
+                        <span className="text-zinc-300 font-medium">
+                          {new Date(visit.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <span className="text-xs text-zinc-600">
+                          {new Date(visit.timestamp).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-white truncate max-w-[150px]" title={visit.country}>
                       {visit.country}
@@ -287,7 +296,7 @@ const AnalyticsView = () => {
               </div>
             )}
             
-            {/* Dato central del donut (opcional) */}
+            {/* Dato central del donut */}
             {deviceData.length > 0 && (
                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                  <div className="text-center">

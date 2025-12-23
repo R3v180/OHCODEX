@@ -17,6 +17,7 @@ export interface Config {
     'contact-submissions': ContactSubmission;
     posts: Post;
     categories: Category;
+    analytics: Analytics;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -29,6 +30,7 @@ export interface Config {
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    analytics: AnalyticsSelect<false> | AnalyticsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -37,12 +39,14 @@ export interface Config {
     defaultIDType: number;
   };
   globals: {
+    'analytics-dashboard': AnalyticsDashboard;
     'company-info': CompanyInfo;
     'legal-texts': LegalText;
     'landing-page': LandingPage;
     'email-settings': EmailSetting;
   };
   globalsSelect: {
+    'analytics-dashboard': AnalyticsDashboardSelect<false> | AnalyticsDashboardSelect<true>;
     'company-info': CompanyInfoSelect<false> | CompanyInfoSelect<true>;
     'legal-texts': LegalTextsSelect<false> | LegalTextsSelect<true>;
     'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
@@ -216,6 +220,24 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "analytics".
+ */
+export interface Analytics {
+  id: number;
+  timestamp: string;
+  page?: string | null;
+  country?: string | null;
+  city?: string | null;
+  device?: string | null;
+  browser?: string | null;
+  source?: string | null;
+  companyName?: string | null;
+  ipHash?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -244,6 +266,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'analytics';
+        value: number | Analytics;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -393,6 +419,23 @@ export interface CategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "analytics_select".
+ */
+export interface AnalyticsSelect<T extends boolean = true> {
+  timestamp?: T;
+  page?: T;
+  country?: T;
+  city?: T;
+  device?: T;
+  browser?: T;
+  source?: T;
+  companyName?: T;
+  ipHash?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
@@ -422,6 +465,16 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "analytics-dashboard".
+ */
+export interface AnalyticsDashboard {
+  id: number;
+  placeholder?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -526,7 +579,7 @@ export interface LandingPage {
   featuresAlign?: ('left' | 'center') | null;
   featuresList?:
     | {
-        icon?: ('smartphone' | 'zap' | 'database' | 'shield') | null;
+        icon?: ('smartphone' | 'zap' | 'database' | 'shield' | 'code' | 'users' | 'rocket') | null;
         title: string;
         description: string;
         id?: string | null;
@@ -571,6 +624,16 @@ export interface EmailSetting {
   toEmail: string;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "analytics-dashboard_select".
+ */
+export interface AnalyticsDashboardSelect<T extends boolean = true> {
+  placeholder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

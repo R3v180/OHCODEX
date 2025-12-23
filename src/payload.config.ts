@@ -7,23 +7,24 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { es } from 'payload/i18n/es'
 
-// 1. Importamos Colecciones Existentes
+// 1. Colecciones
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { ContactSubmissions } from './collections/ContactSubmissions'
-
-// 2. Importamos Colecciones Nuevas (BLOG)
 import { Posts } from './collections/Posts'
 import { Categories } from './collections/Categories'
+import { Analytics } from './collections/Analytics'
 
-// 3. Importamos Globales
+// 2. Globales
 import { Company } from './globals/Company'
 import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
 import { EmailSettings } from './globals/EmailSettings'
+// 👇 NUEVO GLOBAL
+import { AnalyticsDashboard } from './globals/AnalyticsDashboard'
 
-// Importación con llaves (Named Export)
+// 3. Componentes UI
 import { NotificationBell } from './components/admin/NotificationBell'
 
 const filename = fileURLToPath(import.meta.url)
@@ -35,11 +36,12 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    // Inyectamos el componente
     components: {
-      // Usamos 'as any' para evitar el error de tipado estricto de TypeScript
-      // ya que Payload espera tipos muy específicos para los componentes de acción.
+      // Dejamos solo la campana, quitamos el SidebarDashboardLink manual
       actions: [NotificationBell as any],
+      
+      // ❌ HEMOS QUITADO EL BLOQUE "views: { Dashboard: ... }" 
+      // para que deje de intentar reemplazar la home y no dé problemas.
     },
   },
   i18n: {
@@ -52,9 +54,17 @@ export default buildConfig({
     Products, 
     ContactSubmissions,
     Posts,      
-    Categories  
+    Categories,
+    Analytics,
   ],
-  globals: [Company, Legal, Landing, EmailSettings],
+  globals: [
+    // 👇 Registramos el nuevo Dashboard aquí para que salga en el menú
+    AnalyticsDashboard, 
+    Company, 
+    Legal, 
+    Landing, 
+    EmailSettings
+  ],
   
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

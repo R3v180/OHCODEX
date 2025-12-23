@@ -1,85 +1,37 @@
-/* src/app/(payload)/custom.scss */
+/* 
+  IMPORTANTE: Solo importamos 'components' y 'utilities'.
+  NO importamos 'base' para evitar que el reset rompa los botones del Login de Payload.
+*/
+@tailwind components;
+@tailwind utilities;
 
-/* Apuntamos directamente a los encabezados dentro del editor de texto enriquecido */
-.rich-text-lexical-content {
-  
-  /* CHIVATO H1 */
-  h1 {
-    position: relative !important;
-    border-left: 4px solid #ef4444 !important; /* Línea roja a la izquierda */
-    padding-left: 10px !important;
-    &::before {
-      content: 'H1';
-      position: absolute;
-      left: -35px; /* Lo sacamos fuera del texto */
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 10px;
-      font-weight: bold;
-      font-family: monospace;
-      background-color: #ef4444;
-      color: white;
-      padding: 2px 5px;
-      border-radius: 4px;
-      pointer-events: none;
-    }
-  }
+/* --- Estilos Globales para el Admin --- */
 
-  /* CHIVATO H2 */
-  h2 {
-    position: relative !important;
-    border-left: 4px solid #f97316 !important; /* Línea naranja */
-    padding-left: 10px !important;
-    &::before {
-      content: 'H2';
-      position: absolute;
-      left: -35px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 10px;
-      font-weight: bold;
-      font-family: monospace;
-      background-color: #f97316;
-      color: white;
-      padding: 2px 5px;
-      border-radius: 4px;
-      pointer-events: none;
-    }
-  }
+/* Forzar fondo negro profundo para dar look profesional */
+html, body {
+  background-color: #000000 !important;
+  color: #ffffff;
+}
 
-  /* CHIVATO H3 */
-  h3 {
-    position: relative !important;
-    border-left: 4px solid #eab308 !important; /* Línea amarilla */
-    padding-left: 10px !important;
-    &::before {
-      content: 'H3';
-      position: absolute;
-      left: -35px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 10px;
-      font-weight: bold;
-      font-family: monospace;
-      background-color: #eab308;
-      color: black;
-      padding: 2px 5px;
-      border-radius: 4px;
-      pointer-events: none;
-    }
-  }
+/* Ajuste fino para la barra de desplazamiento */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b; /* Zinc-950 */
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a; /* Zinc-800 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46; /* Zinc-700 */
+}
 
-  /* Párrafos: Solo se marcan sutilmente al pasar el mouse para no molestar */
-  p:hover {
-    background-color: rgba(255, 255, 255, 0.03);
-    position: relative;
-    &::after {
-      content: '¶';
-      position: absolute;
-      left: -20px;
-      top: 0;
-      color: #666;
-      font-family: monospace;
-    }
-  }
+/* Corrección de tipografía para el Dashboard personalizado */
+.dashboard-container h1, 
+.dashboard-container h2, 
+.dashboard-container h3 {
+  font-family: var(--font-sans), system-ui, sans-serif;
 }

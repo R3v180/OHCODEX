@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import nodemailer from 'nodemailer'
-// Importamos el componente (ahora debe ser un Client Component con Named Export)
-import { ReadStatusHandler } from '../components/admin/ReadStatusHandler'
+// ⚠️ COMENTADO TEMPORALMENTE PARA ARREGLAR EL BUILD
+// import ReadStatusHandler from '../components/admin/ReadStatusHandler'
 
 export const ContactSubmissions: CollectionConfig = {
   slug: 'contact-submissions',
@@ -19,21 +19,17 @@ export const ContactSubmissions: CollectionConfig = {
   hooks: {
     afterChange: [
       async ({ doc, operation, req }) => {
-        // Solo enviamos email si se está CREANDO un mensaje nuevo
         if (operation === 'create') {
           try {
-            // 1. Leemos la configuración de correo desde el Global
             const emailSettings = await req.payload.findGlobal({
               slug: 'email-settings' as any,
             }) as any
 
-            // Validamos que haya configuración
             if (!emailSettings?.smtpHost || !emailSettings?.smtpUser || !emailSettings?.toEmail) {
               console.warn('⚠️ No se ha configurado el SMTP en el panel. No se envió el correo.')
               return
             }
 
-            // 2. Configuramos el transporte (Nodemailer)
             const transporter = nodemailer.createTransport({
               host: emailSettings.smtpHost,
               port: emailSettings.smtpPort,
@@ -44,7 +40,6 @@ export const ContactSubmissions: CollectionConfig = {
               },
             })
 
-            // 3. Preparamos el contenido del email
             const mailOptions = {
               from: `"${emailSettings.fromName}" <${emailSettings.fromEmail}>`,
               to: emailSettings.toEmail,
@@ -70,7 +65,6 @@ export const ContactSubmissions: CollectionConfig = {
               `,
             }
 
-            // 4. Enviamos el correo
             await transporter.sendMail(mailOptions)
             console.log(`✅ Notificación enviada a ${emailSettings.toEmail}`)
 
@@ -82,20 +76,19 @@ export const ContactSubmissions: CollectionConfig = {
     ],
   },
   fields: [
-    // --- LÓGICA AUTOMÁTICA DE LECTURA ---
+    // ⚠️ COMENTADO: Este campo UI es el que rompe el generador en la versión Beta actual
+    /*
     {
       name: 'autoReadLogic',
       type: 'ui',
       admin: {
         position: 'sidebar',
         components: {
-          // Usamos 'as any' para evitar conflictos de tipado estricto de TS,
-          // pero al ser un Client Component real, Next.js lo aceptará.
           Field: ReadStatusHandler as any,
         },
       },
     },
-    // --- FIN LÓGICA AUTOMÁTICA ---
+    */
 
     {
       name: 'isRead',

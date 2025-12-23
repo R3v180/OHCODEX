@@ -4,9 +4,8 @@ import { useDocumentInfo } from '@payloadcms/ui'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 
-// IMPORTANTE: 'use client' arriba y 'export const' (Named Export).
-// NO usar 'export default'.
-export const ReadStatusHandler = () => {
+// 1. Quitamos "export" de aquí
+const ReadStatusHandler = () => {
   const { id } = useDocumentInfo()
   
   useEffect(() => {
@@ -43,3 +42,6 @@ export const ReadStatusHandler = () => {
 
   return null
 }
+
+// 2. Exportamos por defecto al final
+export default ReadStatusHandler

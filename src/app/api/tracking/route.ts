@@ -2,37 +2,45 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
+// 👇 Importamos la librería de geoip
+import geoip from 'geoip-lite'
 
 export async function POST(req: Request) {
   try {
-    // 1. Leer los datos que nos envía el "Sensor" (Middleware/Cliente)
     const body = await req.json()
-    const { page, referrer, country, city, device, browser, ip } = body
+    const { page, referrer, device, browser } = body
 
-    // 2. Anonimizar IP (Hash SHA-256) - Cumplimiento RGPD
-    const ipHash = ip
-      ? crypto.createHash('sha256').update(ip).digest('hex')
-      : 'unknown'
+    // 1. Obtener la IP real en Heroku (vía cabecera x-forwarded-for)
+    // Si estamos en local, usamos una IP ficticia
+    const forwardedFor = req.headers.get('x-forwarded-for')
+    let ip = forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1'
 
-    // 3. (Futuro) Detección de Empresa B2B
-    const companyName = null
+    // 2. Geolocalizar la IP usando la librería
+    const geo = geoip.lookup(ip)
+    
+    // Si geo existe, usamos sus datos. Si no (ej: localhost), ponemos Unknown.
+    const country = geo ? geo.country : 'Unknown'
+    const city = geo ? geo.city : 'Unknown'
+
+    // 3. Anonimizar IP (Hash SHA-256) - Cumplimiento RGPD
+    const ipHash = crypto.createHash('sha256').update(ip).digest('hex')
 
     // 4. Inicializar Payload
     const payload = await getPayload({ config: configPromise })
 
-    // 5. Guardar la visita en la base de datos
+    // 5. Guardar la visita con los datos reales
     await payload.create({
       collection: 'analytics', 
       data: {
         timestamp: new Date().toISOString(),
         page: page || '/',
-        country: country || 'Unknown',
-        city: city || 'Unknown',
+        country, // Ahora guardamos ES, US, MX, etc.
+        city,    // Madrid, Barcelona, etc.
         device: device || 'Desktop',
         browser: browser || 'Chrome',
         source: referrer || 'Direct',
         ipHash,
-        companyName,
+        companyName: null,
       },
     })
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import '../globals.css'
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
@@ -7,7 +7,6 @@ import configPromise from '@payload-config'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import type { CompanyInfo } from '@/payload-types'
-// 👇 1. IMPORTAR EL RASTREADOR
 import { AnalyticsTracker } from '@/components/AnalyticsTracker'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -21,17 +20,14 @@ const SOCIAL_IMAGE_URL = 'https://res.cloudinary.com/dpp6gyfao/image/upload/w_12
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config: configPromise })
   
-  // Obtenemos la configuración global
   const company = (await payload.findGlobal({
     slug: 'company-info' as any,
   })) as unknown as CompanyInfo
 
-  // Valores dinámicos con fallback
   const title = company?.defaultTitle || 'OHCodex | Desarrollo de Software a Medida'
   const titleTemplate = company?.titleTemplate || '%s | OHCodex'
   const description = company?.defaultDescription || 'Empresa de desarrollo de software especializada en PWAs y arquitecturas SaaS.'
   
-  // Mapeamos las keywords del array de objetos a un array de strings
   const keywords = company?.keywords?.map(k => k.keyword).filter((k): k is string => !!k) || [
     'Desarrollo de Software', 'SaaS', 'PWA', 'Next.js'
   ]
@@ -103,8 +99,10 @@ export default function FrontendLayout({
     <html lang="es" className="dark scroll-smooth">
       <body className={`${inter.className} min-h-screen bg-black font-sans antialiased text-foreground selection:bg-cyan-500/30 flex flex-col`}>
         
-        {/* 👇 2. AÑADIR EL TRACKER AQUÍ (Invisible) */}
-        <AnalyticsTracker />
+        {/* 👇 CORRECCIÓN: Envolvemos el tracker en Suspense para evitar error de build */}
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
 
         {/* NAVEGACIÓN SUPERIOR */}
         <Header />

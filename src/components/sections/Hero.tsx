@@ -1,5 +1,3 @@
-// ========== src/components/sections/Hero.tsx ========== //
-
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -7,19 +5,28 @@ import { ArrowRight, Code2, Layers } from 'lucide-react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LandingPage } from '@/payload-types'
+import { getTranslations } from 'next-intl/server'
 
-export async function Hero() {
+interface HeroProps {
+  locale?: string
+}
+
+export async function Hero({ locale = 'es' }: HeroProps) {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Obtener datos de la Landing Page
+  // Cargar traducciones de interfaz
+  const t = await getTranslations('home.hero')
+
+  // Obtener datos de la Landing Page en el idioma correcto
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
+    locale: locale as any,
   })) as unknown as LandingPage
 
-  // 2. Definir valores (con fallback por si el panel está vacío)
+  // Definir valores (con fallback por si el panel está vacío)
   const badge = landing?.heroBadge || 'Nuevo: Pool-Control Beta Disponible'
   const title = landing?.heroTitle || 'Arquitectos de Ecosistemas Digitales'
-  const subtitle = landing?.heroSubtitle || 'Transformamos negocios con software a medida de alto rendimiento. Desde PWAs ultra-rápidas hasta infraestructuras SaaS complejas.'
+  const subtitle = landing?.heroSubtitle || 'Transformamos negocios con software a medida de alto rendimiento.'
 
   return (
     <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-white/10 bg-black pt-20 pb-16">
@@ -64,7 +71,7 @@ export async function Hero() {
             asChild
           >
             <Link href="/#contacto">
-              Empezar Proyecto <ArrowRight className="ml-2 h-5 w-5" />
+              {t('startProject')} <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
           
@@ -75,30 +82,23 @@ export async function Hero() {
             asChild
           >
             <Link href="/#productos">
-              Ver Portfolio
+              {t('viewPortfolio')}
             </Link>
           </Button>
         </div>
 
         {/* 6. TECH STACK (Responsive) */}
-        {/* Cambios: flex-wrap para permitir varias líneas, gap responsive, y ocultar separadores en móvil */}
         <div className="mt-16 sm:mt-20 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-zinc-500 opacity-70 grayscale transition-all hover:grayscale-0">
             <div className="flex items-center gap-2">
                 <Code2 className="h-6 w-6" />
                 <span className="font-mono text-sm">Next.js 15</span>
             </div>
-            
-            {/* Separador: oculto en móvil (hidden), visible en sm (sm:block) */}
             <div className="hidden sm:block h-4 w-[1px] bg-zinc-800" />
-            
             <div className="flex items-center gap-2">
                 <Layers className="h-6 w-6" />
                 <span className="font-mono text-sm">Payload CMS</span>
             </div>
-            
-            {/* Separador: oculto en móvil (hidden), visible en sm (sm:block) */}
             <div className="hidden sm:block h-4 w-[1px] bg-zinc-800" />
-            
             <div className="flex items-center gap-2">
                 <span className="font-mono text-sm font-bold">NEON</span>
                 <span className="font-mono text-sm">Postgres</span>
@@ -109,5 +109,3 @@ export async function Hero() {
     </section>
   )
 }
-
-// ========== Fin de src/components/sections/Hero.tsx ========== //

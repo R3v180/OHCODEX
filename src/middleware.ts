@@ -1,12 +1,11 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import createMiddleware from 'next-intl/middleware';
+import { routing } from '@/i18n/routing';
 
-export function middleware(request: NextRequest) {
-  // El tracking ahora se hace desde el cliente (AnalyticsTracker.tsx) para evitar problemas de caché.
-  // Dejamos el middleware limpio para no duplicar lógica ni gastar CPU innecesaria.
-  return NextResponse.next()
-}
+export default createMiddleware(routing);
 
 export const config = {
-  matcher: '/:path*',
-}
+  matcher: [
+    // Ignorar rutas internas de Payload (api, admin), Next.js (_next) y archivos estáticos
+    '/((?!api|admin|_next|static|.*\\..*).*)'
+  ]
+};

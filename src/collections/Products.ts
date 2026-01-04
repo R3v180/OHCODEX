@@ -45,6 +45,7 @@ export const Products: CollectionConfig = {
               name: 'name',
               type: 'text',
               required: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Nombre del Producto',
             },
             {
@@ -52,6 +53,7 @@ export const Products: CollectionConfig = {
               type: 'text',
               required: true,
               unique: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
               admin: {
                 description: 'Identificador URL (ej: pool-control)',
               },
@@ -101,12 +103,14 @@ export const Products: CollectionConfig = {
               name: 'shortDescription',
               type: 'textarea',
               required: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Descripción Corta (Tarjeta)',
               maxLength: 250,
             },
             {
               name: 'description',
               type: 'richText', 
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Caso de Éxito / Detalle',
             },
             {
@@ -155,6 +159,7 @@ export const Products: CollectionConfig = {
             {
               name: 'metaTitle',
               type: 'text',
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Meta Título (Opcional)',
               admin: {
                 description: 'Si se deja vacío, se usará el nombre del producto.',
@@ -163,6 +168,7 @@ export const Products: CollectionConfig = {
             {
               name: 'metaDescription',
               type: 'textarea',
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Meta Descripción (Opcional)',
               admin: {
                 description: 'Si se deja vacío, se usará la descripción corta.',

@@ -1,5 +1,3 @@
-// ========== src/globals/Company.ts ========== //
-
 import type { GlobalConfig } from 'payload'
 
 export const Company: GlobalConfig = {
@@ -35,12 +33,14 @@ export const Company: GlobalConfig = {
               name: 'tagline',
               type: 'text',
               label: 'Eslogan Corto (Footer)',
+              localized: true, // ✅
               defaultValue: 'Arquitectos de Ecosistemas Digitales',
             },
             {
               name: 'description',
               type: 'textarea',
               label: 'Descripción Breve (Footer)',
+              localized: true, // ✅
               defaultValue: 'Ingeniería de software avanzada para empresas que buscan escalabilidad.',
             },
           ],
@@ -54,6 +54,7 @@ export const Company: GlobalConfig = {
               type: 'text',
               required: true,
               label: 'Título por defecto (Home)',
+              localized: true, // ✅
               defaultValue: 'OHCodex | Desarrollo de Software a Medida y Sistemas SaaS',
               admin: {
                 description: 'Se usará en la página principal y como fallback.',
@@ -64,6 +65,7 @@ export const Company: GlobalConfig = {
               type: 'text',
               required: true,
               label: 'Plantilla de Título',
+              localized: true, // ✅
               defaultValue: '%s | OHCodex',
               admin: {
                 description: 'El %s se reemplazará por el título de la página actual (ej: "Aviso Legal | OHCodex").',
@@ -74,6 +76,7 @@ export const Company: GlobalConfig = {
               type: 'textarea',
               required: true,
               label: 'Meta Descripción Global',
+              localized: true, // ✅
               defaultValue: 'Empresa de desarrollo de software especializada en PWAs, arquitecturas SaaS escalables y transformación digital.',
               minLength: 50,
               maxLength: 160,
@@ -91,6 +94,7 @@ export const Company: GlobalConfig = {
                   name: 'keyword',
                   type: 'text',
                   label: 'Palabra clave',
+                  localized: true, // ✅
                 },
               ],
             },
@@ -115,12 +119,14 @@ export const Company: GlobalConfig = {
               name: 'address',
               type: 'textarea',
               label: 'Dirección Física',
+              localized: true, // ✅
               defaultValue: 'Jávea, Alicante, España',
             },
             {
               name: 'schedule',
               type: 'text',
               label: 'Horario de Atención',
+              localized: true, // ✅
               defaultValue: 'L-V: 09:00 - 18:00',
             },
           ],

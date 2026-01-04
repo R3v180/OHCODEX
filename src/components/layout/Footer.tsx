@@ -1,20 +1,24 @@
-// ========== src/components/layout/Footer.tsx ========== //
-
 import React from 'react'
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { Github, Linkedin, Twitter } from 'lucide-react'
-// 1. Importamos el tipo generado automáticamente
+import { getTranslations } from 'next-intl/server'
 import type { CompanyInfo } from '@/payload-types'
 
-export async function Footer() {
+interface FooterProps {
+  locale?: string
+}
+
+export async function Footer({ locale = 'es' }: FooterProps) {
   const payload = await getPayload({ config: configPromise })
+  const t = await getTranslations('common')
+  const tFooter = await getTranslations('footer')
   
-  // 2. CORRECCIÓN: Usamos 'as any' en el slug para evitar el error 'never'
-  // y forzamos el tipo de retorno a 'CompanyInfo' para tener autocompletado.
+  // Obtenemos datos de la empresa en el idioma correcto
   const company = (await payload.findGlobal({
     slug: 'company-info' as any,
+    locale: locale as any,
   })) as unknown as CompanyInfo
 
   const currentYear = new Date().getFullYear()
@@ -22,7 +26,7 @@ export async function Footer() {
   // Valores por defecto
   const email = company?.contactEmail || 'info@ohcodex.com'
   const schedule = company?.schedule || 'L-V: 09:00 - 18:00'
-  const description = company?.description || 'Ingeniería de software avanzada para empresas que buscan escalabilidad.'
+  const description = company?.description || tFooter('description')
 
   return (
     <footer className="border-t border-white/10 bg-black pt-16 pb-8">
@@ -62,21 +66,21 @@ export async function Footer() {
 
           {/* ENLACES RÁPIDOS */}
           <div>
-            <h3 className="text-white font-semibold mb-6">Navegación</h3>
+            <h3 className="text-white font-semibold mb-6">{tFooter('navigation')}</h3>
             <ul className="space-y-4">
               <li>
                 <Link href="/#productos" className="text-zinc-400 hover:text-cyan-400 transition-colors">
-                  Productos
+                  {t('products')}
                 </Link>
               </li>
               <li>
                 <Link href="/#metodologia" className="text-zinc-400 hover:text-cyan-400 transition-colors">
-                  Metodología
+                  {t('methodology')}
                 </Link>
               </li>
               <li>
                 <Link href="/admin" className="text-zinc-400 hover:text-cyan-400 transition-colors">
-                  Área Clientes (Admin)
+                  Admin Panel
                 </Link>
               </li>
             </ul>
@@ -84,7 +88,7 @@ export async function Footer() {
 
           {/* CONTACTO */}
           <div>
-            <h3 className="text-white font-semibold mb-6">Contacto</h3>
+            <h3 className="text-white font-semibold mb-6">{tFooter('contact')}</h3>
             <ul className="space-y-4">
               <li>
                 <a href={`mailto:${email}`} className="text-zinc-400 hover:text-cyan-400 transition-colors">
@@ -92,7 +96,7 @@ export async function Footer() {
                 </a>
               </li>
               <li className="text-zinc-500 text-sm whitespace-pre-line">
-                Soporte disponible:<br />
+                {tFooter('support')}<br />
                 {schedule}
               </li>
               {company?.phoneNumber && (
@@ -107,17 +111,17 @@ export async function Footer() {
         {/* COPYRIGHT & LEGAL */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-zinc-500 text-sm">
-            &copy; {currentYear} OHCodex. Todos los derechos reservados.
+            &copy; {currentYear} OHCodex. {t('copyright')}.
           </p>
           <div className="flex gap-6 text-sm text-zinc-500">
             <Link href="/aviso-legal" className="hover:text-zinc-300 transition-colors">
-              Aviso Legal
+              {t('legal.legalNotice')}
             </Link>
             <Link href="/privacidad" className="hover:text-zinc-300 transition-colors">
-              Privacidad
+              {t('legal.privacy')}
             </Link>
             <Link href="/terminos" className="hover:text-zinc-300 transition-colors">
-              Términos
+              {t('legal.terms')}
             </Link>
           </div>
         </div>
@@ -125,5 +129,3 @@ export async function Footer() {
     </footer>
   )
 }
-
-// ========== Fin de src/components/layout/Footer.tsx ========== //

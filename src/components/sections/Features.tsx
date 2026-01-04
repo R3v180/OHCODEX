@@ -3,6 +3,7 @@ import { Smartphone, Zap, Database, ShieldCheck, LucideIcon, Code2, Users, Rocke
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LandingPage } from '@/payload-types'
+import { getTranslations } from 'next-intl/server'
 
 // Mapa para traducir el texto del CMS al componente Icono real
 const iconMap: Record<string, LucideIcon> = {
@@ -15,49 +16,46 @@ const iconMap: Record<string, LucideIcon> = {
   rocket: Rocket
 }
 
-export async function FeaturesSection() {
+interface FeaturesSectionProps {
+  locale?: string
+}
+
+export async function FeaturesSection({ locale = 'es' }: FeaturesSectionProps) {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Obtener datos globales con tipado seguro
+  // 1. OBTENER TRADUCCIONES DE INTERFAZ (Para los bullets)
+  const t = await getTranslations('home.features.bullets')
+
+  // 2. Obtener datos globales de contenido (Títulos y Descripción)
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
+    locale: locale as any,
   })) as unknown as LandingPage
 
-  // 2. Configuración Visual
-  const align = landing.featuresAlign || 'left' // 'left' | 'center'
+  // Configuración Visual
+  const align = landing.featuresAlign || 'left'
   
-  // Textos con Fallback
+  // Textos con Fallback (Vienen de la Base de Datos)
   const title = landing?.featuresTitle || 'Más allá del código: Ingeniería de Producto'
-  const description = landing?.featuresDescription || 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.'
+  const description = landing?.featuresDescription || 'En OHCodex no somos una factoría de software al peso...'
   
-  // Lista de Características (Fallback si está vacío)
   const featuresList = landing?.featuresList || [
-    {
-      icon: 'smartphone',
-      title: 'Expertos en PWA',
-      description: 'Creamos aplicaciones web que se instalan como nativas. Sin Apple Store ni Play Store.',
-    },
-    {
-      icon: 'zap',
-      title: 'Rendimiento Extremo',
-      description: 'Optimizamos cada milisegundo. Usamos Next.js y arquitecturas modernas.',
-    },
-    {
-      icon: 'database',
-      title: 'Integración Total',
-      description: 'Conectamos tu software con ERPs existentes, pasarelas de pago y hardware IoT.',
-    },
-    {
-      icon: 'shield',
-      title: 'Escalabilidad Real',
-      description: 'Arquitecturas preparadas para crecer. Desde un MVP hasta sistemas SaaS complejos.',
-    },
+    { icon: 'smartphone', title: 'Expertos en PWA', description: 'Creamos aplicaciones web...' },
+    { icon: 'zap', title: 'Rendimiento Extremo', description: 'Optimizamos cada milisegundo...' },
+    { icon: 'database', title: 'Integración Total', description: 'Conectamos tu software...' },
+    { icon: 'shield', title: 'Escalabilidad Real', description: 'Arquitecturas preparadas...' },
   ]
 
-  // Lógica para el Título (Última palabra en Cyan)
   const titleWords = title.split(' ')
   const titleMain = titleWords.slice(0, -1).join(' ')
   const titleLast = titleWords.slice(-1)
+
+  // 3. ARRAY DINÁMICO TRADUCIDO (Aquí estaba el texto fijo)
+  const highlightPoints = [
+    t('agile'),     // "Metodología Ágil Real" / "Real Agile Methodology"
+    t('ownCode'),   // "Código Propio" / "Proprietary Code"
+    t('support')    // "Soporte Directo" / "Direct Engineer Support"
+  ]
 
   return (
     <section id="metodologia" className="bg-black py-24 relative overflow-hidden border-b border-white/5">
@@ -80,9 +78,8 @@ export async function FeaturesSection() {
             </p>
             
             {/* --- LISTA DE VENTAJAS ADAPTATIVA --- */}
-            {/* Se muestra siempre, pero cambia de forma según la alineación */}
             <div className={`flex mt-8 ${align === 'center' ? 'flex-wrap justify-center gap-3' : 'flex-col gap-4'}`}>
-               {['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros'].map((item, i) => (
+               {highlightPoints.map((item, i) => (
                  <div 
                    key={i} 
                    className={`flex items-center gap-3 ${
@@ -101,7 +98,6 @@ export async function FeaturesSection() {
           {/* GRID DE ICONOS */}
           <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 ${align === 'center' ? 'w-full lg:grid-cols-4' : ''}`}>
             {featuresList.map((feature, index) => {
-              // Resolver el icono desde el mapa (Tipado seguro)
               const iconKey = (feature.icon as string) || 'zap'
               const IconComponent = iconMap[iconKey] || Zap
               

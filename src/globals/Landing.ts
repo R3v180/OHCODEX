@@ -7,22 +7,18 @@ export const Landing: GlobalConfig = {
   access: {
     read: () => true,
   },
-  // --- AQUI ESTÁ LA MAGIA ---
   hooks: {
     afterChange: [
       async () => {
-        // Esto borra la caché de la Home inmediatamente al guardar
         revalidatePath('/')
         console.log('🔄 Home regenerada bajo demanda')
       },
     ],
   },
-  // ---------------------------
   fields: [
     {
       type: 'tabs',
       tabs: [
-        // --- TAB 1: HERO ---
         {
           label: 'Sección Hero',
           fields: [
@@ -30,6 +26,7 @@ export const Landing: GlobalConfig = {
               name: 'heroBadge',
               type: 'text',
               label: 'Etiqueta Superior (Badge)',
+              localized: true, // ✅
               defaultValue: 'Nuevo: Pool-Control Beta Disponible',
             },
             {
@@ -37,6 +34,7 @@ export const Landing: GlobalConfig = {
               type: 'text',
               label: 'Título Principal',
               required: true,
+              localized: true, // ✅
               defaultValue: 'Arquitectos de Ecosistemas Digitales',
             },
             {
@@ -44,12 +42,11 @@ export const Landing: GlobalConfig = {
               type: 'textarea',
               label: 'Subtítulo',
               required: true,
+              localized: true, // ✅
               defaultValue: 'Transformamos negocios con software a medida de alto rendimiento. Desde PWAs ultra-rápidas hasta infraestructuras SaaS complejas.',
             },
           ],
         },
-
-        // --- TAB 2: BARRA DE CONFIANZA ---
         {
           label: 'Barra de Confianza',
           fields: [
@@ -57,6 +54,7 @@ export const Landing: GlobalConfig = {
               name: 'trustBarTitle',
               type: 'text',
               label: 'Título pequeño (sobre los logos)',
+              localized: true, // ✅
               defaultValue: 'Tecnologías que impulsan nuestros productos',
             },
             {
@@ -68,8 +66,6 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
-
-        // --- TAB 3: PRODUCTOS ---
         {
           label: 'Sección Productos',
           fields: [
@@ -77,12 +73,14 @@ export const Landing: GlobalConfig = {
               name: 'productsTitle',
               type: 'text',
               label: 'Título Sección Productos',
+              localized: true, // ✅
               defaultValue: 'Soluciones OHCodex',
             },
             {
               name: 'productsDescription',
               type: 'textarea',
               label: 'Descripción Sección Productos',
+              localized: true, // ✅
               defaultValue: 'Software diseñado para resolver problemas reales. Desde la automatización de infraestructura hasta la gestión comercial.',
             },
             {
@@ -115,8 +113,6 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
-
-        // --- TAB 4: METODOLOGÍA ---
         {
           label: 'Sección Metodología',
           fields: [
@@ -124,12 +120,14 @@ export const Landing: GlobalConfig = {
               name: 'featuresTitle',
               type: 'text',
               label: 'Título Metodología',
+              localized: true, // ✅
               defaultValue: 'Más allá del código: Ingeniería de Producto',
             },
             {
               name: 'featuresDescription',
               type: 'textarea',
               label: 'Descripción Metodología',
+              localized: true, // ✅
               defaultValue: 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.',
             },
             {
@@ -172,20 +170,20 @@ export const Landing: GlobalConfig = {
                   name: 'title',
                   type: 'text',
                   label: 'Título',
+                  localized: true, // ✅
                   required: true,
                 },
                 {
                   name: 'description',
                   type: 'textarea',
                   label: 'Descripción',
+                  localized: true, // ✅
                   required: true,
                 },
               ],
             },
           ],
         },
-
-        // --- TAB 5: TESTIMONIOS ---
         {
           label: 'Testimonios',
           fields: [
@@ -193,12 +191,14 @@ export const Landing: GlobalConfig = {
               name: 'testimonialsTitle',
               type: 'text',
               label: 'Título Sección Testimonios',
+              localized: true, // ✅
               defaultValue: 'Confianza que se construye con código',
             },
             {
               name: 'testimonialsSubtitle',
               type: 'textarea',
               label: 'Subtítulo',
+              localized: true, // ✅
               defaultValue: 'Lo que dicen los líderes técnicos que ya escalan con nuestra arquitectura.',
             },
             {
@@ -224,6 +224,7 @@ export const Landing: GlobalConfig = {
                       name: 'authorRole',
                       type: 'text',
                       label: 'Cargo (ej: CTO)',
+                      localized: true, // ✅
                       required: true,
                       admin: { width: '50%' },
                     },
@@ -239,6 +240,7 @@ export const Landing: GlobalConfig = {
                   name: 'quote',
                   type: 'textarea',
                   label: 'La Cita / Opinión',
+                  localized: true, // ✅
                   required: true,
                 },
                 {
@@ -251,8 +253,6 @@ export const Landing: GlobalConfig = {
             },
           ],
         },
-
-        // --- TAB 6: FAQ ---
         {
           label: 'FAQs',
           fields: [
@@ -260,12 +260,14 @@ export const Landing: GlobalConfig = {
               name: 'faqTitle',
               type: 'text',
               label: 'Título Sección FAQ',
+              localized: true, // ✅
               defaultValue: 'Preguntas Frecuentes',
             },
             {
               name: 'faqSubtitle',
               type: 'textarea',
               label: 'Subtítulo',
+              localized: true, // ✅
               defaultValue: 'Todo lo que necesitas saber sobre nuestra forma de trabajar.',
             },
             {
@@ -281,12 +283,14 @@ export const Landing: GlobalConfig = {
                   name: 'question',
                   type: 'text',
                   label: 'Pregunta',
+                  localized: true, // ✅
                   required: true,
                 },
                 {
                   name: 'answer',
                   type: 'textarea',
                   label: 'Respuesta',
+                  localized: true, // ✅
                   required: true,
                 },
               ],

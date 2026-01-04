@@ -2,45 +2,49 @@ import React from 'react'
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-import { ArrowUpRight, CheckCircle2, FlaskConical, Rocket, Timer } from 'lucide-react'
+import { ArrowUpRight, CheckCircle2, FlaskConical, Rocket, Timer, ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { LandingPage } from '@/payload-types'
 import Image from 'next/image'
+import { getTranslations } from 'next-intl/server'
 
-const getStatusConfig = (status: string) => {
-  switch (status) {
-    case 'live':
-      return { label: 'En Producción', color: 'bg-green-500/10 text-green-400 border-green-500/20', icon: CheckCircle2 }
-    case 'beta':
-      return { label: 'Beta Pública', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: Rocket }
-    case 'development':
-      return { label: 'En Desarrollo', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', icon: Timer }
-    default:
-      return { label: 'Concepto', color: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20', icon: FlaskConical }
-  }
+// Configuración visual estática (Iconos y Colores no cambian por idioma)
+const STATUS_VISUALS = {
+  live: { color: 'bg-green-500/10 text-green-400 border-green-500/20', icon: CheckCircle2 },
+  beta: { color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: Rocket },
+  development: { color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', icon: Timer },
+  concept: { color: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20', icon: FlaskConical }
 }
 
-export async function ProductsSection() {
+interface ProductsSectionProps {
+  locale?: string
+}
+
+export async function ProductsSection({ locale = 'es' }: ProductsSectionProps) {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Obtenemos la configuración de la Landing (Tipado seguro)
+  // 1. Cargar traducciones de interfaz (Botones, Estados)
+  const t = await getTranslations('products')
+
+  // 2. Cargar datos de contenido (Títulos, Descripciones) desde Payload
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
+    locale: locale as any,
   })) as unknown as LandingPage
 
   const { docs: products } = await payload.find({
     collection: 'products',
     depth: 1, 
-    // CAMBIO IMPORTANTE: Ordenar por el campo 'order' ascendente (1, 2, 3...)
     sort: 'order', 
+    locale: locale as any,
   })
 
-  // 2. Extraer configuración visual con Fallbacks
+  // Textos de cabecera (con fallback)
   const title = landing?.productsTitle || 'Soluciones OHCodex'
   const description = landing?.productsDescription || 'Software diseñado para resolver problemas reales.'
   
-  // Configuración de Rejilla
+  // Configuración de Grid/Alineación
   const gridColsOption = landing.productsGridCols || '3'
   const gridClass = {
     '2': 'lg:grid-cols-2',
@@ -48,19 +52,15 @@ export async function ProductsSection() {
     '4': 'lg:grid-cols-4',
   }[gridColsOption]
 
-  // Configuración de Alineación
-  const alignOption = landing.productsAlign || 'center'
-  const headerAlignClass = alignOption === 'center' ? 'text-center mx-auto' : 'text-left mr-auto'
+  const headerAlignClass = landing.productsAlign === 'center' ? 'text-center mx-auto' : 'text-left mr-auto'
 
-  if (!products || products.length === 0) {
-    return null 
-  }
+  if (!products || products.length === 0) return null 
 
   return (
     <section id="productos" className="bg-zinc-950 py-24 border-b border-white/5">
       <div className="container px-4 mx-auto">
         
-        {/* CABECERA CONFIGURABLE */}
+        {/* Cabecera de Sección */}
         <div className={`mb-16 max-w-3xl ${headerAlignClass}`}>
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             {title.split(' ').slice(0, -1).join(' ')} <span className="text-cyan-500">{title.split(' ').slice(-1)}</span>
@@ -70,28 +70,28 @@ export async function ProductsSection() {
           </p>
         </div>
 
-        {/* REJILLA CONFIGURABLE */}
+        {/* Grid de Productos */}
         <div className={`grid grid-cols-1 md:grid-cols-2 ${gridClass} gap-8`}>
           {products.map((product) => {
-            const status = getStatusConfig(product.status)
-            const StatusIcon = status.icon
-            
-            const iconUrl = typeof product.logo === 'object' && product.logo?.url 
-              ? product.logo.url 
-              : null
-            
-            const detailUrl = `/products/${product.slug}`
+            // Resolver estilos y texto del estado
+            const statusKey = product.status as keyof typeof STATUS_VISUALS
+            const visuals = STATUS_VISUALS[statusKey] || STATUS_VISUALS.concept
+            const StatusIcon = visuals.icon
+            const statusLabel = t(`status.${statusKey}`) // Traducción dinámica: "En Producción" / "Live"
+
+            const iconUrl = typeof product.logo === 'object' && product.logo?.url ? product.logo.url : null
+            const detailUrl = `/${locale}/products/${product.slug}`
 
             return (
               <div 
                 key={product.id} 
                 className="group relative flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all hover:border-cyan-500/50 hover:bg-zinc-900 hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]"
               >
-                {/* Enlace Maestro */}
+                {/* Link Maestro */}
                 <Link 
                     href={detailUrl} 
                     className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-black"
-                    aria-label={`Ver detalles de ${product.name}`}
+                    aria-label={`${t('aboutProject')} ${product.name}`}
                 />
 
                 <div className="flex items-start justify-between mb-6 pointer-events-none">
@@ -105,9 +105,9 @@ export async function ProductsSection() {
                       )}
                   </div>
 
-                  <Badge variant="outline" className={`${status.color} capitalize flex gap-1.5`}>
+                  <Badge variant="outline" className={`${visuals.color} capitalize flex gap-1.5`}>
                     <StatusIcon className="w-3 h-3" />
-                    {status.label}
+                    {statusLabel}
                   </Badge>
                 </div>
 
@@ -132,7 +132,7 @@ export async function ProductsSection() {
                     <div className="relative z-20">
                         <Button asChild size="sm" variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950 p-0 h-auto font-semibold ml-2">
                         <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
-                            Visitar Web <ArrowUpRight className="ml-1 w-4 h-4" />
+                            {t('visitWebsite')} <ArrowUpRight className="ml-1 w-4 h-4" />
                         </a>
                         </Button>
                     </div>

@@ -4,15 +4,16 @@ import React, { useActionState } from 'react'
 import { submitContactForm } from '@/app/(frontend)/actions'
 import { Button } from '@/components/ui/button'
 import { Mail, MapPin, Loader2, Send } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 const initialState = {
   success: false,
   message: '',
 }
 
-// CORRECCIÓN CLAVE: Definimos explícitamente que este componente recibe un 'email' de tipo string
 export function ContactSection({ email }: { email: string }) {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
+  const t = useTranslations('contactSection')
 
   // Usamos el prop o un valor por defecto si viniera vacío
   const displayEmail = email || 'info@ohcodex.com'
@@ -27,12 +28,11 @@ export function ContactSection({ email }: { email: string }) {
           
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
-              Inicia tu <br />
-              <span className="text-cyan-500">Transformación Digital</span>
+              {t('title')} <br />
+              <span className="text-cyan-500">{t('titleHighlight')}</span>
             </h2>
             <p className="text-lg text-zinc-400 mb-10 leading-relaxed">
-              ¿Listo para escalar? Cuéntanos tu desafío técnico. 
-              Analizaremos tu caso y diseñaremos la arquitectura de software que tu negocio necesita para crecer sin límites.
+              {t('description')}
             </p>
 
             <div className="space-y-8">
@@ -41,11 +41,11 @@ export function ContactSection({ email }: { email: string }) {
                   <Mail className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold text-lg">Contacto Directo</h3>
+                  <h3 className="text-white font-semibold text-lg">{t('directContact')}</h3>
                   <a href={`mailto:${displayEmail}`} className="text-zinc-500 mt-1 hover:text-cyan-400 transition-colors block">
                     {displayEmail}
                   </a>
-                  <p className="text-zinc-600 text-sm mt-1">Respuesta en &lt; 24h laborables</p>
+                  <p className="text-zinc-600 text-sm mt-1">{t('responseTime')}</p>
                 </div>
               </div>
               
@@ -54,9 +54,9 @@ export function ContactSection({ email }: { email: string }) {
                   <MapPin className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold text-lg">Operaciones</h3>
-                  <p className="text-zinc-500 mt-1">España (Remote First)</p>
-                  <p className="text-zinc-600 text-sm mt-1">Servicio Global</p>
+                  <h3 className="text-white font-semibold text-lg">{t('operations')}</h3>
+                  <p className="text-zinc-500 mt-1">{t('location')}</p>
+                  <p className="text-zinc-600 text-sm mt-1">{t('globalService')}</p>
                 </div>
               </div>
             </div>
@@ -68,50 +68,50 @@ export function ContactSection({ email }: { email: string }) {
                 <div className="h-20 w-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mb-6 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
                   <Send className="h-10 w-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">¡Solicitud Enviada!</h3>
+                <h3 className="text-2xl font-bold text-white mb-3">{t('form.successTitle')}</h3>
                 <p className="text-zinc-400 max-w-xs mx-auto">
-                  Hemos recibido tus datos correctamente. Nuestro equipo de ingeniería revisará tu propuesta y te contactará en breve.
+                  {t('form.successMessage')}
                 </p>
               </div>
             ) : (
               <form action={formAction} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium text-zinc-300">Nombre</label>
+                    <label htmlFor="name" className="text-sm font-medium text-zinc-300">{t('form.name')}</label>
                     <input
                       id="name"
                       name="name"
                       type="text"
                       required
-                      placeholder="Tu nombre completo"
+                      placeholder={t('form.namePlaceholder')}
                       className="w-full rounded-lg border border-zinc-800 bg-black/40 px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-zinc-300">Email Corporativo</label>
+                    <label htmlFor="email" className="text-sm font-medium text-zinc-300">{t('form.email')}</label>
                     <input
                       id="email"
                       name="email"
                       type="email"
                       required
-                      placeholder="nombre@empresa.com"
+                      placeholder={t('form.emailPlaceholder')}
                       className="w-full rounded-lg border border-zinc-800 bg-black/40 px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="serviceType" className="text-sm font-medium text-zinc-300">Tipo de Proyecto</label>
+                  <label htmlFor="serviceType" className="text-sm font-medium text-zinc-300">{t('form.projectType')}</label>
                   <div className="relative">
                     <select
                       id="serviceType"
                       name="serviceType"
                       className="w-full rounded-lg border border-zinc-800 bg-black/40 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 appearance-none transition-all cursor-pointer"
                     >
-                      <option value="pwa">Desarrollo PWA / Aplicación Web</option>
-                      <option value="saas">Plataforma SaaS</option>
-                      <option value="api">Integración de Sistemas / API</option>
-                      <option value="other">Consultoría / Otro</option>
+                      <option value="pwa">{t('form.types.pwa')}</option>
+                      <option value="saas">{t('form.types.saas')}</option>
+                      <option value="api">{t('form.types.api')}</option>
+                      <option value="other">{t('form.types.other')}</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-500">
                       <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -120,13 +120,13 @@ export function ContactSection({ email }: { email: string }) {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium text-zinc-300">Detalles del Proyecto</label>
+                  <label htmlFor="message" className="text-sm font-medium text-zinc-300">{t('form.details')}</label>
                   <textarea
                     id="message"
                     name="message"
                     required
                     rows={4}
-                    placeholder="Describe brevemente tus objetivos, plazos estimados o la tecnología actual..."
+                    placeholder={t('form.detailsPlaceholder')}
                     className="w-full rounded-lg border border-zinc-800 bg-black/40 px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 resize-none transition-all"
                   />
                 </div>
@@ -142,7 +142,7 @@ export function ContactSection({ email }: { email: string }) {
                     />
                   </div>
                   <label htmlFor="privacyAccepted" className="text-xs text-zinc-500 leading-relaxed cursor-pointer select-none">
-                    He leído y acepto la <a href="/privacidad" target="_blank" className="underline hover:text-zinc-300 decoration-zinc-700 underline-offset-2">política de privacidad</a>. Entiendo que mis datos se procesarán para gestionar esta solicitud.
+                    {t('form.privacyAccept')}
                   </label>
                 </div>
 
@@ -159,10 +159,10 @@ export function ContactSection({ email }: { email: string }) {
                 >
                   {isPending ? (
                     <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Procesando...
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> {t('form.processing')}
                     </>
                   ) : (
-                    'Enviar Solicitud'
+                    t('form.submit')
                   )}
                 </Button>
               </form>

@@ -1,5 +1,3 @@
-    // ========== src/collections/Categories.ts ========== //
-
 import type { CollectionConfig } from 'payload'
 
 export const Categories: CollectionConfig = {
@@ -19,14 +17,18 @@ export const Categories: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      localized: true, // 👈 ¡ESTA ES LA CLAVE! Añadido para habilitar traducción
       label: 'Nombre',
     },
     {
       name: 'slug',
       type: 'text',
       label: 'Slug URL (Opcional)',
+      // El slug suele ser mejor no traducirlo si queremos mantener IDs consistentes, 
+      // pero si quieres URLs traducidas tipo /es/noticias y /en/news, añádelo aquí también.
+      // Por simplicidad, lo dejaré común, pero el nombre sí cambia.
       admin: {
-        description: 'Identificador para la URL (ej: tecnologia, noticias). Si se deja vacío, se puede usar el nombre.',
+        description: 'Identificador para la URL (ej: tecnologia).',
       },
     },
   ],

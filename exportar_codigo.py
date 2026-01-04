@@ -1,104 +1,138 @@
-# exportar_codigo.py
 import os
 
-# --- CONFIGURACIÓN PARA FICHAFACIL ---
+# ==========================================
+# CONFIGURACIÓN DEL SCRUBBER (LIMPIADOR)
+# ==========================================
 
-# Obtiene la ruta del directorio donde se encuentra este script.
-# Esto hace que el script sea totalmente portable.
-# <-- MODIFICADO (AHORA ES DINÁMICO)
+# 1. Directorio base (donde está el script)
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Nombre del archivo de salida. Se creará en la misma raíz del proyecto.
+# 2. Archivo de salida
 output_filename = "ohcodex-code.txt"
 output_file = os.path.join(base_dir, output_filename)
 
-# Nombre de este propio script para que se ignore a sí mismo.
-# <-- AÑADIDO
-script_name = os.path.basename(__file__)
+# 3. Carpetas PROHIBIDAS (Se ignoran recursivamente en cualquier lugar)
+ignored_dirs = {
+    # Dependencias y Build
+    'node_modules', '.next', 'build', 'dist', 'out', 'coverage', '.vercel',
+    # Sistema e IDEs
+    '.git', '.vscode', '.idea', '__MACOSX',
+    # Basura específica del Template SecureVault (RUIDO)
+    'skills',   # Documentación del SDK, no es código de la app
+    'examples', # Ejemplos de uso del SDK, no es código de la app
+    'upload',   # Markdown de especificaciones, no es código
+    'public',   # Assets binarios (imágenes, fuentes)
+}
 
-# Extensiones de archivo a incluir.
+# 4. Extensiones PERMITIDAS (Solo queremos código fuente y config)
 valid_extensions = (
-    ".ts", ".tsx", ".js", ".md", ".json", 
-    ".html", ".css", ".prisma", ".svg"
+    '.ts', '.tsx',   # TypeScript
+    '.js', '.mjs', '.cjs', # JavaScript
+    '.css', '.scss', # Estilos
+    '.prisma',       # Base de datos
+    '.json',         # Configuración (package.json, tsconfig.json)
+    '.md'            # Documentación (README)
 )
 
-# Archivos específicos a incluir por su nombre exacto.
-specific_files_to_include = {
-    '.env', 
-    '.env.example', 
-    '.gitignore', 
-    'pnpm-workspace.yaml'
+# 5. Archivos ESPECÍFICOS a INCLUIR (Aunque no cumplan extensión o estén ocultos)
+# NOTA: Has pedido incluir .env explícitamente.
+include_specific_files = {
+    '.env',
+    '.env.local',
+    '.env.example',
+    '.gitignore',
+    'Dockerfile',
+    'next.config.mjs',
+    'next.config.ts',
+    'tailwind.config.ts',
+    'postcss.config.mjs'
 }
 
-# Carpetas a ignorar.
-ignored_dirs = {
-    'node_modules', 
-    '.git', 
-    '.vscode', 
-    'dist', 
-    'build',
-    '.next'
+# 6. Archivos ESPECÍFICOS a IGNORAR (Ruido masivo)
+ignore_specific_files = {
+    output_filename,       # El propio archivo generado
+    os.path.basename(__file__), # Este script
+    'package-lock.json',   # Ruido (miles de líneas)
+    'pnpm-lock.yaml',      # Ruido
+    'yarn.lock',           # Ruido
+    'bun.lockb',           # Binario
+    'next-env.d.ts',       # Autogenerado por Next.js
+    '.DS_Store',           # Basura de Mac
+    'README.md',           # A veces queremos el root, pero subcarpetas suelen ser ruido. (Lo dejamos opcional)
 }
-# --- FIN CONFIGURACIÓN ---
+
+# ==========================================
+# LÓGICA DEL SCRIPT
+# ==========================================
+
+def is_valid_file(filename):
+    """Determina si un archivo debe ser incluido."""
+    if filename in ignore_specific_files:
+        return False
+    if filename in include_specific_files:
+        return True
+    return filename.endswith(valid_extensions)
 
 def main():
-    """
-    Función principal que escanea, recolecta y escribe el contenido
-    de los archivos del proyecto en un único archivo de texto.
-    """
-    print(f"Iniciando escaneo de archivos en: {base_dir}")
-    all_files = []
+    print(f"🧹 Iniciando escaneo limpio en: {base_dir}")
+    print(f"🚫 Ignorando carpetas basura: {', '.join(ignored_dirs)}")
     
+    collected_files = []
+
+    # Recorrer directorio
     for root, dirs, files in os.walk(base_dir, topdown=True):
-        # Evita que os.walk entre en las carpetas ignoradas.
+        # Modificar dirs in-place para evitar entrar en carpetas ignoradas
+        # Esto hace que os.walk sea mucho más rápido y no lea basura
         dirs[:] = [d for d in dirs if d not in ignored_dirs]
-        
+
         for file in files:
-            # Ignora el propio script de exportación.
-            # <-- AÑADIDO
-            if file == script_name:
-                continue
-            
-            # Incluye un archivo si su extensión es válida O si su nombre está en la lista específica.
-            if file.endswith(valid_extensions) or file in specific_files_to_include:
+            if is_valid_file(file):
                 full_path = os.path.join(root, file)
                 rel_path = os.path.relpath(full_path, base_dir).replace(os.path.sep, '/')
-                all_files.append((full_path, rel_path))
+                collected_files.append((full_path, rel_path))
 
-    # Ordena los archivos alfabéticamente.
-    all_files.sort(key=lambda x: x[1])
+    # Ordenar alfabéticamente para mantener contexto ordenado
+    collected_files.sort(key=lambda x: x[1])
 
-    print(f"Se encontraron {len(all_files)} archivos válidos. Escribiendo en {output_file}...")
-    
+    print(f"✅ Se encontraron {len(collected_files)} archivos limpios.")
+    print("✍️  Generando archivo consolidado...")
+
     try:
-        with open(output_file, "w", encoding="utf-8") as outfile:
-            # Escribe el índice de archivos.
-            outfile.write("=" * 20 + "\n")
-            outfile.write("ÍNDICE DE ARCHIVOS\n")
-            outfile.write("=" * 20 + "\n\n")
-            for idx, (_, rel_path) in enumerate(all_files, start=1):
-                outfile.write(f"{idx}. {rel_path}\n")
-            outfile.write("\n\n" + "=" * 50 + "\n\n")
+        with open(output_file, "w", encoding="utf-8") as f:
+            # 1. CABECERA E ÍNDICE
+            f.write("==============================\n")
+            f.write("ÍNDICE DE ARCHIVOS DEL PROYECTO\n")
+            f.write("==============================\n\n")
             
-            # Escribe el contenido de cada archivo.
-            outfile.write("=" * 20 + "\n")
-            outfile.write("CONTENIDO DE ARCHIVOS\n")
-            outfile.write("=" * 20 + "\n\n")
-            for idx, (full_path, rel_path) in enumerate(all_files, start=1):
+            for idx, (_, rel_path) in enumerate(collected_files, 1):
+                f.write(f"{idx}. {rel_path}\n")
+            
+            f.write("\n==================================================\n")
+            f.write("\nINICIO DEL CONTENIDO\n")
+            f.write("==================================================\n\n")
+
+            # 2. CONTENIDO DE LOS ARCHIVOS
+            for idx, (full_path, rel_path) in enumerate(collected_files, 1):
                 try:
                     with open(full_path, "r", encoding="utf-8", errors='ignore') as infile:
                         content = infile.read()
-                    outfile.write(f"// {'='*10} [{idx}] {rel_path} {'='*10} //\n\n")
-                    outfile.write(content)
-                    outfile.write(f"\n\n// {'='*10} Fin de {rel_path} {'='*10} //\n\n")
-                except Exception as e:
-                    print(f"  ADVERTENCIA: No se pudo leer el archivo {full_path}: {e}")
-                    outfile.write(f"// {'='*10} [{idx}] {rel_path} (ERROR DE LECTURA) {'='*10} //\n")
-                    outfile.write(f"// No se pudo leer el archivo. Error: {e}\n\n")
+                        
+                    f.write(f"// =============== INICIO ARCHIVO [{idx}]: {rel_path} =============== //\n")
+                    f.write(content)
+                    # Asegurar un salto de línea al final si no lo tiene
+                    if content and not content.endswith('\n'):
+                        f.write('\n')
+                    f.write(f"\n// =============== FIN ARCHIVO [{idx}]: {rel_path} =============== //\n\n")
                     
-        print(f"¡Éxito! El archivo '{output_filename}' ha sido creado en la raíz del proyecto.")
+                except Exception as e:
+                    print(f"⚠️ Error leyendo {rel_path}: {e}")
+                    f.write(f"// ERROR LECTURA: {rel_path}\n\n")
+
+        print(f"🎉 ¡Listo! Archivo generado: {output_filename}")
+        print("   -> Súbelo al chat para comenzar a trabajar.")
+
     except Exception as e:
-        print(f"ERROR FATAL al escribir el archivo de salida: {e}")
+        print(f"❌ Error fatal escribiendo el archivo: {e}")
 
 if __name__ == "__main__":
     main()

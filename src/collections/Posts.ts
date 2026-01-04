@@ -46,6 +46,7 @@ export const Posts: CollectionConfig = {
               name: 'title',
               type: 'text',
               required: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Título del Artículo',
             },
             {
@@ -53,9 +54,10 @@ export const Posts: CollectionConfig = {
               type: 'text',
               required: true,
               unique: true,
+              localized: true, // ✅ URL DIFERENTE POR IDIOMA
               admin: {
                 position: 'sidebar',
-                description: 'URL amigable (ej: arquitectura-saas-escalable)',
+                description: 'URL amigable (ej: arquitectura-saas / saas-architecture)',
               },
             },
             {
@@ -99,6 +101,7 @@ export const Posts: CollectionConfig = {
               name: 'excerpt',
               type: 'textarea',
               required: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Extracto / Resumen',
               maxLength: 300,
               admin: {
@@ -109,6 +112,7 @@ export const Posts: CollectionConfig = {
               name: 'content',
               type: 'richText',
               required: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Cuerpo del Artículo',
             },
           ],
@@ -121,6 +125,7 @@ export const Posts: CollectionConfig = {
             {
               name: 'metaTitle',
               type: 'text',
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Meta Título (Opcional)',
               admin: {
                 description: 'Si se deja vacío, se usará el título del artículo.',
@@ -129,6 +134,7 @@ export const Posts: CollectionConfig = {
             {
               name: 'metaDescription',
               type: 'textarea',
+              localized: true, // ✅ AHORA TRADUCIBLE
               label: 'Meta Descripción (Opcional)',
               minLength: 50,
               maxLength: 160,

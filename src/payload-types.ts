@@ -39,20 +39,18 @@ export interface Config {
     defaultIDType: number;
   };
   globals: {
-    'analytics-dashboard': AnalyticsDashboard;
     'company-info': CompanyInfo;
     'legal-texts': LegalText;
     'landing-page': LandingPage;
     'email-settings': EmailSetting;
   };
   globalsSelect: {
-    'analytics-dashboard': AnalyticsDashboardSelect<false> | AnalyticsDashboardSelect<true>;
     'company-info': CompanyInfoSelect<false> | CompanyInfoSelect<true>;
     'legal-texts': LegalTextsSelect<false> | LegalTextsSelect<true>;
     'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
     'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
   };
-  locale: null;
+  locale: 'es' | 'en';
   user: User & {
     collection: 'users';
   };
@@ -468,16 +466,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "analytics-dashboard".
- */
-export interface AnalyticsDashboard {
-  id: number;
-  placeholder?: string | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "company-info".
  */
 export interface CompanyInfo {
@@ -624,16 +612,6 @@ export interface EmailSetting {
   toEmail: string;
   updatedAt?: string | null;
   createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "analytics-dashboard_select".
- */
-export interface AnalyticsDashboardSelect<T extends boolean = true> {
-  placeholder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

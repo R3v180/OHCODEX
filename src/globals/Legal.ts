@@ -12,6 +12,7 @@ export const Legal: GlobalConfig = {
     afterChange: [
       async () => {
         // Regeneramos las 3 páginas legales al mismo tiempo
+        // Nota: Al introducir locales, Next.js revalidará las rutas específicas por idioma
         revalidatePath('/aviso-legal')
         revalidatePath('/privacidad')
         revalidatePath('/terminos')
@@ -32,6 +33,7 @@ export const Legal: GlobalConfig = {
               type: 'richText',
               label: 'Contenido del Aviso Legal',
               required: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
             },
           ],
         },
@@ -43,6 +45,7 @@ export const Legal: GlobalConfig = {
               type: 'richText',
               label: 'Contenido de Política de Privacidad',
               required: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
             },
           ],
         },
@@ -54,6 +57,7 @@ export const Legal: GlobalConfig = {
               type: 'richText',
               label: 'Contenido de Términos y Condiciones',
               required: true,
+              localized: true, // ✅ AHORA TRADUCIBLE
             },
           ],
         },

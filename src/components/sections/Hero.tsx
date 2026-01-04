@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Code2, Layers } from 'lucide-react'
+import { ArrowRight, Code2, Layers, Database } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 // Definimos la interfaz para recibir los datos dinámicos desde page.tsx
@@ -93,8 +93,9 @@ export function Hero({ badge, title, subtitle }: HeroProps) {
           <div className="hidden sm:block h-4 w-[1px] bg-border" />
 
           <div className="flex items-center gap-2">
-            <span className="font-mono text-sm font-bold">Prisma</span>
-            <span className="font-mono text-sm">ORM</span>
+            <Database className="h-6 w-6" />
+            <span className="font-mono text-sm font-bold">PostgreSQL</span>
+            <span className="font-mono text-sm">(Neon)</span>
           </div>
         </div>
 

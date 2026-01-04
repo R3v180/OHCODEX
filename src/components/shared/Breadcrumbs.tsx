@@ -1,3 +1,5 @@
+"use client" // 👈 ESTA ES LA LÍNEA QUE FALTA
+
 import React from 'react'
 import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
@@ -16,6 +18,7 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   const pathname = usePathname()
+  // Extraer el idioma de la URL (ej: /es/tools -> 'es')
   const locale = pathname.split('/')[1] || 'es'
 
   return (

@@ -1,19 +1,17 @@
-// =============== INICIO ARCHIVO: src/components/tools/pdf-studio/PDFStudioTool.tsx =============== //
-'use client'
+"use client"
 
 import React, { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Upload, Download, FileText, RotateCw, Merge, Trash2, CheckCircle2, PenLine } from 'lucide-react'
-// FIX: Importamos 'degrees' necesario para la rotación
 import { PDFDocument, degrees } from 'pdf-lib'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { SignatureDialog } from './SignatureDialog'
 
 export function PDFStudioTool() {
-  const t = useTranslations('tools.pdfStudio')
+  const t = useTranslations('tools.pdf-studio')
   const [files, setFiles] = useState<File[]>([])
   const [signatures, setSignatures] = useState<Record<number, string>>({})
   const [processing, setProcessing] = useState(false)
@@ -34,15 +32,12 @@ export function PDFStudioTool() {
       const pdfDoc = await PDFDocument.load(arrayBuffer)
       const pages = pdfDoc.getPages()
       
-      // Rotar todas las páginas
       pages.forEach(page => {
-        const currentRotation = page.getRotation()
-        // FIX: Usamos la función helper 'degrees' de pdf-lib
-        page.setRotation(degrees(currentRotation.angle + angle))
+        const currentRotation = page.getRotation().angle
+        page.setRotation(degrees(currentRotation + angle))
       })
       
       const pdfBytes = await pdfDoc.save()
-      // FIX: Casting 'as any' para el Blob
       const newBlob = new Blob([pdfBytes as any], { type: 'application/pdf' })
 
       const newFiles = [...files]
@@ -85,7 +80,6 @@ export function PDFStudioTool() {
       }
 
       const pdfBytes = await mergedPdf.save()
-      // FIX: Casting 'as any' para el Blob
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -107,7 +101,6 @@ export function PDFStudioTool() {
       const file = files[index]
       const signatureBase64 = signatures[index]
 
-      // Si no hay firma, descargar original
       if (!signatureBase64) {
         const url = URL.createObjectURL(file)
         const a = document.createElement('a')
@@ -118,7 +111,6 @@ export function PDFStudioTool() {
         return
       }
 
-      // Si hay firma, incrustar en el PDF
       const arrayBuffer = await file.arrayBuffer()
       const pdfDoc = await PDFDocument.load(arrayBuffer)
 
@@ -131,7 +123,6 @@ export function PDFStudioTool() {
       const signatureWidth = width * 0.25
       const signatureHeight = (signatureImage.height / signatureImage.width) * signatureWidth
 
-      // Posición: abajo a la derecha con margen
       const x = width - signatureWidth - 30
       const y = 30 
 
@@ -143,7 +134,6 @@ export function PDFStudioTool() {
       })
 
       const pdfBytes = await pdfDoc.save()
-      // FIX: Casting 'as any' para el Blob
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
 
       const url = URL.createObjectURL(blob)
@@ -171,7 +161,6 @@ export function PDFStudioTool() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
-      {/* Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400">
@@ -191,7 +180,6 @@ export function PDFStudioTool() {
         </AlertDescription>
       </Alert>
 
-      {/* Upload Section */}
       <Card className="mb-8 border-zinc-800 bg-zinc-950/50 backdrop-blur-xl">
         <CardContent className="p-6">
           <div
@@ -247,7 +235,6 @@ export function PDFStudioTool() {
         </CardContent>
       </Card>
 
-      {/* Files Grid */}
       {files.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {files.map((file, index) => (
@@ -275,6 +262,7 @@ export function PDFStudioTool() {
               <CardContent className="space-y-3">
                 {signatures[index] && (
                   <div className="relative rounded-lg overflow-hidden bg-white/10 p-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={signatures[index]}
                       alt="Signature"
@@ -301,7 +289,6 @@ export function PDFStudioTool() {
         </div>
       )}
 
-      {/* Signature Dialog */}
       <SignatureDialog
         open={signatureDialogOpen}
         onClose={() => setSignatureDialogOpen(false)}
@@ -310,4 +297,3 @@ export function PDFStudioTool() {
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/pdf-studio/PDFStudioTool.tsx =============== //

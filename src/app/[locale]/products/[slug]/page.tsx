@@ -1,3 +1,4 @@
+// =============== INICIO ARCHIVO: src/app/[locale]/products/[slug]/page.tsx =============== //
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -9,22 +10,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Metadata } from 'next'
 import type { Product } from '@/payload-types'
+import { getTranslations } from 'next-intl/server'
 
 export const revalidate = 600
 
-// --- Helper para traducir el estado visualmente ---
-const getStatusConfig = (status: string, locale: string) => {
-  const isEn = locale === 'en'
-  switch (status) {
-    case 'live':
-      return { label: isEn ? 'Live' : 'En Producción', color: 'bg-green-500/10 text-green-400 border-green-500/20', icon: CheckCircle2 }
-    case 'beta':
-      return { label: isEn ? 'Public Beta' : 'Beta Pública', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: Rocket }
-    case 'development':
-      return { label: isEn ? 'In Development' : 'En Desarrollo', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', icon: Timer }
-    default:
-      return { label: isEn ? 'Concept' : 'Concepto', color: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20', icon: FlaskConical }
-  }
+// Configuración visual estática (Iconos y Colores no cambian por idioma)
+const STATUS_VISUALS = {
+  live: { color: 'bg-green-500/10 text-green-400 border-green-500/20', icon: CheckCircle2 },
+  beta: { color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: Rocket },
+  development: { color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', icon: Timer },
+  concept: { color: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20', icon: FlaskConical }
 }
 
 // --- Helper para renderizar texto enriquecido ---
@@ -94,7 +89,7 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     locale: locale as any,
   })
 
-  if (!docs[0]) return { title: 'Producto no encontrado' }
+  if (!docs[0]) return { title: 'Product Not Found' }
   const product = docs[0]
 
   const title = product.metaTitle || `${product.name} | OHCodex`
@@ -117,6 +112,9 @@ export default async function ProductPage({ params }: Args) {
   const { slug, locale } = await params
   const payload = await getPayload({ config: configPromise })
 
+  // 1. Cargar traducciones
+  const t = await getTranslations('products')
+
   const { docs } = await payload.find({
     collection: 'products',
     where: { slug: { equals: slug } },
@@ -132,8 +130,12 @@ export default async function ProductPage({ params }: Args) {
   const logoUrl = typeof product.logo === 'object' && product.logo?.url ? product.logo.url : null
   
   // Configuración de estado
-  const statusConfig = getStatusConfig(product.status, locale)
-  const StatusIcon = statusConfig.icon
+  const statusKey = product.status as keyof typeof STATUS_VISUALS
+  const visuals = STATUS_VISUALS[statusKey] || STATUS_VISUALS.concept
+  const StatusIcon = visuals.icon
+  
+  // Traducción del estado usando el JSON
+  const statusLabel = t(`status.${product.status}`)
 
   // JSON-LD
   const softwareJsonLd = {
@@ -161,7 +163,8 @@ export default async function ProductPage({ params }: Args) {
         <div className="mb-8">
           <Link href={`/${locale}/#productos`} className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors">
             <ArrowLeft className="mr-2 h-4 w-4" /> 
-            {locale === 'en' ? 'Back to Portfolio' : 'Volver al Portfolio'}
+            {/* 👇 Texto traducido */}
+            {t('backToPortfolio')}
           </Link>
         </div>
 
@@ -180,9 +183,9 @@ export default async function ProductPage({ params }: Args) {
                   {product.name}
                 </h1>
                 <div className="flex flex-wrap gap-2">
-                  <Badge className={`${statusConfig.color} flex items-center gap-1`}>
+                  <Badge className={`${visuals.color} flex items-center gap-1`}>
                     <StatusIcon className="w-3 h-3" />
-                    {statusConfig.label}
+                    {statusLabel}
                   </Badge>
                 </div>
               </div>
@@ -202,14 +205,16 @@ export default async function ProductPage({ params }: Args) {
             ) : (
               <div className="w-full h-64 rounded-2xl bg-zinc-900/50 border border-zinc-800 flex items-center justify-center mb-10">
                 <p className="text-zinc-600">
-                  {locale === 'en' ? 'No cover image' : 'Sin imagen de portada'}
+                  {/* 👇 Texto traducido */}
+                  {t('noCover')}
                 </p>
               </div>
             )}
 
             <div className="prose prose-invert max-w-none prose-p:text-zinc-400 prose-headings:text-white prose-a:text-cyan-400">
               <h2 className="text-2xl font-bold text-white mb-4">
-                {locale === 'en' ? 'About the Project' : 'Sobre el Proyecto'}
+                {/* 👇 Texto traducido */}
+                {t('aboutProject')}
               </h2>
               {product.description && 'root' in product.description && (
                 <SerializeLexical nodes={(product.description.root as any).children} />
@@ -220,7 +225,8 @@ export default async function ProductPage({ params }: Args) {
             {product.relatedProducts && product.relatedProducts.length > 0 && (
               <div className="mt-20 pt-10 border-t border-white/10">
                 <h3 className="text-2xl font-bold text-white mb-6">
-                  {locale === 'en' ? 'Related Projects' : 'Otros Proyectos Similares'}
+                  {/* 👇 Texto traducido */}
+                  {t('related')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {product.relatedProducts.map((related) => {
@@ -264,19 +270,22 @@ export default async function ProductPage({ params }: Args) {
           <div className="lg:col-span-1 space-y-8">
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 backdrop-blur-sm sticky top-24">
               <h3 className="text-white font-semibold mb-4">
-                {locale === 'en' ? 'Technical Sheet' : 'Ficha Técnica'}
+                {/* 👇 Texto traducido */}
+                {t('technicalSheet')}
               </h3>
               
               {product.projectUrl ? (
                 <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white mb-6 shadow-lg shadow-cyan-900/20" asChild>
                   <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
-                    {locale === 'en' ? 'Visit Website' : 'Visitar Sitio Web'} 
+                    {/* 👇 Texto traducido */}
+                    {t('visitWebsite')} 
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
               ) : (
                 <Button disabled className="w-full bg-zinc-800 text-zinc-500 border border-zinc-700 mb-6">
-                  {locale === 'en' ? 'In Development' : 'En Desarrollo'}
+                  {/* 👇 Texto traducido */}
+                  {t('inDevelopment')}
                 </Button>
               )}
 
@@ -284,7 +293,8 @@ export default async function ProductPage({ params }: Args) {
                 <div>
                   <div className="flex items-center gap-2 text-white font-medium mb-3">
                     <Layers className="h-4 w-4 text-cyan-500" /> 
-                    {locale === 'en' ? 'Tech Stack' : 'Stack Tecnológico'}
+                    {/* 👇 Texto traducido */}
+                    {t('techStack')}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {product.technologies?.map((tech, i) => (
@@ -303,3 +313,4 @@ export default async function ProductPage({ params }: Args) {
     </article>
   )
 }
+// =============== FIN ARCHIVO: src/app/[locale]/products/[slug]/page.tsx =============== //

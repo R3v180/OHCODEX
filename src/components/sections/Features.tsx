@@ -3,7 +3,6 @@ import { Smartphone, Zap, Database, ShieldCheck, LucideIcon, Code2, Users, Rocke
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { LandingPage } from '@/payload-types'
-import { getTranslations } from 'next-intl/server'
 
 // Mapa para traducir el texto del CMS al componente Icono real
 const iconMap: Record<string, LucideIcon> = {
@@ -16,46 +15,34 @@ const iconMap: Record<string, LucideIcon> = {
   rocket: Rocket
 }
 
-interface FeaturesSectionProps {
-  locale?: string
-}
-
-export async function FeaturesSection({ locale = 'es' }: FeaturesSectionProps) {
+export async function FeaturesSection({ locale }: { locale: string }) {
   const payload = await getPayload({ config: configPromise })
   
-  // 1. OBTENER TRADUCCIONES DE INTERFAZ (Para los bullets)
-  const t = await getTranslations('home.features.bullets')
-
-  // 2. Obtener datos globales de contenido (Títulos y Descripción)
+  // 1. Obtener datos globales pasándole el locale para que traiga la versión de la BD correcta
   const landing = (await payload.findGlobal({
     slug: 'landing-page' as any,
-    locale: locale as any,
+    locale: locale as any, // 👈 IMPORTANTE
   })) as unknown as LandingPage
 
-  // Configuración Visual
+  // 2. Configuración Visual
   const align = landing.featuresAlign || 'left'
   
-  // Textos con Fallback (Vienen de la Base de Datos)
+  // Textos con Fallback
   const title = landing?.featuresTitle || 'Más allá del código: Ingeniería de Producto'
-  const description = landing?.featuresDescription || 'En OHCodex no somos una factoría de software al peso...'
+  const description = landing?.featuresDescription || 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.'
   
-  const featuresList = landing?.featuresList || [
-    { icon: 'smartphone', title: 'Expertos en PWA', description: 'Creamos aplicaciones web...' },
-    { icon: 'zap', title: 'Rendimiento Extremo', description: 'Optimizamos cada milisegundo...' },
-    { icon: 'database', title: 'Integración Total', description: 'Conectamos tu software...' },
-    { icon: 'shield', title: 'Escalabilidad Real', description: 'Arquitecturas preparadas...' },
-  ]
+  // Lista de Características (Tarjetas con iconos)
+  const featuresList = landing?.featuresList || []
 
+  // Lógica para el Título (Separar última palabra para el Cyan)
   const titleWords = title.split(' ')
   const titleMain = titleWords.slice(0, -1).join(' ')
   const titleLast = titleWords.slice(-1)
 
-  // 3. ARRAY DINÁMICO TRADUCIDO (Aquí estaba el texto fijo)
-  const highlightPoints = [
-    t('agile'),     // "Metodología Ágil Real" / "Real Agile Methodology"
-    t('ownCode'),   // "Código Propio" / "Proprietary Code"
-    t('support')    // "Soporte Directo" / "Direct Engineer Support"
-  ]
+  // 3. Traducción de los "Bubbles" (Beneficios rápidos que están fijos en el código)
+  const advantages = locale === 'en' 
+    ? ['Real Agile Methodology', 'Custom Code (No templates)', 'Direct Support from Engineers']
+    : ['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros']
 
   return (
     <section id="metodologia" className="bg-black py-24 relative overflow-hidden border-b border-white/5">
@@ -65,7 +52,6 @@ export async function FeaturesSection({ locale = 'es' }: FeaturesSectionProps) {
 
       <div className="container px-4 mx-auto relative z-10">
         
-        {/* --- LAYOUT CONDICIONAL --- */}
         <div className={align === 'center' ? 'flex flex-col items-center' : 'grid grid-cols-1 lg:grid-cols-2 gap-16 items-center'}>
           
           {/* BLOQUE DE TEXTO */}
@@ -79,7 +65,7 @@ export async function FeaturesSection({ locale = 'es' }: FeaturesSectionProps) {
             
             {/* --- LISTA DE VENTAJAS ADAPTATIVA --- */}
             <div className={`flex mt-8 ${align === 'center' ? 'flex-wrap justify-center gap-3' : 'flex-col gap-4'}`}>
-               {highlightPoints.map((item, i) => (
+               {advantages.map((item, i) => (
                  <div 
                    key={i} 
                    className={`flex items-center gap-3 ${
@@ -95,7 +81,7 @@ export async function FeaturesSection({ locale = 'es' }: FeaturesSectionProps) {
             </div>
           </div>
 
-          {/* GRID DE ICONOS */}
+          {/* GRID DE ICONOS (Cards) */}
           <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 ${align === 'center' ? 'w-full lg:grid-cols-4' : ''}`}>
             {featuresList.map((feature, index) => {
               const iconKey = (feature.icon as string) || 'zap'

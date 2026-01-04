@@ -1,7 +1,9 @@
+// =============== INICIO ARCHIVO: src/app/(frontend)/actions.ts =============== //
 'use server'
 
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { getTranslations, getLocale } from 'next-intl/server'
 
 // Definimos el tipo de estado de retorno para el cliente
 type FormState = {
@@ -10,7 +12,13 @@ type FormState = {
 }
 
 export async function submitContactForm(prevState: any, formData: FormData): Promise<FormState> {
-  // Inicializamos Payload para poder hablar con la base de datos
+  // 1. Detectar el idioma actual de la petición
+  const locale = await getLocale()
+  
+  // 2. Cargar traducciones para ese idioma
+  const t = await getTranslations({ locale, namespace: 'contactSection.form' })
+
+  // Inicializamos Payload
   const payload = await getPayload({ config: configPromise })
 
   // Extraemos los datos del formulario HTML
@@ -18,15 +26,14 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
   const email = formData.get('email') as string
   const serviceType = formData.get('serviceType') as string
   const message = formData.get('message') as string
-  // Los checkboxes envían "on" si están marcados, o null si no
   const privacyAccepted = formData.get('privacyAccepted') === 'on'
 
-  // Validación de seguridad en el servidor
-  // (Aunque el frontend valide, nunca hay que confiar en lo que viene del cliente)
+  // Validación básica
   if (!name || !email || !message || !privacyAccepted) {
     return {
       success: false,
-      message: 'Faltan campos obligatorios o no se ha aceptado la privacidad.',
+      // 👇 Mensaje de error traducido (definido en en.json/es.json)
+      message: t('errors.required'), 
     }
   }
 
@@ -37,25 +44,25 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
       data: {
         name,
         email,
-        // Hacemos casting al tipo esperado por Payload según definimos en la colección
         serviceType: serviceType as 'pwa' | 'saas' | 'api' | 'other',
         message,
         privacyAccepted,
       },
     })
 
-    // Si todo va bien, devolvemos éxito
     return {
       success: true,
-      message: '¡Recibido! Tu mensaje ha entrado en nuestro sistema. Te contactaremos pronto.',
+      // 👇 Mensaje de éxito traducido
+      message: t('successMessage'), 
     }
   } catch (error) {
     console.error('Error al procesar el formulario de contacto:', error)
     
-    // Si falla la base de datos, devolvemos un error amigable
     return {
       success: false,
-      message: 'Hubo un problema técnico al enviar tu mensaje. Por favor, intenta de nuevo más tarde.',
+      // 👇 Mensaje de error genérico traducido
+      message: t('errors.generic'),
     }
   }
 }
+// =============== FIN ARCHIVO: src/app/(frontend)/actions.ts =============== //

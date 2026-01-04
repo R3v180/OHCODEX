@@ -1,18 +1,17 @@
-// ========== src/app/(frontend)/not-found.tsx ========== //
-
-// -----------------------------------------------------------------------------
-// Archivo: src/app/(frontend)/not-found.tsx
-// Versión: 1.0.0
-// Descripción: Página de error 404 personalizada. Mantiene la estética
-// del sitio y ofrece una ruta de escape al usuario.
-// -----------------------------------------------------------------------------
-
+// =============== INICIO ARCHIVO: src/app/(frontend)/not-found.tsx =============== //
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { FileQuestion, Home } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
-export default function NotFound() {
+export default async function NotFound() {
+  // 1. Cargar traducciones
+  // Nota: Al estar en la raíz, intentará detectar el idioma por headers/cookies.
+  // Si falla, next-intl usará el default (es).
+  const t = await getTranslations('notFound')
+  const tCommon = await getTranslations('common.buttons')
+
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center bg-black px-4 text-center">
       
@@ -23,19 +22,23 @@ export default function NotFound() {
 
       {/* Texto */}
       <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl mb-4">
-        404
+        {/* 👇 Título (404) */}
+        {t('title')}
       </h1>
       <h2 className="text-2xl font-semibold text-white mb-4">
-        Página no encontrada
+        {/* 👇 Subtítulo (Page not found) */}
+        {t('subtitle')}
       </h2>
       <p className="max-w-md text-lg text-zinc-400 mb-8 leading-relaxed">
-        Parece que te has aventurado demasiado en el código. La página que buscas no existe o ha sido movida a otro servidor.
+        {/* 👇 Descripción detallada */}
+        {t('description')}
       </p>
 
       {/* Botón de retorno */}
       <Button asChild size="lg" className="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold">
+        {/* Enlazamos a la raíz '/' y dejamos que el Middleware redirija al idioma correcto */}
         <Link href="/">
-          <Home className="mr-2 h-4 w-4" /> Volver al Inicio
+          <Home className="mr-2 h-4 w-4" /> {tCommon('backToHome')}
         </Link>
       </Button>
 
@@ -46,5 +49,4 @@ export default function NotFound() {
     </div>
   )
 }
-
-// ========== Fin de src/app/(frontend)/not-found.tsx ========== //
+// =============== FIN ARCHIVO: src/app/(frontend)/not-found.tsx =============== //

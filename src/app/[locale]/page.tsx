@@ -1,126 +1,176 @@
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { getTranslations } from 'next-intl/server'
+import type { LandingPage, CompanyInfo } from '@/payload-types'
+
+// Componentes Corporativos
 import { Hero } from '@/components/sections/Hero'
-import { TrustBar } from '@/components/sections/TrustBar'
 import { ProductsSection } from '@/components/sections/Products'
 import { FeaturesSection } from '@/components/sections/Features'
 import { Testimonials } from '@/components/sections/Testimonials'
+import { TrustBar } from '@/components/sections/TrustBar'
 import { FAQ } from '@/components/sections/FAQ'
 import { ContactSection } from '@/components/sections/Contact'
-import type { CompanyInfo, LandingPage } from '@/payload-types'
 
-// Revalidación rápida para mantener el contenido fresco
-export const revalidate = 600
+// Componentes de Tools (Para la sección específica)
+import Link from 'next/link'
+import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Lock, Image as ImageIcon, FileText, Database, QrCode, ArrowRight, Shield } from 'lucide-react'
 
-type Args = {
-  params: Promise<{ locale: string }>
-}
-
-export default async function HomePage({ params }: Args) {
+// Metadatos Dinámicos
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const payload = await getPayload({ config: configPromise })
   
-  // 1. Carga de datos con Localización
-  const [company, landing] = await Promise.all([
-    payload.findGlobal({
-      slug: 'company-info' as any,
-      locale: locale as any, // 👈 Pedimos datos en el idioma actual
-    }) as unknown as CompanyInfo,
-    payload.findGlobal({
-      slug: 'landing-page' as any,
-      locale: locale as any,
-    }) as unknown as LandingPage
-  ])
-
-  // URL base para metadatos
-  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
+  const landing = (await payload.findGlobal({
+    slug: 'landing-page' as any,
+    locale: locale as any,
+  })) as unknown as LandingPage
   
-  // Gestión del Logo
-  const logoUrl = typeof company?.logo === 'object' && company.logo?.url 
-    ? company.logo.url 
-    : `${baseUrl}/logo.png`
+  const company = (await payload.findGlobal({
+    slug: 'company-info' as any,
+    locale: locale as any,
+  })) as unknown as CompanyInfo
 
-  // 2. DATOS ESTRUCTURADOS (JSON-LD)
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
-    name: 'OHCodex',
-    url: `${baseUrl}/${locale}`,
-    logo: logoUrl,
-    image: logoUrl,
-    description: company?.description,
-    telephone: company?.phoneNumber,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Jávea',
-      addressRegion: 'Alicante',
-      postalCode: '03730',
-      addressCountry: 'ES',
-      streetAddress: company?.address,
-    },
-    contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: company?.phoneNumber,
-      contactType: 'customer service',
-      email: company?.contactEmail,
-      areaServed: 'Global',
-      availableLanguage: ['es', 'en'],
-    },
-    priceRange: '$$$',
+  return {
+    title: landing?.heroTitle || company?.defaultTitle,
+    description: landing?.heroSubtitle || company?.defaultDescription,
   }
+}
 
-  // Mapeo de datos para componentes "tontos" (que reciben datos por props)
-  const testimonialData = landing.testimonials?.map(t => ({
-    id: t.id,
-    authorName: t.authorName,
-    authorRole: t.authorRole,
-    companyName: t.companyName,
-    quote: t.quote,
-    authorImage: t.authorImage
-  })) || []
+// Configuración de Tools
+const toolIcons = {
+  vault: Lock,
+  'image-optimizer': ImageIcon,
+  'pdf-studio': FileText,
+  'data-station': Database,
+  'qr-factory': QrCode,
+}
 
-  const faqData = landing.faqs?.map(f => ({
-    id: f.id,
-    question: f.question,
-    answer: f.answer
-  })) || []
+const toolBadges = {
+  vault: { label: 'Popular', color: 'bg-cyan-900/50 text-cyan-400 border-cyan-800' },
+  'image-optimizer': { label: 'New', color: 'bg-green-900/50 text-green-400 border-green-800' },
+  'pdf-studio': { label: 'Pro', color: 'bg-purple-900/50 text-purple-400 border-purple-800' },
+}
+
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  const payload = await getPayload({ config: configPromise })
+  
+  // Cargar Textos de Traducción (Botones, etiquetas estáticas)
+  const tHome = await getTranslations({ locale, namespace: 'home' })
+  const tTools = await getTranslations({ locale, namespace: 'tools' })
+
+  // Cargar Datos de la BD (Landing y Empresa) en el idioma actual
+  const landing = (await payload.findGlobal({
+    slug: 'landing-page' as any,
+    locale: locale as any,
+  })) as unknown as LandingPage
+
+  const company = (await payload.findGlobal({
+    slug: 'company-info' as any,
+    locale: locale as any,
+  })) as unknown as CompanyInfo
+
+  const toolsList = ['vault', 'image-optimizer', 'pdf-studio', 'data-station', 'qr-factory']
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      {/* 1. HERO Corporativo (Dinámico) */}
+      <Hero 
+        badge={landing?.heroBadge}
+        title={landing?.heroTitle || "OHCodex Software Studio"}
+        subtitle={landing?.heroSubtitle || "Engineering the future."}
       />
 
-      {/* Componentes que buscan sus propios datos (necesitarán actualización de props) */}
-      {/* @ts-ignore: Arreglaremos los tipos en el siguiente paso */}
-      <Hero locale={locale} />
-
+      {/* 2. Barra de Confianza (Logos) */}
       <TrustBar 
-        logos={landing.trustLogos as any} 
-        title={landing.trustBarTitle || undefined}
+        logos={landing?.trustLogos} 
+        title={landing?.trustBarTitle || undefined} 
       />
 
-      {/* @ts-ignore */}
+      {/* 3. Sección de Productos (SaaS Portfolio) */}
+      {/* CORRECCIÓN: Pasamos el locale para que se traduzcan los estados y contenido de la BD */}
       <ProductsSection locale={locale} />
 
-      {/* @ts-ignore */}
+      {/* 4. SECCIÓN: Tools Suite */}
+      <section id="tools" className="py-24 bg-zinc-900/30 border-y border-white/5">
+        <div className="container px-4 mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 bg-cyan-950 text-cyan-400 border-cyan-900/50">
+              <Shield className="w-3 h-3 mr-2" />
+              {tHome('hero.badge')}
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-white">
+              {tHome('ourTools.title')}
+            </h2>
+            <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+              {tHome('ourTools.subtitle')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {toolsList.map((toolSlug) => {
+              // @ts-ignore
+              const Icon = toolIcons[toolSlug] || Database
+              // @ts-ignore
+              const badge = toolBadges[toolSlug]
+              
+              return (
+                <Link key={toolSlug} href={`/${locale}/tools/${toolSlug}`} className="group block h-full">
+                  <Card className="h-full border-zinc-800 bg-black/40 transition-all duration-300 hover:border-cyan-500/50 hover:bg-zinc-900/80 hover:-translate-y-1">
+                    <CardHeader>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="p-3 rounded-lg bg-zinc-800 text-zinc-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/30 transition-colors">
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        {badge && (
+                          <Badge className={`${badge.color} border`}>
+                            {badge.label}
+                          </Badge>
+                        )}
+                      </div>
+                      <CardTitle className="text-xl text-white group-hover:text-cyan-400 transition-colors">
+                        {/* @ts-ignore */}
+                        {tTools(`${toolSlug}.title`)}
+                      </CardTitle>
+                      <CardDescription className="text-base text-zinc-400 line-clamp-2">
+                         {/* @ts-ignore */}
+                        {tTools(`${toolSlug}.description`)}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardFooter className="text-sm text-zinc-500 font-medium mt-auto group-hover:text-cyan-500 transition-colors">
+                      {tHome('ourTools.useTool')} <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </CardFooter>
+                  </Card>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Metodología (Features) */}
+      {/* CORRECCIÓN: Pasamos el locale para traducir la sección "Qué Hacemos" */}
       <FeaturesSection locale={locale} />
-      
-      {/* Componentes que reciben datos directamente */}
+
+      {/* 6. Testimonios */}
       <Testimonials 
-        testimonials={testimonialData}
-        title={landing.testimonialsTitle || undefined}
-        subtitle={landing.testimonialsSubtitle || undefined}
+        testimonials={landing?.testimonials}
+        title={landing?.testimonialsTitle || undefined}
+        subtitle={landing?.testimonialsSubtitle || undefined}
       />
 
+      {/* 7. FAQ */}
       <FAQ 
-        faqs={faqData}
-        title={landing.faqTitle || undefined}
-        subtitle={landing.faqSubtitle || undefined}
+        faqs={landing?.faqs}
+        title={landing?.faqTitle || undefined}
+        subtitle={landing?.faqSubtitle || undefined}
       />
 
+      {/* 8. Contacto */}
       <ContactSection email={company?.contactEmail || 'info@ohcodex.com'} />
     </>
   )

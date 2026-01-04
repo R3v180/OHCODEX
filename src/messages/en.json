@@ -1,81 +1,64 @@
 {
   "common": {
     "tools": "Tools",
-    "products": "Products",
-    "methodology": "Methodology",
-    "contact": "Contact",
     "home": "Home",
     "visitStudio": "Visit Studio",
     "blog": "Blog",
     "aboutUs": "About Us",
+    "contact": "Contact",
+    "products": "Products",
+    "methodology": "Methodology",
     "madeWith": "Made with ❤️ by the OHCodex engineering team",
     "copyright": "All rights reserved",
     "legal": {
       "legalNotice": "Legal Notice",
-      "privacy": "Privacy Policy",
-      "terms": "Terms & Conditions"
+      "privacy": "Privacy",
+      "terms": "Terms"
     },
     "buttons": {
       "copy": "Copy",
       "download": "Download",
       "process": "Process",
       "clear": "Clear",
-      "backToHome": "Back to Home",
-      "readArticle": "Read full article"
+      "readArticle": "Read Article",
+      "backToHome": "Back to Home"
     }
+  },
+  "hero": {
+    "badge": "New: Tools Section Available",
+    "title": "Software Architecture & Development",
+    "subtitle": "Engineering the future of digital ecosystems.",
+    "ctaProject": "Start Project",
+    "ctaPortfolio": "View Portfolio"
   },
   "home": {
     "hero": {
-      "badge": "100% Client-Side Processing",
-      "title": "Free Development & Productivity Tools",
-      "subtitle": "Professional tools suite that run 100% in your browser. Maximum privacy, zero server costs, no limits.",
-      "exploreTools": "Explore Tools",
-      "visitStudio": "Visit Studio",
-      "startProject": "Start Project",
-      "viewPortfolio": "View Portfolio"
-    },
-    "features": {
-      "whyOhcodex": "Why OHCodex Tools?",
-      "description": "Our tools run completely client-side using modern browser APIs. This means absolute privacy, instant load, and zero infrastructure costs.",
-      "ultraFast": "Ultra-fast",
-      "secure": "Secure",
-      "scalable": "Scalable",
-      "knowOhcodex": "Know OHCodex",
-      "bullets": {
-        "agile": "Real Agile Methodology",
-        "ownCode": "Proprietary Code (No templates)",
-        "support": "Direct Engineer Support"
-      }
+      "badge": "New: Tools Section Available",
+      "title": "Software Architecture & Development",
+      "subtitle": "Engineering the future of digital ecosystems.",
+      "ctaProject": "Start Project",
+      "ctaPortfolio": "View Portfolio"
     },
     "ourTools": {
-      "title": "Our Tools",
-      "subtitle": "All processing happens in your browser. Your data never leaves your device.",
-      "useTool": "Use tool"
+      "title": "Engineering Suite",
+      "subtitle": "Powerful, private, and browser-based tools for modern developers.",
+      "useTool": "Use Tool"
     }
   },
-  "footer": {
-    "description": "Advanced software engineering for companies seeking scalability.",
-    "tools": "Tools",
-    "more": "More",
-    "navigation": "Navigation",
-    "contact": "Contact",
-    "support": "Support available:"
-  },
   "contactSection": {
-    "title": "Start your",
-    "titleHighlight": "Digital Transformation",
-    "description": "Ready to scale? Tell us your technical challenge. We will analyze your case and design the software architecture your business needs to grow without limits.",
+    "title": "Start your Digital Transformation",
+    "subtitle": "Ready to scale? Tell us about your technical challenge. We will analyze your case and design the software architecture your business needs to grow without limits.",
     "directContact": "Direct Contact",
-    "responseTime": "Response in < 24 business hours",
+    "response": "Response in < 24h business days",
     "operations": "Operations",
     "location": "Spain (Remote First)",
-    "globalService": "Global Service",
+    "global": "Global Service",
     "form": {
       "name": "Name",
       "namePlaceholder": "Your full name",
       "email": "Corporate Email",
       "emailPlaceholder": "name@company.com",
-      "projectType": "Project Type",
+      "type": "Project Type",
       "types": {
         "pwa": "PWA Development / Web App",
         "saas": "SaaS Platform",
@@ -83,40 +66,41 @@
         "other": "Consulting / Other"
       },
       "details": "Project Details",
-      "detailsPlaceholder": "Briefly describe your goals, estimated deadlines, or current technology...",
-      "privacyAccept": "I have read and accept the privacy policy. I understand that my data will be processed to handle this request.",
+      "detailsPlaceholder": "Briefly describe your goals, estimated timeline, or current technology...",
+      "privacy": "I have read and accept the privacy policy. I understand my data will be processed to manage this request.",
       "submit": "Send Request",
       "processing": "Processing...",
-      "successTitle": "Request Sent!",
-      "successMessage": "We have received your data correctly. Our engineering team will review your proposal and contact you shortly.",
+      "sentTitle": "Request Sent!",
+      "sentDesc": "We have received your details correctly. Our engineering team will review your proposal and contact you shortly.",
       "errors": {
-        "required": "Required fields missing or privacy not accepted.",
-        "generic": "There was a technical problem sending your message. Please try again later."
-      }
+        "required": "Please complete all required fields.",
+        "generic": "There was an error sending the message. Please try again."
+      },
+      "successMessage": "Message sent successfully! We will contact you soon."
     }
   },
   "blog": {
     "title": "Engineering & Thought",
-    "subtitle": "We explore the technologies that power our products. From offline-first PWA architectures to cloud scalability strategies.",
-    "noArticles": "No articles published yet.",
+    "subtitle": "Articles on software development, system architecture, and technology strategy.",
     "backToBlog": "Back to Blog",
     "publishedOn": "Published on",
     "minRead": "min read",
-    "interested": "Interested in this topic?",
-    "helpText": "We help companies implement these technologies.",
-    "letsTalk": "Let's Talk"
+    "interested": "Interested in this approach?",
+    "helpText": "We apply this same philosophy to every project we develop.",
+    "letsTalk": "Let's Talk About Your Project",
+    "noArticles": "No articles published yet."
   },
   "products": {
     "backToPortfolio": "Back to Portfolio",
     "aboutProject": "About the Project",
-    "related": "Other Similar Projects",
+    "related": "Related Projects",
     "technicalSheet": "Technical Sheet",
     "visitWebsite": "Visit Website",
     "inDevelopment": "In Development",
     "techStack": "Tech Stack",
     "noCover": "No cover image",
     "status": {
-      "live": "Live Production",
+      "live": "Live",
       "beta": "Public Beta",
       "development": "In Development",
       "concept": "Concept"
@@ -124,8 +108,8 @@
   },
   "notFound": {
     "title": "404",
-    "subtitle": "Page not found",
-    "description": "It seems you've ventured too far into the code. The page you are looking for does not exist or has been moved to another server."
+    "subtitle": "Page Not Found",
+    "description": "Sorry, we couldn't find the page you're looking for. It might have been moved or deleted."
   },
   "tools": {
     "vault": {
@@ -175,10 +159,9 @@
       "encryptionError": "Encryption error",
       "decryptionError": "Incorrect password or corrupted data"
     },
-    "imageOptimizer": {
+    "image-optimizer": {
       "title": "Pixel Optimizer",
       "description": "Compress, resize, watermark and convert to WebP in batches.",
-      "badge": "New",
       "seo": {
         "title": "Compress and Optimize Images Online (WebP, JPG) - OHCodex",
         "description": "Reduce photo weight, add watermark and convert to WebP for free. Batch processing in your browser. Private and no limits."
@@ -197,25 +180,18 @@
       "privacyAlert": "EXIF metadata automatically removed for privacy",
       "processAll": "Process All",
       "processing": "Processing...",
-      "processingImages": "Processing...",
       "dragImages": "Drag images here",
       "clickToSelect": "or click to select",
       "imagesSelected": "{count} images selected",
       "results": "Results",
-      "originalSize": "Original",
-      "processedSize": "Processed",
       "size": "{size}",
-      "reduction": "(-{reduction}%)",
       "download": "Download",
-      "downloadZip": "Download ZIP",
-      "selectImages": "Please select images",
       "processedSuccess": "{count} images processed",
       "processingError": "Error processing images"
     },
-    "pdfStudio": {
+    "pdf-studio": {
       "title": "PDF Studio",
       "description": "Merge, split, sign and compress PDFs in a professional interface.",
-      "badge": "Pro",
       "seo": {
         "title": "Online PDF Editor: Merge, Sign and Compress - OHCodex PDF Studio",
         "description": "Free tool to manage PDFs. Organize pages, sign documents digitally and reduce file size. No registration and secure."
@@ -245,12 +221,9 @@
         "canvasPlaceholder": "Draw your signature here",
         "upload": "Upload Image"
       },
-      "selectPdf": "Please select a PDF file",
-      "uploadSignature": "Upload Signature",
-      "signatureSaved": "Signature saved",
-      "signatureError": "Error saving signature"
+      "signatureSaved": "Signature saved"
     },
-    "dataStation": {
+    "data-station": {
       "title": "Data Station",
       "description": "Format JSON, convert CSV/XML, validate SQL and compare code diff.",
       "seo": {
@@ -274,9 +247,6 @@
       "inputSql": "Input SQL",
       "formatSql": "Format SQL",
       "formattedSql": "Formatted SQL",
-      "pasteJson": "Paste your JSON here...",
-      "pasteCsv": "Paste JSON or CSV here...",
-      "pasteSql": "Paste your SQL here...",
       "jsonValid": "✓ Valid JSON",
       "jsonInvalid": "✗ Error: {error}",
       "convertedToCsv": "Converted to CSV",
@@ -288,7 +258,7 @@
       "conversionError": "Conversion error",
       "formatError": "Format error"
     },
-    "qrFactory": {
+    "qr-factory": {
       "title": "QR Factory",
       "description": "Generate custom QRs with logo and EAN-13, UPC barcodes.",
       "seo": {
@@ -300,49 +270,24 @@
       "generator": "QR Generator",
       "barcode": "Barcode",
       "scanner": "Scanner",
-      "livePreview": "Live Preview",
       "qrType": "QR Type",
-      "url": "Link/URL",
-      "wifi": "WiFi",
-      "vcard": "VCard",
-      "whatsapp": "WhatsApp",
       "design": "Design & Colors",
       "foregroundColor": "Foreground Color",
       "backgroundColor": "Background Color",
-      "dotStyle": "Dot Style",
-      "square": "Square",
-      "rounded": "Rounded",
-      "dots": "Dots",
       "logo": "Logo",
       "uploadLogo": "Upload Logo",
-      "errorCorrection": "Error Correction",
       "barcodeType": "Barcode Type",
-      "code128": "CODE128",
-      "ean13": "EAN-13",
-      "upc": "UPC",
       "showText": "Show Text",
       "height": "Height",
-      "margin": "Margins",
-      "scanBarcode": "Scan Barcode",
-      "scanQr": "Scan QR",
       "uploadImage": "Upload Image",
-      "downloadPng": "Download PNG",
-      "downloadSvg": "Download SVG",
       "enterUrl": "Enter URL...",
       "ssid": "Network Name (SSID)",
       "wifiPassword": "WiFi Password",
-      "security": "Security",
-      "wpa": "WPA",
-      "wep": "WEP",
-      "nopass": "No password",
-      "hiddenNetwork": "Hidden Network",
+      "security": { "nopass": "No password" },
       "firstName": "First Name",
       "lastName": "Last Name",
       "phone": "Phone",
       "email": "Email",
-      "organization": "Organization",
-      "address": "Address",
-      "website": "Website",
       "whatsappNumber": "WhatsApp Number",
       "message": "Message (optional)",
       "enterCode": "Enter code...",
@@ -350,13 +295,24 @@
       "noCodeFound": "No code detected",
       "scanError": "Scan error",
       "qrGenerated": "QR generated successfully",
-      "barcodeGenerated": "Barcode generated successfully",
-      "enterCodeError": "Please enter a valid code"
+      "barcodeGenerated": "Barcode generated successfully"
     }
+  },
+  "footer": {
+    "description": "Free development and productivity tools. Client-side processing for maximum privacy.",
+    "tools": "Tools",
+    "navigation": "Navigation",
+    "contact": "Contact",
+    "support": "Technical Support"
   },
   "crossSell": {
     "title": "Need Custom Software?",
     "description": "The OHCodex team creates high-performance web and mobile apps. Next.js, TypeScript, AI and cloud-native architecture.",
-    "requestQuote": "Request Quote"
+    "requestQuote": "Request Quote",
+    "common": {
+      "ultraFast": "Ultra Fast",
+      "secure": "Secure",
+      "scalable": "Scalable"
+    }
   }
 }

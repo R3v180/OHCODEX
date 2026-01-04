@@ -13,9 +13,10 @@ const initialState = {
 
 export function ContactSection({ email }: { email: string }) {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
+  
+  // 1. Hook de traducción cargando el namespace 'contactSection'
   const t = useTranslations('contactSection')
-
-  // Usamos el prop o un valor por defecto si viniera vacío
+  
   const displayEmail = email || 'info@ohcodex.com'
 
   return (
@@ -26,13 +27,15 @@ export function ContactSection({ email }: { email: string }) {
       <div className="container px-4 mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           
+          {/* COLUMNA IZQUIERDA: Info */}
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
-              {t('title')} <br />
-              <span className="text-cyan-500">{t('titleHighlight')}</span>
+              {/* Título dinámico con estilo bicolor */}
+              {t('title').split(' ').slice(0, 2).join(' ')} <br />
+              <span className="text-cyan-500">{t('title').split(' ').slice(2).join(' ')}</span>
             </h2>
             <p className="text-lg text-zinc-400 mb-10 leading-relaxed">
-              {t('description')}
+              {t('subtitle')}
             </p>
 
             <div className="space-y-8">
@@ -45,7 +48,7 @@ export function ContactSection({ email }: { email: string }) {
                   <a href={`mailto:${displayEmail}`} className="text-zinc-500 mt-1 hover:text-cyan-400 transition-colors block">
                     {displayEmail}
                   </a>
-                  <p className="text-zinc-600 text-sm mt-1">{t('responseTime')}</p>
+                  <p className="text-zinc-600 text-sm mt-1">{t('response')}</p>
                 </div>
               </div>
               
@@ -56,21 +59,22 @@ export function ContactSection({ email }: { email: string }) {
                 <div>
                   <h3 className="text-white font-semibold text-lg">{t('operations')}</h3>
                   <p className="text-zinc-500 mt-1">{t('location')}</p>
-                  <p className="text-zinc-600 text-sm mt-1">{t('globalService')}</p>
+                  <p className="text-zinc-600 text-sm mt-1">{t('global')}</p>
                 </div>
               </div>
             </div>
           </div>
 
+          {/* COLUMNA DERECHA: Formulario */}
           <div className="bg-zinc-900/30 border border-white/10 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
             {state.success ? (
               <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-500">
                 <div className="h-20 w-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mb-6 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
                   <Send className="h-10 w-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">{t('form.successTitle')}</h3>
+                <h3 className="text-2xl font-bold text-white mb-3">{t('form.sentTitle')}</h3>
                 <p className="text-zinc-400 max-w-xs mx-auto">
-                  {t('form.successMessage')}
+                  {t('form.sentDesc')}
                 </p>
               </div>
             ) : (
@@ -101,7 +105,7 @@ export function ContactSection({ email }: { email: string }) {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="serviceType" className="text-sm font-medium text-zinc-300">{t('form.projectType')}</label>
+                  <label htmlFor="serviceType" className="text-sm font-medium text-zinc-300">{t('form.type')}</label>
                   <div className="relative">
                     <select
                       id="serviceType"
@@ -142,7 +146,7 @@ export function ContactSection({ email }: { email: string }) {
                     />
                   </div>
                   <label htmlFor="privacyAccepted" className="text-xs text-zinc-500 leading-relaxed cursor-pointer select-none">
-                    {t('form.privacyAccept')}
+                    {t('form.privacy')}
                   </label>
                 </div>
 

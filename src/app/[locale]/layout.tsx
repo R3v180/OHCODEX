@@ -1,52 +1,45 @@
-import { NextIntlClientProvider } from 'next-intl'
-import { getMessages } from 'next-intl/server'
-import { notFound } from 'next/navigation'
-import { routing } from '@/i18n/routing'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-import { AnalyticsTracker } from '@/components/AnalyticsTracker'
-import { Suspense } from 'react'
-import '../globals.css'
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { routing } from '@/i18n/routing';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { Toaster } from '@/components/ui/toaster';
 
 export default async function LocaleLayout({
   children,
   params
 }: {
-  children: React.ReactNode
-  params: Promise<{ locale: string }>
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params
+  // 1. En Next.js 15, los params son una Promesa que hay que esperar
+  const { locale } = await params;
 
-  // Validar idioma usando la configuración centralizada
+  // 2. Seguridad: Si el idioma no está en nuestra lista, devolvemos 404
   if (!routing.locales.includes(locale as any)) {
-    notFound()
+    notFound();
   }
 
-  // Cargar traducciones para el cliente (Client Components)
-  const messages = await getMessages()
+  // 3. Cargamos los mensajes de traducción en el servidor
+  const messages = await getMessages();
 
   return (
-    <html lang={locale} className="dark scroll-smooth" suppressHydrationWarning>
-      <body className="min-h-screen bg-black font-sans antialiased text-foreground selection:bg-cyan-500/30 flex flex-col">
+    <NextIntlClientProvider messages={messages} locale={locale}>
+      <div className="flex min-h-screen flex-col">
+        {/* El Header es Cliente, ahora funcionará porque está dentro del Provider */}
+        <Header />
         
-        <NextIntlClientProvider messages={messages}>
-          
-          <Suspense fallback={null}>
-            <AnalyticsTracker />
-          </Suspense>
-
-          <Header />
-          
-          <main className="flex-1">
-            {children}
-          </main>
-          
-          {/* Pasamos el locale al Footer para que cargue los datos correctos de la BD */}
-          <Footer locale={locale} />
-
-        </NextIntlClientProvider>
+        <main className="flex-1">
+          {children}
+        </main>
         
-      </body>
-    </html>
-  )
+        {/* El Footer es Servidor, le pasamos el locale explícitamente */}
+        <Footer locale={locale} />
+      </div>
+      
+      {/* Toast para notificaciones (ej: "Copiado al portapapeles") */}
+      <Toaster />
+    </NextIntlClientProvider>
+  );
 }

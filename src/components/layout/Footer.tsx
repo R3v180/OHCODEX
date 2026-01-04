@@ -2,20 +2,23 @@ import React from 'react'
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-import { Github, Linkedin, Twitter } from 'lucide-react'
+import { Github, Linkedin, Twitter, ExternalLink } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import type { CompanyInfo } from '@/payload-types'
 
 interface FooterProps {
-  locale?: string
+  locale: string
 }
 
-export async function Footer({ locale = 'es' }: FooterProps) {
+export async function Footer({ locale }: FooterProps) {
   const payload = await getPayload({ config: configPromise })
+  
+  // Cargar traducciones
   const t = await getTranslations('common')
   const tFooter = await getTranslations('footer')
+  const tTools = await getTranslations('tools')
   
-  // Obtenemos datos de la empresa en el idioma correcto
+  // Obtener datos de la empresa desde Payload CMS
   const company = (await payload.findGlobal({
     slug: 'company-info' as any,
     locale: locale as any,
@@ -23,29 +26,37 @@ export async function Footer({ locale = 'es' }: FooterProps) {
 
   const currentYear = new Date().getFullYear()
 
-  // Valores por defecto
+  // Datos con fallback
   const email = company?.contactEmail || 'info@ohcodex.com'
-  const schedule = company?.schedule || 'L-V: 09:00 - 18:00'
+  const schedule = company?.schedule || 'L-V: 09:00 - 18:00' 
   const description = company?.description || tFooter('description')
+
+  // Lista de herramientas con enlaces localizados
+  const toolsLinks = [
+    { name: tTools('vault.title'), href: `/${locale}/tools/vault` },
+    { name: tTools('image-optimizer.title'), href: `/${locale}/tools/image-optimizer` },
+    { name: tTools('pdf-studio.title'), href: `/${locale}/tools/pdf-studio` },
+    { name: tTools('data-station.title'), href: `/${locale}/tools/data-station` },
+    { name: tTools('qr-factory.title'), href: `/${locale}/tools/qr-factory` },
+  ]
 
   return (
     <footer className="border-t border-white/10 bg-black pt-16 pb-8">
       <div className="container px-4 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           
-          {/* BRANDING */}
-          <div className="md:col-span-2">
-            <Link href="/" className="inline-block mb-6">
+          {/* 1. BRANDING & SOCIAL */}
+          <div className="md:col-span-1 lg:col-span-1">
+            <Link href={`/${locale}`} className="inline-block mb-6">
               <span className="text-2xl font-bold tracking-tighter text-white">
                 OH<span className="text-cyan-500">CODEX</span>
               </span>
             </Link>
-            <p className="text-zinc-400 leading-relaxed max-w-sm">
+            <p className="text-zinc-400 leading-relaxed text-sm mb-6">
               {description}
             </p>
             
-            {/* Redes Sociales */}
-            <div className="flex gap-4 mt-6">
+            <div className="flex gap-4">
               {company?.linkedin && (
                 <a href={company.linkedin} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors">
                   <Linkedin className="h-5 w-5" />
@@ -64,39 +75,53 @@ export async function Footer({ locale = 'es' }: FooterProps) {
             </div>
           </div>
 
-          {/* ENLACES RÁPIDOS */}
+          {/* 2. HERRAMIENTAS (TOOLS) */}
+          <div>
+            <h3 className="text-white font-semibold mb-6">{t('tools')}</h3>
+            <ul className="space-y-3 text-sm">
+              {toolsLinks.map((tool) => (
+                <li key={tool.href}>
+                  <Link href={tool.href} className="text-zinc-400 hover:text-cyan-400 transition-colors">
+                    {tool.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 3. NAVEGACIÓN CORPORATIVA */}
           <div>
             <h3 className="text-white font-semibold mb-6">{tFooter('navigation')}</h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/#productos" className="text-zinc-400 hover:text-cyan-400 transition-colors">
+                <Link href={`/${locale}/#productos`} className="text-zinc-400 hover:text-cyan-400 transition-colors">
                   {t('products')}
                 </Link>
               </li>
               <li>
-                <Link href="/#metodologia" className="text-zinc-400 hover:text-cyan-400 transition-colors">
+                <Link href={`/${locale}/#metodologia`} className="text-zinc-400 hover:text-cyan-400 transition-colors">
                   {t('methodology')}
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="text-zinc-400 hover:text-cyan-400 transition-colors">
-                  Admin Panel
-                </Link>
+                <a href="/admin" target="_blank" className="text-zinc-400 hover:text-cyan-400 transition-colors flex items-center gap-1">
+                  Admin Panel <ExternalLink className="h-3 w-3" />
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* CONTACTO */}
+          {/* 4. CONTACTO */}
           <div>
             <h3 className="text-white font-semibold mb-6">{tFooter('contact')}</h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3 text-sm">
               <li>
                 <a href={`mailto:${email}`} className="text-zinc-400 hover:text-cyan-400 transition-colors">
                   {email}
                 </a>
               </li>
-              <li className="text-zinc-500 text-sm whitespace-pre-line">
-                {tFooter('support')}<br />
+              <li className="text-zinc-500 whitespace-pre-line">
+                <span className="block text-zinc-300 mb-1">{tFooter('support')}</span>
                 {schedule}
               </li>
               {company?.phoneNumber && (
@@ -110,17 +135,18 @@ export async function Footer({ locale = 'es' }: FooterProps) {
 
         {/* COPYRIGHT & LEGAL */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-zinc-500 text-sm">
+          <p className="text-zinc-500 text-sm text-center md:text-left">
             &copy; {currentYear} OHCodex. {t('copyright')}.
           </p>
-          <div className="flex gap-6 text-sm text-zinc-500">
-            <Link href="/aviso-legal" className="hover:text-zinc-300 transition-colors">
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-zinc-500">
+            {/* 👇 ENLACES LEGALES CORREGIDOS */}
+            <Link href={`/${locale}/aviso-legal`} className="hover:text-zinc-300 transition-colors">
               {t('legal.legalNotice')}
             </Link>
-            <Link href="/privacidad" className="hover:text-zinc-300 transition-colors">
+            <Link href={`/${locale}/privacidad`} className="hover:text-zinc-300 transition-colors">
               {t('legal.privacy')}
             </Link>
-            <Link href="/terminos" className="hover:text-zinc-300 transition-colors">
+            <Link href={`/${locale}/terminos`} className="hover:text-zinc-300 transition-colors">
               {t('legal.terms')}
             </Link>
           </div>

@@ -1,84 +1,72 @@
-// ========== src/app/sitemap.ts ========== //
-
 import { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config: configPromise })
-  
-  // 1. Definir la URL base
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
+  
+  // Definimos los idiomas que soporta la web
+  const locales = ['es', 'en'] as const
 
-  // 2. Obtener PRODUCTOS
-  const { docs: products } = await payload.find({
-    collection: 'products',
-    where: {
-      status: {
-        in: ['live', 'beta', 'development', 'concept'], 
+  let sitemapEntries: MetadataRoute.Sitemap = []
+
+  // Recorremos cada idioma para generar sus URLs específicas
+  for (const locale of locales) {
+    
+    // 1. Obtener PRODUCTOS en el idioma actual (para tener el slug traducido)
+    const { docs: products } = await payload.find({
+      collection: 'products',
+      where: {
+        status: { in: ['live', 'beta', 'development', 'concept'] },
       },
-    },
-    depth: 0,
-    limit: 1000,
-  })
+      depth: 0,
+      limit: 1000,
+      locale: locale, // 👈 Clave: Pedimos el slug en este idioma
+    })
 
-  // 3. Obtener POSTS DEL BLOG (Nuevo)
-  const { docs: posts } = await payload.find({
-    collection: 'posts',
-    depth: 0,
-    limit: 1000,
-  })
+    // 2. Obtener POSTS en el idioma actual
+    const { docs: posts } = await payload.find({
+      collection: 'posts',
+      depth: 0,
+      limit: 1000,
+      locale: locale, // 👈 Clave: Pedimos el slug en este idioma
+    })
 
-  // 4. Generar URLs dinámicas de PRODUCTOS
-  const productUrls = products.map((product) => ({
-    url: `${baseUrl}/products/${product.slug}`,
-    lastModified: new Date(product.updatedAt),
-    changeFrequency: 'weekly' as const,
-    priority: product.isFeatured ? 0.9 : 0.7,
-  }))
-
-  // 5. Generar URLs dinámicas de POSTS (Nuevo)
-  const postUrls = posts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.updatedAt),
-    changeFrequency: 'monthly' as const, // Los posts cambian menos que los productos
-    priority: 0.6, // Prioridad estándar para artículos
-  }))
-
-  // 6. Generar URLs estáticas (Home, Blog Index y Legales)
-  const staticRoutes = [
-    {
-      url: baseUrl,
+    // 3. URLs ESTÁTICAS (Home, Blog Index, Legales)
+    // Nota: Añadimos el prefijo /es o /en a todas
+    const staticRoutes = [
+      '', // Home
+      '/blog',
+      '/aviso-legal',
+      '/privacidad',
+      '/terminos',
+    ].map(route => ({
+      url: `${baseUrl}/${locale}${route}`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/blog`, // Índice del blog
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/aviso-legal`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/privacidad`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terminos`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-  ]
+      priority: route === '' ? 1 : 0.8, // Home prioridad 1
+    }))
 
-  // 7. Unir todo y devolver
-  return [...staticRoutes, ...productUrls, ...postUrls]
+    // 4. URLs PRODUCTOS
+    const productUrls = products.map((product) => ({
+      url: `${baseUrl}/${locale}/products/${product.slug}`,
+      lastModified: new Date(product.updatedAt),
+      changeFrequency: 'weekly' as const,
+      priority: product.isFeatured ? 0.9 : 0.7,
+    }))
+
+    // 5. URLs POSTS
+    const postUrls = posts.map((post) => ({
+      url: `${baseUrl}/${locale}/blog/${post.slug}`,
+      lastModified: new Date(post.updatedAt),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }))
+
+    // Añadir todo al array principal
+    sitemapEntries.push(...staticRoutes, ...productUrls, ...postUrls)
+  }
+
+  return sitemapEntries
 }

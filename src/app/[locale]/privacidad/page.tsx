@@ -20,8 +20,9 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     description: locale === 'en' 
       ? 'Privacy Policy and data protection at OHCodex.' 
       : 'Política de Privacidad y protección de datos de OHCodex.',
+    // 👇 CORRECCIÓN SEO: Permitimos que Google indexe la página de privacidad
     robots: {
-      index: false,
+      index: true, 
       follow: true,
     },
   }
@@ -86,7 +87,6 @@ export default async function PrivacidadPage({ params }: Args) {
           {t('privacy')}
         </h1>
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* CORRECCIÓN: Usamos camelCase 'privacyPolicy' según payload-types.ts */}
           {legal?.privacyPolicy && (legal.privacyPolicy as any).root ? (
             <SerializeLexical nodes={(legal.privacyPolicy as any).root.children} />
           ) : (

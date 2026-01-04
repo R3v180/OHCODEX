@@ -20,8 +20,9 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     description: locale === 'en' 
       ? 'Terms of use for OHCodex services and software.' 
       : 'Condiciones de uso de los servicios y software de OHCodex.',
+    // 👇 CORRECCIÓN SEO: Habilitamos la indexación en Google
     robots: {
-      index: false,
+      index: true, 
       follow: true,
     },
   }
@@ -86,7 +87,6 @@ export default async function TerminosPage({ params }: Args) {
           {t('terms')}
         </h1>
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* CORRECCIÓN: Propiedad 'termsConditions' según payload-types.ts */}
           {legal?.termsConditions && (legal.termsConditions as any).root ? (
             <SerializeLexical nodes={(legal.termsConditions as any).root.children} />
           ) : (

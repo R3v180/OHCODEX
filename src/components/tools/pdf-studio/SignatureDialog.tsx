@@ -1,4 +1,3 @@
-// =============== INICIO ARCHIVO: src/components/tools/pdf-studio/SignatureDialog.tsx =============== //
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react'
@@ -15,7 +14,8 @@ export interface SignatureDialogProps {
 }
 
 export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps) {
-  const t = useTranslations('tools.pdfStudio.signature')
+  // CORRECCIÓN: 'pdf-studio' con guion
+  const t = useTranslations('tools.pdf-studio.signature')
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [hasSignature, setHasSignature] = useState(false)
@@ -24,7 +24,6 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
   useEffect(() => {
     if (!open) return
 
-    // Pequeño timeout para asegurar que el DOM del diálogo se ha renderizado
     const timer = setTimeout(() => {
       const canvas = canvasRef.current
       if (!canvas) return
@@ -32,8 +31,6 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
       const ctx = canvas.getContext('2d')
       if (!ctx) return
 
-      // Set canvas size
-      // Obtenemos el tamaño real del contenedor para ajustar el canvas
       const parent = canvas.parentElement
       if (parent) {
         canvas.width = parent.clientWidth
@@ -43,11 +40,8 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
         canvas.height = 200
       }
 
-      // Set white background explicitly
       ctx.fillStyle = '#ffffff'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      // Set drawing style
       ctx.strokeStyle = '#000000'
       ctx.lineWidth = 3
       ctx.lineCap = 'round'
@@ -68,7 +62,7 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
     const canvas = canvasRef.current
     if (canvas) {
         const ctx = canvas.getContext('2d')
-        ctx?.beginPath() // Reset path to prevent connecting lines
+        ctx?.beginPath()
     }
   }
 
@@ -85,8 +79,6 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
     let x, y
 
     if ('touches' in e) {
-      // Prevent scrolling while drawing on mobile
-      // e.preventDefault() // Descomentar si causa problemas de scroll
       x = e.touches[0].clientX - rect.left
       y = e.touches[0].clientY - rect.top
     } else {
@@ -109,7 +101,7 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
 
     ctx.fillStyle = '#ffffff'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.beginPath() // Reset paths
+    ctx.beginPath()
     
     setHasSignature(false)
     setUploadedImage(null)
@@ -121,7 +113,7 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
 
     if (uploadedImage) {
       onSave(uploadedImage)
-      toast.success(t('save')) // "Signature saved" en realidad
+      toast.success(t('save'))
     } else {
       const dataUrl = canvas.toDataURL('image/png')
       onSave(dataUrl)
@@ -142,26 +134,19 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
       img.onload = () => {
         const canvas = canvasRef.current
         if (!canvas) return
-
         const ctx = canvas.getContext('2d')
         if (!ctx) return
-
-        // Clear and draw uploaded image centered
         ctx.fillStyle = '#ffffff'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
-
         const aspectRatio = img.width / img.height
         let drawWidth = canvas.width * 0.8
         let drawHeight = drawWidth / aspectRatio
-
         if (drawHeight > canvas.height * 0.8) {
           drawHeight = canvas.height * 0.8
           drawWidth = drawHeight * aspectRatio
         }
-
         const x = (canvas.width - drawWidth) / 2
         const y = (canvas.height - drawHeight) / 2
-
         ctx.drawImage(img, x, y, drawWidth, drawHeight)
         setUploadedImage(canvas.toDataURL('image/png'))
         setHasSignature(true)
@@ -182,7 +167,6 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Canvas Wrapper */}
           <div className="relative w-full h-[200px] border border-zinc-700 rounded-lg overflow-hidden bg-white touch-none">
             <canvas
               ref={canvasRef}
@@ -197,19 +181,12 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
             />
           </div>
 
-          {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-2">
-            <Button
-              onClick={handleClear}
-              variant="outline"
-              className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800"
-            >
+            <Button onClick={handleClear} variant="outline" className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800">
               <Trash2 className="w-4 h-4 mr-2" />
               {t('clear')}
             </Button>
-
             <div className="flex-1 hidden sm:block" />
-
             <label className="cursor-pointer flex-1">
               <Button variant="outline" className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800" asChild>
                 <span>
@@ -217,19 +194,9 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
                   {t('upload')}
                 </span>
               </Button>
-              <input
-                type="file"
-                accept="image/png,image/jpeg"
-                onChange={handleUpload}
-                className="hidden"
-              />
+              <input type="file" accept="image/png,image/jpeg" onChange={handleUpload} className="hidden" />
             </label>
-
-            <Button
-              onClick={handleSave}
-              disabled={!hasSignature}
-              className="flex-1 bg-green-600 hover:bg-green-500 text-white"
-            >
+            <Button onClick={handleSave} disabled={!hasSignature} className="flex-1 bg-green-600 hover:bg-green-500 text-white">
               <CheckCircle2 className="w-4 h-4 mr-2" />
               {t('save')}
             </Button>
@@ -239,4 +206,3 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
     </Dialog>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/pdf-studio/SignatureDialog.tsx =============== //

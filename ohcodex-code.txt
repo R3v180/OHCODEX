@@ -138,21 +138,20 @@
 134. src/i18n/request.ts
 135. src/i18n/routing.ts
 136. src/lib/cloudinaryAdapter.ts
-137. src/lib/db.ts
-138. src/lib/engines/crypto-engine.ts
-139. src/lib/engines/data-engine.ts
-140. src/lib/engines/image-engine.ts
-141. src/lib/engines/pdf-engine.ts
-142. src/lib/engines/qr-engine.ts
-143. src/lib/utils.ts
-144. src/messages/en.json
-145. src/messages/es.json
-146. src/middleware.ts
-147. src/payload-types.ts
-148. src/payload.config.ts
-149. src/scripts/local-backup.ts
-150. tailwind.config.js
-151. tsconfig.json
+137. src/lib/engines/crypto-engine.ts
+138. src/lib/engines/data-engine.ts
+139. src/lib/engines/image-engine.ts
+140. src/lib/engines/pdf-engine.ts
+141. src/lib/engines/qr-engine.ts
+142. src/lib/utils.ts
+143. src/messages/en.json
+144. src/messages/es.json
+145. src/middleware.ts
+146. src/payload-types.ts
+147. src/payload.config.ts
+148. src/scripts/local-backup.ts
+149. tailwind.config.js
+150. tsconfig.json
 
 ==================================================
 
@@ -575,7 +574,7 @@ export default withPayload(withNextIntl(nextConfig))
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+    "build": "payload generate:importmap && next build",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
     "generate:importmap": "cross-env NODE_OPTIONS=\"--no-deprecation --loader=./css-loader.mjs\" payload generate:importmap",
@@ -2332,7 +2331,6 @@ export default async function TerminosPage({ params }: Args) {
 // =============== FIN ARCHIVO [31]: src/app/[locale]/terminos/page.tsx =============== //
 
 // =============== INICIO ARCHIVO [32]: src/app/[locale]/tools/data-station/page.tsx =============== //
-// =============== INICIO ARCHIVO: src/app/[locale]/tools/data-station/page.tsx =============== //
 import React from 'react'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
@@ -2340,9 +2338,14 @@ import { DataStationTool } from '@/components/tools/data-station/DataStationTool
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { AdSlot } from '@/components/shared/AdSlot'
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+type Props = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'tools.dataStation.seo' })
+  // CORRECCIÓN: 'data-station' con guion
+  const t = await getTranslations({ locale, namespace: 'tools.data-station.seo' })
 
   return {
     title: t('title'),
@@ -2353,10 +2356,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 }
 
-export default async function DataStationPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function DataStationPage({ params }: Props) {
   const { locale } = await params
   const t = await getTranslations('common')
-  const tTool = await getTranslations('tools.dataStation')
+  // CORRECCIÓN: 'data-station' con guion
+  const tTool = await getTranslations('tools.data-station')
 
   return (
     <div className="min-h-screen bg-black pt-20 pb-20">
@@ -2388,12 +2392,10 @@ export default async function DataStationPage({ params }: { params: Promise<{ lo
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/app/[locale]/tools/data-station/page.tsx =============== //
 
 // =============== FIN ARCHIVO [32]: src/app/[locale]/tools/data-station/page.tsx =============== //
 
 // =============== INICIO ARCHIVO [33]: src/app/[locale]/tools/image-optimizer/page.tsx =============== //
-// =============== INICIO ARCHIVO: src/app/[locale]/tools/image-optimizer/page.tsx =============== //
 import React from 'react'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
@@ -2401,9 +2403,14 @@ import { ImageOptimizerTool } from '@/components/tools/image-optimizer/ImageOpti
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { AdSlot } from '@/components/shared/AdSlot'
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+type Props = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'tools.imageOptimizer.seo' })
+  // CORRECCIÓN: Usamos el nombre con guion 'image-optimizer'
+  const t = await getTranslations({ locale, namespace: 'tools.image-optimizer.seo' })
 
   return {
     title: t('title'),
@@ -2414,10 +2421,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 }
 
-export default async function ImageOptimizerPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ImageOptimizerPage({ params }: Props) {
   const { locale } = await params
   const t = await getTranslations('common')
-  const tTool = await getTranslations('tools.imageOptimizer')
+  // CORRECCIÓN: Usamos el nombre con guion 'image-optimizer'
+  const tTool = await getTranslations('tools.image-optimizer')
 
   return (
     <div className="min-h-screen bg-black pt-20 pb-20">
@@ -2449,7 +2457,6 @@ export default async function ImageOptimizerPage({ params }: { params: Promise<{
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/app/[locale]/tools/image-optimizer/page.tsx =============== //
 
 // =============== FIN ARCHIVO [33]: src/app/[locale]/tools/image-optimizer/page.tsx =============== //
 
@@ -2568,7 +2575,6 @@ export default async function ToolsIndexPage({ params }: { params: Promise<{ loc
 // =============== FIN ARCHIVO [34]: src/app/[locale]/tools/page.tsx =============== //
 
 // =============== INICIO ARCHIVO [35]: src/app/[locale]/tools/pdf-studio/page.tsx =============== //
-// =============== INICIO ARCHIVO: src/app/[locale]/tools/pdf-studio/page.tsx =============== //
 import React from 'react'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
@@ -2576,9 +2582,14 @@ import { PDFStudioTool } from '@/components/tools/pdf-studio/PDFStudioTool'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { AdSlot } from '@/components/shared/AdSlot'
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+type Props = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'tools.pdfStudio.seo' })
+  // CORRECCIÓN: Namespace 'pdf-studio' con guion
+  const t = await getTranslations({ locale, namespace: 'tools.pdf-studio.seo' })
 
   return {
     title: t('title'),
@@ -2589,10 +2600,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 }
 
-export default async function PDFStudioPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function PDFStudioPage({ params }: Props) {
   const { locale } = await params
   const t = await getTranslations('common')
-  const tTool = await getTranslations('tools.pdfStudio')
+  // CORRECCIÓN: Namespace 'pdf-studio' con guion
+  const tTool = await getTranslations('tools.pdf-studio')
 
   return (
     <div className="min-h-screen bg-black pt-20 pb-20">
@@ -2624,12 +2636,10 @@ export default async function PDFStudioPage({ params }: { params: Promise<{ loca
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/app/[locale]/tools/pdf-studio/page.tsx =============== //
 
 // =============== FIN ARCHIVO [35]: src/app/[locale]/tools/pdf-studio/page.tsx =============== //
 
 // =============== INICIO ARCHIVO [36]: src/app/[locale]/tools/qr-factory/page.tsx =============== //
-// =============== INICIO ARCHIVO: src/app/[locale]/tools/qr-factory/page.tsx =============== //
 import React from 'react'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
@@ -2637,9 +2647,14 @@ import { QRFactoryTool } from '@/components/tools/qr-factory/QRFactoryTool'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { AdSlot } from '@/components/shared/AdSlot'
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+type Props = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'tools.qrFactory.seo' })
+  // CORRECCIÓN: 'qr-factory' con guion
+  const t = await getTranslations({ locale, namespace: 'tools.qr-factory.seo' })
 
   return {
     title: t('title'),
@@ -2650,10 +2665,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 }
 
-export default async function QRFactoryPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function QRFactoryPage({ params }: Props) {
   const { locale } = await params
   const t = await getTranslations('common')
-  const tTool = await getTranslations('tools.qrFactory')
+  // CORRECCIÓN: 'qr-factory' con guion
+  const tTool = await getTranslations('tools.qr-factory')
 
   return (
     <div className="min-h-screen bg-black pt-20 pb-20">
@@ -2685,7 +2701,6 @@ export default async function QRFactoryPage({ params }: { params: Promise<{ loca
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/app/[locale]/tools/qr-factory/page.tsx =============== //
 
 // =============== FIN ARCHIVO [36]: src/app/[locale]/tools/qr-factory/page.tsx =============== //
 
@@ -5339,7 +5354,7 @@ export async function FeaturesSection({ locale }: { locale: string }) {
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Code2, Layers } from 'lucide-react'
+import { ArrowRight, Code2, Layers, Database } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 // Definimos la interfaz para recibir los datos dinámicos desde page.tsx
@@ -5429,8 +5444,9 @@ export function Hero({ badge, title, subtitle }: HeroProps) {
           <div className="hidden sm:block h-4 w-[1px] bg-border" />
 
           <div className="flex items-center gap-2">
-            <span className="font-mono text-sm font-bold">Prisma</span>
-            <span className="font-mono text-sm">ORM</span>
+            <Database className="h-6 w-6" />
+            <span className="font-mono text-sm font-bold">PostgreSQL</span>
+            <span className="font-mono text-sm">(Neon)</span>
           </div>
         </div>
 
@@ -6022,10 +6038,9 @@ export function LanguageSwitcher() {
 // =============== FIN ARCHIVO [71]: src/components/shared/LanguageSwitcher.tsx =============== //
 
 // =============== INICIO ARCHIVO [72]: src/components/tools/data-station/DataStationTool.tsx =============== //
-// =============== INICIO ARCHIVO: src/components/tools/data-station/DataStationTool.tsx =============== //
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -6038,22 +6053,22 @@ import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 
 export function DataStationTool() {
-  const t = useTranslations('tools.dataStation')
+  // CORRECCIÓN: Namespace 'data-station' con guion
+  const t = useTranslations('tools.data-station')
   const tCommon = useTranslations('common.buttons')
+  
   const [activeTab, setActiveTab] = useState<'json' | 'convert' | 'sql'>('json')
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [indent, setIndent] = useState(2)
   
-  // Monaco editor configuration
   const handleEditorDidMount = (editor: any, monaco: Monaco) => {
-    // Configuración adicional del tema si fuera necesaria
     monaco.editor.defineTheme('ohcodex-dark', {
       base: 'vs-dark',
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': '#09090b', // zinc-950
+        'editor.background': '#09090b',
       }
     })
   }
@@ -6128,7 +6143,7 @@ export function DataStationTool() {
   const copyOutput = async () => {
     if (!output) return
     await navigator.clipboard.writeText(output)
-    toast.success(t('copied')) // "Copied to clipboard"
+    toast.success(tCommon('copy')) 
   }
 
   const handleClear = () => {
@@ -6138,7 +6153,6 @@ export function DataStationTool() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
-      {/* Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="p-3 rounded-lg bg-green-500/10 text-green-400">
@@ -6169,7 +6183,6 @@ export function DataStationTool() {
               </TabsTrigger>
             </TabsList>
 
-            {/* JSON Tab */}
             <TabsContent value="json" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -6192,16 +6205,7 @@ export function DataStationTool() {
                       theme="vs-dark"
                       value={input}
                       onChange={(value) => setInput(value || '')}
-                      onMount={handleEditorDidMount}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        automaticLayout: true,
-                        padding: { top: 16 }
-                      }}
+                      options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true }}
                     />
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -6234,23 +6238,13 @@ export function DataStationTool() {
                       language="json"
                       theme="vs-dark"
                       value={output}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        readOnly: true,
-                        automaticLayout: true,
-                        padding: { top: 16 }
-                      }}
+                      options={{ minimap: { enabled: false }, readOnly: true, automaticLayout: true }}
                     />
                   </div>
                 </div>
               </div>
             </TabsContent>
 
-            {/* Converter Tab */}
             <TabsContent value="convert" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -6262,14 +6256,7 @@ export function DataStationTool() {
                       theme="vs-dark"
                       value={input}
                       onChange={(value) => setInput(value || '')}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        automaticLayout: true,
-                      }}
+                      options={{ minimap: { enabled: false }, automaticLayout: true }}
                     />
                   </div>
                   <div className="flex gap-2">
@@ -6296,22 +6283,13 @@ export function DataStationTool() {
                       language="plaintext" 
                       theme="vs-dark"
                       value={output}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        readOnly: true,
-                        automaticLayout: true,
-                      }}
+                      options={{ minimap: { enabled: false }, readOnly: true, automaticLayout: true }}
                     />
                   </div>
                 </div>
               </div>
             </TabsContent>
 
-            {/* SQL Tab */}
             <TabsContent value="sql" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -6323,14 +6301,7 @@ export function DataStationTool() {
                       theme="vs-dark"
                       value={input}
                       onChange={(value) => setInput(value || '')}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        automaticLayout: true,
-                      }}
+                      options={{ minimap: { enabled: false }, automaticLayout: true }}
                     />
                   </div>
                   <Button onClick={handleFormatSQL} className="w-full bg-green-600 hover:bg-green-500 text-white">
@@ -6352,15 +6323,7 @@ export function DataStationTool() {
                       language="sql"
                       theme="vs-dark"
                       value={output}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        readOnly: true,
-                        automaticLayout: true,
-                      }}
+                      options={{ minimap: { enabled: false }, readOnly: true, automaticLayout: true }}
                     />
                   </div>
                 </div>
@@ -6372,12 +6335,10 @@ export function DataStationTool() {
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/data-station/DataStationTool.tsx =============== //
 
 // =============== FIN ARCHIVO [72]: src/components/tools/data-station/DataStationTool.tsx =============== //
 
 // =============== INICIO ARCHIVO [73]: src/components/tools/image-optimizer/ImageOptimizerTool.tsx =============== //
-// =============== INICIO ARCHIVO: src/components/tools/image-optimizer/ImageOptimizerTool.tsx =============== //
 'use client'
 
 import React, { useState, useCallback } from 'react'
@@ -6396,8 +6357,10 @@ import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 export function ImageOptimizerTool() {
-  const t = useTranslations('tools.imageOptimizer')
+  // CORRECCIÓN: Namespace con guion para coincidir con es.json
+  const t = useTranslations('tools.image-optimizer')
   const tCommon = useTranslations('common.buttons')
+  
   const [files, setFiles] = useState<File[]>([])
   const [results, setResults] = useState<Array<{ original: File; processed: any }>>([])
   const [processing, setProcessing] = useState(false)
@@ -6444,7 +6407,6 @@ export function ImageOptimizerTool() {
         }
       )
 
-      // Mapeamos los resultados para mantener la referencia
       const newResults = processedImages.map((processed, index) => ({
         original: files[index],
         processed
@@ -6476,7 +6438,6 @@ export function ImageOptimizerTool() {
 
     try {
       const zip = new JSZip()
-
       results.forEach((result) => {
         const ext = format === 'image/webp' ? 'webp' : format === 'image/jpeg' ? 'jpg' : 'png'
         const fileName = `${result.original.name.split('.')[0]}_optimized.${ext}`
@@ -6490,7 +6451,6 @@ export function ImageOptimizerTool() {
       a.download = 'optimized-images.zip'
       a.click()
       URL.revokeObjectURL(url)
-
       toast.success('ZIP downloaded successfully')
     } catch (error) {
       console.error(error)
@@ -6568,7 +6528,6 @@ export function ImageOptimizerTool() {
         {/* Main Content */}
         <Card className="lg:col-span-2 border-zinc-800 bg-zinc-950/50 backdrop-blur-xl">
           <CardContent className="p-6">
-            {/* Dropzone */}
             <div
               className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
                 files.length > 0 ? 'border-cyan-500 bg-cyan-950/10' : 'border-zinc-700 hover:border-cyan-500/50 hover:bg-zinc-900 cursor-pointer'
@@ -6606,7 +6565,6 @@ export function ImageOptimizerTool() {
               )}
             </div>
 
-            {/* Progress */}
             {processing && (
               <div className="mt-6 space-y-2">
                 <div className="flex justify-between text-sm text-zinc-400">
@@ -6617,7 +6575,6 @@ export function ImageOptimizerTool() {
               </div>
             )}
 
-            {/* Results Grid */}
             {results.length > 0 && (
               <div className="mt-6 space-y-4">
                 <div className="flex items-center justify-between">
@@ -6659,7 +6616,6 @@ export function ImageOptimizerTool() {
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/image-optimizer/ImageOptimizerTool.tsx =============== //
 
 // =============== FIN ARCHIVO [73]: src/components/tools/image-optimizer/ImageOptimizerTool.tsx =============== //
 
@@ -6967,7 +6923,6 @@ export function PDFStudioTool() {
 // =============== FIN ARCHIVO [74]: src/components/tools/pdf-studio/PDFStudioTool.tsx =============== //
 
 // =============== INICIO ARCHIVO [75]: src/components/tools/pdf-studio/SignatureDialog.tsx =============== //
-// =============== INICIO ARCHIVO: src/components/tools/pdf-studio/SignatureDialog.tsx =============== //
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react'
@@ -6984,7 +6939,8 @@ export interface SignatureDialogProps {
 }
 
 export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps) {
-  const t = useTranslations('tools.pdfStudio.signature')
+  // CORRECCIÓN: 'pdf-studio' con guion
+  const t = useTranslations('tools.pdf-studio.signature')
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [hasSignature, setHasSignature] = useState(false)
@@ -6993,7 +6949,6 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
   useEffect(() => {
     if (!open) return
 
-    // Pequeño timeout para asegurar que el DOM del diálogo se ha renderizado
     const timer = setTimeout(() => {
       const canvas = canvasRef.current
       if (!canvas) return
@@ -7001,8 +6956,6 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
       const ctx = canvas.getContext('2d')
       if (!ctx) return
 
-      // Set canvas size
-      // Obtenemos el tamaño real del contenedor para ajustar el canvas
       const parent = canvas.parentElement
       if (parent) {
         canvas.width = parent.clientWidth
@@ -7012,11 +6965,8 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
         canvas.height = 200
       }
 
-      // Set white background explicitly
       ctx.fillStyle = '#ffffff'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      // Set drawing style
       ctx.strokeStyle = '#000000'
       ctx.lineWidth = 3
       ctx.lineCap = 'round'
@@ -7037,7 +6987,7 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
     const canvas = canvasRef.current
     if (canvas) {
         const ctx = canvas.getContext('2d')
-        ctx?.beginPath() // Reset path to prevent connecting lines
+        ctx?.beginPath()
     }
   }
 
@@ -7054,8 +7004,6 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
     let x, y
 
     if ('touches' in e) {
-      // Prevent scrolling while drawing on mobile
-      // e.preventDefault() // Descomentar si causa problemas de scroll
       x = e.touches[0].clientX - rect.left
       y = e.touches[0].clientY - rect.top
     } else {
@@ -7078,7 +7026,7 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
 
     ctx.fillStyle = '#ffffff'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.beginPath() // Reset paths
+    ctx.beginPath()
     
     setHasSignature(false)
     setUploadedImage(null)
@@ -7090,7 +7038,7 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
 
     if (uploadedImage) {
       onSave(uploadedImage)
-      toast.success(t('save')) // "Signature saved" en realidad
+      toast.success(t('save'))
     } else {
       const dataUrl = canvas.toDataURL('image/png')
       onSave(dataUrl)
@@ -7111,26 +7059,19 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
       img.onload = () => {
         const canvas = canvasRef.current
         if (!canvas) return
-
         const ctx = canvas.getContext('2d')
         if (!ctx) return
-
-        // Clear and draw uploaded image centered
         ctx.fillStyle = '#ffffff'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
-
         const aspectRatio = img.width / img.height
         let drawWidth = canvas.width * 0.8
         let drawHeight = drawWidth / aspectRatio
-
         if (drawHeight > canvas.height * 0.8) {
           drawHeight = canvas.height * 0.8
           drawWidth = drawHeight * aspectRatio
         }
-
         const x = (canvas.width - drawWidth) / 2
         const y = (canvas.height - drawHeight) / 2
-
         ctx.drawImage(img, x, y, drawWidth, drawHeight)
         setUploadedImage(canvas.toDataURL('image/png'))
         setHasSignature(true)
@@ -7151,7 +7092,6 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Canvas Wrapper */}
           <div className="relative w-full h-[200px] border border-zinc-700 rounded-lg overflow-hidden bg-white touch-none">
             <canvas
               ref={canvasRef}
@@ -7166,19 +7106,12 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
             />
           </div>
 
-          {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-2">
-            <Button
-              onClick={handleClear}
-              variant="outline"
-              className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800"
-            >
+            <Button onClick={handleClear} variant="outline" className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800">
               <Trash2 className="w-4 h-4 mr-2" />
               {t('clear')}
             </Button>
-
             <div className="flex-1 hidden sm:block" />
-
             <label className="cursor-pointer flex-1">
               <Button variant="outline" className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800" asChild>
                 <span>
@@ -7186,19 +7119,9 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
                   {t('upload')}
                 </span>
               </Button>
-              <input
-                type="file"
-                accept="image/png,image/jpeg"
-                onChange={handleUpload}
-                className="hidden"
-              />
+              <input type="file" accept="image/png,image/jpeg" onChange={handleUpload} className="hidden" />
             </label>
-
-            <Button
-              onClick={handleSave}
-              disabled={!hasSignature}
-              className="flex-1 bg-green-600 hover:bg-green-500 text-white"
-            >
+            <Button onClick={handleSave} disabled={!hasSignature} className="flex-1 bg-green-600 hover:bg-green-500 text-white">
               <CheckCircle2 className="w-4 h-4 mr-2" />
               {t('save')}
             </Button>
@@ -7208,12 +7131,10 @@ export function SignatureDialog({ open, onClose, onSave }: SignatureDialogProps)
     </Dialog>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/pdf-studio/SignatureDialog.tsx =============== //
 
 // =============== FIN ARCHIVO [75]: src/components/tools/pdf-studio/SignatureDialog.tsx =============== //
 
 // =============== INICIO ARCHIVO [76]: src/components/tools/qr-factory/QRFactoryTool.tsx =============== //
-// =============== INICIO ARCHIVO: src/components/tools/qr-factory/QRFactoryTool.tsx =============== //
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
@@ -7234,7 +7155,9 @@ import { formatWiFiQR, formatVCardQR, formatWhatsAppQR } from '@/lib/engines/qr-
 import { Html5Qrcode } from 'html5-qrcode'
 
 export function QRFactoryTool() {
-  const t = useTranslations('tools.qrFactory')
+  // CORRECCIÓN: 'qr-factory' con guion
+  const t = useTranslations('tools.qr-factory')
+  
   const [activeTab, setActiveTab] = useState<'generator' | 'barcode' | 'scanner'>('generator')
   
   // QR Generator state
@@ -7248,7 +7171,7 @@ export function QRFactoryTool() {
   const [foregroundColor, setForegroundColor] = useState('#000000')
   const [backgroundColor, setBackgroundColor] = useState('#ffffff')
   const [logo, setLogo] = useState<string | null>(null)
-  const [size, setSize] = useState(300) // Default size
+  const [size, setSize] = useState(300)
   
   // Barcode state
   const [barcodeType, setBarcodeType] = useState<'CODE128' | 'EAN13' | 'UPC'>('CODE128')
@@ -7264,61 +7187,42 @@ export function QRFactoryTool() {
   const barcodeCanvasRef = useRef<HTMLCanvasElement>(null)
   const logoInputRef = useRef<HTMLInputElement>(null)
 
-  // -- LOGIC: QR Data Formatting --
   const getQRData = () => {
     switch (qrType) {
-      case 'url':
-        return url || 'https://ohcodex.com'
-      case 'wifi':
-        return formatWiFiQR(wifi)
-      case 'vcard':
-        return formatVCardQR(vcard)
-      case 'whatsapp':
-        return formatWhatsAppQR(whatsapp.number, whatsapp.message)
-      default:
-        return ''
+      case 'url': return url || 'https://ohcodex.com'
+      case 'wifi': return formatWiFiQR(wifi)
+      case 'vcard': return formatVCardQR(vcard)
+      case 'whatsapp': return formatWhatsAppQR(whatsapp.number, whatsapp.message)
+      default: return ''
     }
   }
 
-  // -- LOGIC: Download QR --
   const downloadQR = (format: 'png' | 'svg') => {
     if (!qrRef.current) return
-    
     try {
-      // Find the SVG element
       const svgElement = qrRef.current.querySelector('svg')
       if (!svgElement) return
-      
       const svgData = new XMLSerializer().serializeToString(svgElement)
-      
       if (format === 'svg') {
         const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' })
-        const url = URL.createObjectURL(blob)
-        triggerDownload(url, 'qrcode.svg')
+        triggerDownload(URL.createObjectURL(blob), 'qrcode.svg')
       } else {
-        // Convert SVG to PNG via Canvas
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
         const img = new Image()
-        
-        // Add explicit width/height to SVG data for better rendering
         const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' })
         const url = URL.createObjectURL(svgBlob)
-        
         img.onload = () => {
           canvas.width = size
           canvas.height = size
           ctx?.drawImage(img, 0, 0)
-          const pngUrl = canvas.toDataURL('image/png')
-          triggerDownload(pngUrl, 'qrcode.png')
+          triggerDownload(canvas.toDataURL('image/png'), 'qrcode.png')
           URL.revokeObjectURL(url)
         }
         img.src = url
       }
-      
       toast.success(t('qrGenerated'))
     } catch (error) {
-      console.error(error)
       toast.error(t('scanError'))
     }
   }
@@ -7330,7 +7234,6 @@ export function QRFactoryTool() {
     a.click()
   }
 
-  // -- LOGIC: Barcode Generation --
   useEffect(() => {
     if (activeTab === 'barcode' && barcodeData && barcodeCanvasRef.current) {
       try {
@@ -7343,31 +7246,25 @@ export function QRFactoryTool() {
           background: '#ffffff',
           margin: 10
         })
-      } catch (e) {
-        // Silent catch for invalid inputs while typing
-      }
+      } catch (e) {}
     }
   }, [activeTab, barcodeData, barcodeType, showText, barcodeHeight])
 
   const downloadBarcode = () => {
     if (!barcodeCanvasRef.current) return
-    const url = barcodeCanvasRef.current.toDataURL('image/png')
-    triggerDownload(url, 'barcode.png')
+    triggerDownload(barcodeCanvasRef.current.toDataURL('image/png'), 'barcode.png')
     toast.success(t('barcodeGenerated'))
   }
 
-  // -- LOGIC: Scanner --
   const handleScanUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
     try {
       const html5QrCode = new Html5Qrcode("reader")
       const result = await html5QrCode.scanFile(file, true)
       setScanResult(result)
       toast.success(t('scanResult'))
     } catch (err) {
-      console.error(err)
       toast.error(t('noCodeFound'))
     }
   }
@@ -7382,7 +7279,6 @@ export function QRFactoryTool() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
-      {/* Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="p-3 rounded-lg bg-cyan-500/10 text-cyan-400">
@@ -7390,53 +7286,41 @@ export function QRFactoryTool() {
           </div>
           <h1 className="text-4xl font-bold text-white">{t('header')}</h1>
         </div>
-        <p className="text-zinc-400 text-lg">
-          {t('subtitle')}
-        </p>
+        <p className="text-zinc-400 text-lg">{t('subtitle')}</p>
       </div>
 
       <Card className="border-zinc-800 bg-zinc-950/50 backdrop-blur-xl">
         <CardContent className="p-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-6 bg-zinc-900 border border-zinc-800">
-              <TabsTrigger value="generator" className="flex items-center gap-2 data-[state=active]:bg-zinc-800 data-[state=active]:text-white">
-                <Type className="w-4 h-4" />
-                {t('generator')}
+              <TabsTrigger value="generator" className="flex items-center gap-2">
+                <Type className="w-4 h-4" /> {t('generator')}
               </TabsTrigger>
-              <TabsTrigger value="barcode" className="flex items-center gap-2 data-[state=active]:bg-zinc-800 data-[state=active]:text-white">
-                <FileText className="w-4 h-4" />
-                {t('barcode')}
+              <TabsTrigger value="barcode" className="flex items-center gap-2">
+                <FileText className="w-4 h-4" /> {t('barcode')}
               </TabsTrigger>
-              <TabsTrigger value="scanner" className="flex items-center gap-2 data-[state=active]:bg-zinc-800 data-[state=active]:text-white">
-                <Scan className="w-4 h-4" />
-                {t('scanner')}
+              <TabsTrigger value="scanner" className="flex items-center gap-2">
+                <Scan className="w-4 h-4" /> {t('scanner')}
               </TabsTrigger>
             </TabsList>
 
-            {/* --- TAB: QR GENERATOR --- */}
             <TabsContent value="generator" className="space-y-6">
               <div className="grid lg:grid-cols-2 gap-8">
-                {/* Inputs */}
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <Label className="text-zinc-300">{t('qrType')}</Label>
                     <div className="grid grid-cols-4 gap-2">
-                      <Button variant={qrType === 'url' ? 'default' : 'outline'} onClick={() => setQrType('url')} className="w-full" size="sm"><LinkIcon className="w-4 h-4" /></Button>
-                      <Button variant={qrType === 'wifi' ? 'default' : 'outline'} onClick={() => setQrType('wifi')} className="w-full" size="sm"><Wifi className="w-4 h-4" /></Button>
-                      <Button variant={qrType === 'vcard' ? 'default' : 'outline'} onClick={() => setQrType('vcard')} className="w-full" size="sm"><User className="w-4 h-4" /></Button>
-                      <Button variant={qrType === 'whatsapp' ? 'default' : 'outline'} onClick={() => setQrType('whatsapp')} className="w-full" size="sm"><Phone className="w-4 h-4" /></Button>
+                      <Button variant={qrType === 'url' ? 'default' : 'outline'} onClick={() => setQrType('url')} size="sm"><LinkIcon className="w-4 h-4" /></Button>
+                      <Button variant={qrType === 'wifi' ? 'default' : 'outline'} onClick={() => setQrType('wifi')} size="sm"><Wifi className="w-4 h-4" /></Button>
+                      <Button variant={qrType === 'vcard' ? 'default' : 'outline'} onClick={() => setQrType('vcard')} size="sm"><User className="w-4 h-4" /></Button>
+                      <Button variant={qrType === 'whatsapp' ? 'default' : 'outline'} onClick={() => setQrType('whatsapp')} size="sm"><Phone className="w-4 h-4" /></Button>
                     </div>
                   </div>
 
-                  {/* Dynamic Inputs based on Type */}
                   <div className="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800 space-y-4">
                     {qrType === 'url' && (
-                      <div className="space-y-2">
-                        <Label className="text-zinc-400">{t('enterUrl')}</Label>
-                        <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://..." className="bg-zinc-950 border-zinc-700" />
-                      </div>
+                      <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://..." className="bg-zinc-950 border-zinc-700" />
                     )}
-
                     {qrType === 'wifi' && (
                       <div className="space-y-3">
                         <Input value={wifi.ssid} onChange={(e) => setWifi({ ...wifi, ssid: e.target.value })} placeholder={t('ssid')} className="bg-zinc-950 border-zinc-700" />
@@ -7451,7 +7335,6 @@ export function QRFactoryTool() {
                         </Select>
                       </div>
                     )}
-
                     {qrType === 'vcard' && (
                       <div className="space-y-2">
                         <div className="grid grid-cols-2 gap-2">
@@ -7462,7 +7345,6 @@ export function QRFactoryTool() {
                         <Input value={vcard.email} onChange={(e) => setVcard({ ...vcard, email: e.target.value })} placeholder={t('email')} className="bg-zinc-950 border-zinc-700" />
                       </div>
                     )}
-
                     {qrType === 'whatsapp' && (
                       <div className="space-y-2">
                         <Input value={whatsapp.number} onChange={(e) => setWhatsapp({ ...whatsapp, number: e.target.value })} placeholder={t('whatsappNumber')} className="bg-zinc-950 border-zinc-700" />
@@ -7471,40 +7353,25 @@ export function QRFactoryTool() {
                     )}
                   </div>
 
-                  {/* Design Controls */}
                   <div className="space-y-4 pt-4 border-t border-zinc-800">
                     <h3 className="font-semibold text-white">{t('design')}</h3>
                     <div className="flex gap-4">
                       <div className="space-y-2 flex-1">
                         <Label className="text-zinc-400 text-xs">{t('foregroundColor')}</Label>
-                        <div className="flex items-center gap-2">
-                          <input type="color" value={foregroundColor} onChange={(e) => setForegroundColor(e.target.value)} className="h-8 w-8 rounded cursor-pointer bg-transparent border-0" />
-                          <span className="text-xs text-zinc-500 font-mono">{foregroundColor}</span>
-                        </div>
+                        <input type="color" value={foregroundColor} onChange={(e) => setForegroundColor(e.target.value)} className="h-8 w-full rounded cursor-pointer bg-transparent border-0" />
                       </div>
                       <div className="space-y-2 flex-1">
                         <Label className="text-zinc-400 text-xs">{t('backgroundColor')}</Label>
-                        <div className="flex items-center gap-2">
-                          <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="h-8 w-8 rounded cursor-pointer bg-transparent border-0" />
-                          <span className="text-xs text-zinc-500 font-mono">{backgroundColor}</span>
-                        </div>
+                        <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="h-8 w-full rounded cursor-pointer bg-transparent border-0" />
                       </div>
                     </div>
-
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <Label className="text-zinc-400">{t('logo')}</Label>
-                        <Button variant="ghost" size="sm" onClick={() => setLogo(null)} disabled={!logo} className="h-auto p-0 text-red-400 hover:text-red-300">Remove</Button>
-                      </div>
-                      <Button variant="outline" className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={() => logoInputRef.current?.click()}>
-                        <Upload className="w-4 h-4 mr-2" /> {t('uploadLogo')}
-                      </Button>
-                      <input ref={logoInputRef} type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
-                    </div>
+                    <Button variant="outline" className="w-full border-zinc-700 text-zinc-300" onClick={() => logoInputRef.current?.click()}>
+                      <Upload className="w-4 h-4 mr-2" /> {t('uploadLogo')}
+                    </Button>
+                    <input ref={logoInputRef} type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                   </div>
                 </div>
 
-                {/* Preview */}
                 <div className="flex flex-col items-center justify-center p-8 bg-zinc-900/50 rounded-xl border border-zinc-800">
                   <div className="bg-white p-4 rounded-lg shadow-xl" ref={qrRef}>
                     <QRCodeSVG
@@ -7514,105 +7381,56 @@ export function QRFactoryTool() {
                       bgColor={backgroundColor}
                       level="M"
                       includeMargin={true}
-                      imageSettings={logo ? {
-                        src: logo,
-                        height: 50,
-                        width: 50,
-                        excavate: true,
-                      } : undefined}
+                      imageSettings={logo ? { src: logo, height: 50, width: 50, excavate: true } : undefined}
                     />
                   </div>
                   <div className="flex gap-3 mt-8">
-                    <Button onClick={() => downloadQR('png')} className="bg-cyan-600 hover:bg-cyan-500 text-white">
-                      <Download className="w-4 h-4 mr-2" /> PNG
-                    </Button>
-                    <Button onClick={() => downloadQR('svg')} variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
-                      <Download className="w-4 h-4 mr-2" /> SVG
-                    </Button>
+                    <Button onClick={() => downloadQR('png')} className="bg-cyan-600">Download PNG</Button>
+                    <Button onClick={() => downloadQR('svg')} variant="outline">Download SVG</Button>
                   </div>
                 </div>
               </div>
             </TabsContent>
 
-            {/* --- TAB: BARCODE --- */}
             <TabsContent value="barcode" className="space-y-6">
               <div className="grid lg:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label className="text-zinc-300">{t('barcodeType')}</Label>
-                    <Select value={barcodeType} onValueChange={(v: any) => setBarcodeType(v)}>
-                      <SelectTrigger className="bg-zinc-900 border-zinc-700 text-white"><SelectValue /></SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-zinc-700">
-                        <SelectItem value="CODE128">CODE128 (Standard)</SelectItem>
-                        <SelectItem value="EAN13">EAN-13 (Retail)</SelectItem>
-                        <SelectItem value="UPC">UPC (US Retail)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-zinc-300">{t('enterCode')}</Label>
-                    <Input 
-                      value={barcodeData} 
-                      onChange={(e) => setBarcodeData(e.target.value)} 
-                      placeholder="123456..." 
-                      className="bg-zinc-950 border-zinc-700 font-mono"
-                    />
-                  </div>
-
+                  <Label className="text-zinc-300">{t('barcodeType')}</Label>
+                  <Select value={barcodeType} onValueChange={(v: any) => setBarcodeType(v)}>
+                    <SelectTrigger className="bg-zinc-900 text-white"><SelectValue /></SelectTrigger>
+                    <SelectContent className="bg-zinc-900 border-zinc-700">
+                      <SelectItem value="CODE128">CODE128</SelectItem>
+                      <SelectItem value="EAN13">EAN-13</SelectItem>
+                      <SelectItem value="UPC">UPC</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input value={barcodeData} onChange={(e) => setBarcodeData(e.target.value)} placeholder={t('enterCode')} className="bg-zinc-950 border-zinc-700" />
                   <div className="flex items-center justify-between pt-4">
                     <Label className="text-zinc-300">{t('showText')}</Label>
                     <Switch checked={showText} onCheckedChange={setShowText} />
                   </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-zinc-300">{t('height')}</Label>
-                    <Slider value={[barcodeHeight]} onValueChange={([v]) => setBarcodeHeight(v)} min={50} max={150} className="py-2" />
-                  </div>
+                  <Slider value={[barcodeHeight]} onValueChange={([v]) => setBarcodeHeight(v)} min={50} max={150} />
                 </div>
-
-                <div className="flex flex-col items-center justify-center p-8 bg-zinc-900/50 rounded-xl border border-zinc-800 min-h-[300px]">
-                  {barcodeData ? (
-                    <div className="bg-white p-4 rounded shadow-lg">
-                      <canvas ref={barcodeCanvasRef} />
-                    </div>
-                  ) : (
-                    <p className="text-zinc-500 italic">{t('enterCode')}</p>
-                  )}
-                  {barcodeData && (
-                    <Button onClick={downloadBarcode} variant="outline" className="mt-6 border-zinc-700 text-zinc-300 hover:bg-zinc-800">
-                      <Download className="w-4 h-4 mr-2" /> {t('download')}
-                    </Button>
-                  )}
+                <div className="flex flex-col items-center justify-center p-8 bg-zinc-900/50 rounded-xl border border-zinc-800">
+                  {barcodeData ? <div className="bg-white p-4 rounded"><canvas ref={barcodeCanvasRef} /></div> : <p className="text-zinc-500">{t('enterCode')}</p>}
+                  {barcodeData && <Button onClick={downloadBarcode} variant="outline" className="mt-6">{t('download')}</Button>}
                 </div>
               </div>
             </TabsContent>
 
-            {/* --- TAB: SCANNER --- */}
             <TabsContent value="scanner" className="space-y-6">
               <div className="max-w-xl mx-auto text-center space-y-6">
-                <div className="border-2 border-dashed border-zinc-700 hover:border-cyan-500/50 bg-zinc-900/20 hover:bg-cyan-500/5 rounded-xl p-12 transition-all cursor-pointer relative">
+                <div className="border-2 border-dashed border-zinc-700 p-12 relative cursor-pointer rounded-xl">
                   <input type="file" accept="image/*" onChange={handleScanUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
                   <Scan className="w-12 h-12 mx-auto text-zinc-500 mb-4" />
-                  <p className="text-white font-medium mb-1">{t('uploadImage')}</p>
-                  <p className="text-zinc-500 text-sm">PNG, JPG, GIF</p>
+                  <p className="text-white">{t('uploadImage')}</p>
                 </div>
-
                 {scanResult && (
-                  <div className="bg-zinc-900 p-6 rounded-xl border border-zinc-800 animate-in fade-in slide-in-from-bottom-4">
-                    <Label className="text-zinc-400 mb-2 block text-left">{t('scanResult')}</Label>
-                    <div className="flex gap-2">
-                      <code className="flex-1 bg-black p-3 rounded border border-zinc-800 text-cyan-400 font-mono text-sm break-all text-left">
-                        {scanResult}
-                      </code>
-                      <Button size="icon" variant="outline" onClick={() => { navigator.clipboard.writeText(scanResult); toast.success('Copied!'); }}>
-                        <Settings className="w-4 h-4" /> {/* Copy icon reuse */}
-                      </Button>
-                    </div>
+                  <div className="bg-zinc-900 p-6 rounded-xl border border-zinc-800 text-left">
+                    <Label className="text-zinc-400 mb-2 block">{t('scanResult')}</Label>
+                    <code className="block bg-black p-3 rounded text-cyan-400 break-all">{scanResult}</code>
                   </div>
                 )}
-                
-                {/* Hidden div for html5-qrcode library requirement */}
                 <div id="reader" className="hidden"></div>
               </div>
             </TabsContent>
@@ -7622,12 +7440,10 @@ export function QRFactoryTool() {
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/qr-factory/QRFactoryTool.tsx =============== //
 
 // =============== FIN ARCHIVO [76]: src/components/tools/qr-factory/QRFactoryTool.tsx =============== //
 
 // =============== INICIO ARCHIVO [77]: src/components/tools/vault/VaultTool.tsx =============== //
-// =============== INICIO ARCHIVO: src/components/tools/vault/VaultTool.tsx =============== //
 'use client'
 
 import React, { useState } from 'react'
@@ -7638,7 +7454,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Lock, Unlock, Eye, EyeOff, Copy, CheckCircle2, Upload, Shield } from 'lucide-react'
+import { Lock, Unlock, Eye, EyeOff, Copy, CheckCircle2, Upload, Shield, RefreshCw } from 'lucide-react'
 import { encryptText, decryptText, encryptFile, decryptFile } from '@/lib/engines/crypto-engine'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
@@ -7701,10 +7517,10 @@ export function VaultTool() {
     }
   }
 
-  const copyToClipboard = async () => {
-    if (!textOutput) return
+  const copyToClipboard = async (text: string) => {
+    if (!text) return
     try {
-      await navigator.clipboard.writeText(textOutput)
+      await navigator.clipboard.writeText(text)
       toast.success(t('copied'))
     } catch (error) {
       toast.error(t('copyError'))
@@ -7801,7 +7617,7 @@ export function VaultTool() {
               </Alert>
 
               <div className="grid md:grid-cols-2 gap-6">
-                {/* Input Section */}
+                {/* Bloque Texto Plano */}
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="text-input" className="text-zinc-300">
@@ -7809,7 +7625,7 @@ export function VaultTool() {
                     </Label>
                     <Textarea
                       id="text-input"
-                      placeholder={textMode === 'encrypt' ? 'Pega aquí el texto sensible...' : 'El resultado aparecerá aquí...'}
+                      placeholder={textMode === 'encrypt' ? 'Escribe aquí tu mensaje secreto...' : 'Aquí aparecerá tu mensaje una vez desencriptado...'}
                       value={textInput}
                       onChange={(e) => setTextInput(e.target.value)}
                       rows={10}
@@ -7818,6 +7634,35 @@ export function VaultTool() {
                     />
                   </div>
 
+                  {textMode === 'decrypt' && (
+                    <Button
+                      onClick={() => setTextMode('encrypt')}
+                      variant="outline"
+                      className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      {t('changeToEncrypt')}
+                    </Button>
+                  )}
+                  
+                  {textMode === 'encrypt' && (
+                    <Button
+                      onClick={handleTextEncrypt}
+                      disabled={textProcessing || !textInput || !textPassword}
+                      className="w-full bg-cyan-600 hover:bg-cyan-500 text-white"
+                    >
+                      {textProcessing ? 'Encriptando...' : (
+                        <>
+                          <Lock className="w-4 h-4 mr-2" />
+                          {t('encrypt')}
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+
+                {/* Bloque Configuración y Output */}
+                <div className="space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="text-password">{t('password')}</Label>
                     <div className="relative">
@@ -7839,59 +7684,16 @@ export function VaultTool() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
-                    {textMode === 'encrypt' ? (
-                      <Button
-                        onClick={handleTextEncrypt}
-                        disabled={textProcessing || !textInput || !textPassword}
-                        className="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white"
-                      >
-                        {textProcessing ? 'Encriptando...' : (
-                          <>
-                            <Lock className="w-4 h-4 mr-2" />
-                            {t('encrypt')}
-                          </>
-                        )}
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={handleTextDecrypt}
-                        disabled={textProcessing || !textOutput || !textPassword}
-                        className="flex-1 bg-green-600 hover:bg-green-500 text-white"
-                      >
-                        {textProcessing ? 'Desencriptando...' : (
-                          <>
-                            <Unlock className="w-4 h-4 mr-2" />
-                            {t('decrypt')}
-                          </>
-                        )}
-                      </Button>
-                    )}
-                    {textMode === 'encrypt' && (
-                      <Button
-                        onClick={() => setTextMode('decrypt')}
-                        variant="outline"
-                        disabled={!textOutput}
-                        className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
-                      >
-                        {t('changeToDecrypt')}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Output Section */}
-                <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="text-output" className="text-zinc-300">
                       {textMode === 'encrypt' ? t('encryptedText') : t('encrypted')}
                     </Label>
                     <Textarea
                       id="text-output"
-                      placeholder="El resultado encriptado aparecerá aquí..."
+                      placeholder="Pega aquí el código JSON encriptado para recuperarlo..."
                       value={textOutput}
                       onChange={(e) => setTextOutput(e.target.value)}
-                      rows={10}
+                      rows={7}
                       className="bg-zinc-900/50 border-zinc-800 text-cyan-400 font-mono text-sm placeholder:text-zinc-700"
                       readOnly={textMode === 'encrypt'}
                     />
@@ -7900,33 +7702,37 @@ export function VaultTool() {
                   <div className="flex gap-2">
                     {textMode === 'encrypt' ? (
                       <Button
-                        onClick={copyToClipboard}
-                        disabled={!textOutput}
+                        onClick={() => setTextMode('decrypt')}
                         variant="outline"
-                        className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                        className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800"
                       >
-                        <Copy className="w-4 h-4 mr-2" />
-                        {tCommon('copy')}
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        {t('changeToDecrypt')}
                       </Button>
                     ) : (
                       <Button
-                        onClick={() => setTextMode('encrypt')}
-                        variant="outline"
-                        disabled={!textInput}
-                        className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                        onClick={handleTextDecrypt}
+                        disabled={textProcessing || !textOutput || !textPassword}
+                        className="flex-1 bg-green-600 hover:bg-green-500 text-white"
                       >
-                        {t('changeToEncrypt')}
+                        {textProcessing ? 'Procesando...' : (
+                          <>
+                            <Unlock className="w-4 h-4 mr-2" />
+                            {t('decrypt')}
+                          </>
+                        )}
                       </Button>
                     )}
-                  </div>
 
-                  {/* Status Indicator */}
-                  {textOutput && (
-                    <div className="flex items-center gap-2 text-sm text-green-400 bg-green-950/20 p-2 rounded border border-green-900/50">
-                      <CheckCircle2 className="w-4 h-4" />
-                      {textMode === 'encrypt' ? t('encryptedSuccess') : t('readyToDecrypt')}
-                    </div>
-                  )}
+                    <Button
+                      onClick={() => copyToClipboard(textMode === 'encrypt' ? textOutput : textInput)}
+                      disabled={!(textMode === 'encrypt' ? textOutput : textInput)}
+                      variant="outline"
+                      className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </TabsContent>
@@ -8090,7 +7896,6 @@ export function VaultTool() {
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/vault/VaultTool.tsx =============== //
 
 // =============== FIN ARCHIVO [77]: src/components/tools/vault/VaultTool.tsx =============== //
 
@@ -14747,24 +14552,7 @@ export const deleteFromCloudinary: CollectionAfterDeleteHook = async ({ doc }) =
 
 // =============== FIN ARCHIVO [136]: src/lib/cloudinaryAdapter.ts =============== //
 
-// =============== INICIO ARCHIVO [137]: src/lib/db.ts =============== //
-import { PrismaClient } from '@prisma/client'
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
-}
-
-export const db =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: ['query'],
-  })
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
-
-// =============== FIN ARCHIVO [137]: src/lib/db.ts =============== //
-
-// =============== INICIO ARCHIVO [138]: src/lib/engines/crypto-engine.ts =============== //
+// =============== INICIO ARCHIVO [137]: src/lib/engines/crypto-engine.ts =============== //
 // =============== INICIO ARCHIVO: src/lib/engines/crypto-engine.ts =============== //
 /**
  * Crypto Engine - Zero-Knowledge Encryption using Web Crypto API
@@ -15057,9 +14845,9 @@ function base64ToBuffer(base64: string): Uint8Array {
 }
 // =============== FIN ARCHIVO: src/lib/engines/crypto-engine.ts =============== //
 
-// =============== FIN ARCHIVO [138]: src/lib/engines/crypto-engine.ts =============== //
+// =============== FIN ARCHIVO [137]: src/lib/engines/crypto-engine.ts =============== //
 
-// =============== INICIO ARCHIVO [139]: src/lib/engines/data-engine.ts =============== //
+// =============== INICIO ARCHIVO [138]: src/lib/engines/data-engine.ts =============== //
 // =============== INICIO ARCHIVO: src/lib/engines/data-engine.ts =============== //
 /**
  * Data Engine - Data formatting, validation, and conversion
@@ -15425,9 +15213,9 @@ export function formatDataSize(bytes: number): string {
 }
 // =============== FIN ARCHIVO: src/lib/engines/data-engine.ts =============== //
 
-// =============== FIN ARCHIVO [139]: src/lib/engines/data-engine.ts =============== //
+// =============== FIN ARCHIVO [138]: src/lib/engines/data-engine.ts =============== //
 
-// =============== INICIO ARCHIVO [140]: src/lib/engines/image-engine.ts =============== //
+// =============== INICIO ARCHIVO [139]: src/lib/engines/image-engine.ts =============== //
 // =============== INICIO ARCHIVO: src/lib/engines/image-engine.ts =============== //
 /**
  * Image Engine - Image processing and optimization using Canvas API
@@ -15762,9 +15550,9 @@ export function calculateReduction(original: number, compressed: number): number
 }
 // =============== FIN ARCHIVO: src/lib/engines/image-engine.ts =============== //
 
-// =============== FIN ARCHIVO [140]: src/lib/engines/image-engine.ts =============== //
+// =============== FIN ARCHIVO [139]: src/lib/engines/image-engine.ts =============== //
 
-// =============== INICIO ARCHIVO [141]: src/lib/engines/pdf-engine.ts =============== //
+// =============== INICIO ARCHIVO [140]: src/lib/engines/pdf-engine.ts =============== //
 // =============== INICIO ARCHIVO: src/lib/engines/pdf-engine.ts =============== //
 /**
  * PDF Engine - PDF manipulation using pdf-lib
@@ -16049,9 +15837,9 @@ export function isPDFEncrypted(arrayBuffer: ArrayBuffer): boolean {
 }
 // =============== FIN ARCHIVO: src/lib/engines/pdf-engine.ts =============== //
 
-// =============== FIN ARCHIVO [141]: src/lib/engines/pdf-engine.ts =============== //
+// =============== FIN ARCHIVO [140]: src/lib/engines/pdf-engine.ts =============== //
 
-// =============== INICIO ARCHIVO [142]: src/lib/engines/qr-engine.ts =============== //
+// =============== INICIO ARCHIVO [141]: src/lib/engines/qr-engine.ts =============== //
 // =============== INICIO ARCHIVO: src/lib/engines/qr-engine.ts =============== //
 /**
  * QR/Barcode Utility Functions
@@ -16229,9 +16017,9 @@ export function detectBarcodeFormat(code: string): 'EAN-13' | 'UPC' | 'CODE128' 
 }
 // =============== FIN ARCHIVO: src/lib/engines/qr-engine.ts =============== //
 
-// =============== FIN ARCHIVO [142]: src/lib/engines/qr-engine.ts =============== //
+// =============== FIN ARCHIVO [141]: src/lib/engines/qr-engine.ts =============== //
 
-// =============== INICIO ARCHIVO [143]: src/lib/utils.ts =============== //
+// =============== INICIO ARCHIVO [142]: src/lib/utils.ts =============== //
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -16239,9 +16027,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// =============== FIN ARCHIVO [143]: src/lib/utils.ts =============== //
+// =============== FIN ARCHIVO [142]: src/lib/utils.ts =============== //
 
-// =============== INICIO ARCHIVO [144]: src/messages/en.json =============== //
+// =============== INICIO ARCHIVO [143]: src/messages/en.json =============== //
 {
   "common": {
     "tools": "Tools",
@@ -16561,9 +16349,9 @@ export function cn(...inputs: ClassValue[]) {
   }
 }
 
-// =============== FIN ARCHIVO [144]: src/messages/en.json =============== //
+// =============== FIN ARCHIVO [143]: src/messages/en.json =============== //
 
-// =============== INICIO ARCHIVO [145]: src/messages/es.json =============== //
+// =============== INICIO ARCHIVO [144]: src/messages/es.json =============== //
 {
   "common": {
     "tools": "Herramientas",
@@ -16883,9 +16671,9 @@ export function cn(...inputs: ClassValue[]) {
   }
 }
 
-// =============== FIN ARCHIVO [145]: src/messages/es.json =============== //
+// =============== FIN ARCHIVO [144]: src/messages/es.json =============== //
 
-// =============== INICIO ARCHIVO [146]: src/middleware.ts =============== //
+// =============== INICIO ARCHIVO [145]: src/middleware.ts =============== //
 import createMiddleware from 'next-intl/middleware';
 import { routing } from '@/i18n/routing';
 
@@ -16898,9 +16686,9 @@ export const config = {
   ]
 };
 
-// =============== FIN ARCHIVO [146]: src/middleware.ts =============== //
+// =============== FIN ARCHIVO [145]: src/middleware.ts =============== //
 
-// =============== INICIO ARCHIVO [147]: src/payload-types.ts =============== //
+// =============== INICIO ARCHIVO [146]: src/payload-types.ts =============== //
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -17636,9 +17424,9 @@ declare module 'payload' {
   export interface GeneratedTypes extends Config {}
 }
 
-// =============== FIN ARCHIVO [147]: src/payload-types.ts =============== //
+// =============== FIN ARCHIVO [146]: src/payload-types.ts =============== //
 
-// =============== INICIO ARCHIVO [148]: src/payload.config.ts =============== //
+// =============== INICIO ARCHIVO [147]: src/payload.config.ts =============== //
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -17729,9 +17517,9 @@ export default buildConfig({
   ],
 })
 
-// =============== FIN ARCHIVO [148]: src/payload.config.ts =============== //
+// =============== FIN ARCHIVO [147]: src/payload.config.ts =============== //
 
-// =============== INICIO ARCHIVO [149]: src/scripts/local-backup.ts =============== //
+// =============== INICIO ARCHIVO [148]: src/scripts/local-backup.ts =============== //
 // src/scripts/local-backup.ts
 
 import { exec } from 'child_process';
@@ -17865,9 +17653,9 @@ function cleanOldBackups() {
 
 main();
 
-// =============== FIN ARCHIVO [149]: src/scripts/local-backup.ts =============== //
+// =============== FIN ARCHIVO [148]: src/scripts/local-backup.ts =============== //
 
-// =============== INICIO ARCHIVO [150]: tailwind.config.js =============== //
+// =============== INICIO ARCHIVO [149]: tailwind.config.js =============== //
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ["class"],
@@ -17952,9 +17740,9 @@ export default {
   plugins: [require("tailwindcss-animate")],
 };
 
-// =============== FIN ARCHIVO [150]: tailwind.config.js =============== //
+// =============== FIN ARCHIVO [149]: tailwind.config.js =============== //
 
-// =============== INICIO ARCHIVO [151]: tsconfig.json =============== //
+// =============== INICIO ARCHIVO [150]: tsconfig.json =============== //
 {
   "compilerOptions": {
     "baseUrl": ".",
@@ -18000,5 +17788,5 @@ export default {
   ]
 }
 
-// =============== FIN ARCHIVO [151]: tsconfig.json =============== //
+// =============== FIN ARCHIVO [150]: tsconfig.json =============== //
 

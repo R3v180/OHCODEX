@@ -23,6 +23,37 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // 👇 PASO PARA SEO: Redirecciones 301 para limpiar Search Console
+  async redirects() {
+    return [
+      {
+        source: '/privacidad',
+        destination: '/es/privacidad',
+        permanent: true,
+      },
+      {
+        source: '/terminos',
+        destination: '/es/terminos',
+        permanent: true,
+      },
+      {
+        source: '/aviso-legal',
+        destination: '/es/aviso-legal',
+        permanent: true,
+      },
+      {
+        source: '/terms', // Soluciona el 404 específico detectado por Google
+        destination: '/es/terminos',
+        permanent: true,
+      },
+      {
+        source: '/productos/:path*', // Redirige rutas antiguas de productos
+        destination: '/es/products/:path*',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default withPayload(withNextIntl(nextConfig))

@@ -20,8 +20,9 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     description: locale === 'en' 
       ? 'Legal information and ownership of the OHCodex website.' 
       : 'Información legal y titularidad del sitio web OHCodex.',
+    // 👇 CORRECCIÓN SEO: Cambiamos index de false a true para que Google las indexe
     robots: {
-      index: false,
+      index: true, 
       follow: true,
     },
   }
@@ -86,7 +87,6 @@ export default async function AvisoLegalPage({ params }: Args) {
           {t('legalNotice')}
         </h1>
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* CORRECCIÓN: Usamos camelCase 'legalNotice' según payload-types.ts */}
           {legal?.legalNotice && (legal.legalNotice as any).root ? (
             <SerializeLexical nodes={(legal.legalNotice as any).root.children} />
           ) : (

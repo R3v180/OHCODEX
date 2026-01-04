@@ -1,4 +1,3 @@
-// =============== INICIO ARCHIVO: src/components/tools/vault/VaultTool.tsx =============== //
 'use client'
 
 import React, { useState } from 'react'
@@ -9,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Lock, Unlock, Eye, EyeOff, Copy, CheckCircle2, Upload, Shield } from 'lucide-react'
+import { Lock, Unlock, Eye, EyeOff, Copy, CheckCircle2, Upload, Shield, RefreshCw } from 'lucide-react'
 import { encryptText, decryptText, encryptFile, decryptFile } from '@/lib/engines/crypto-engine'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
@@ -72,10 +71,10 @@ export function VaultTool() {
     }
   }
 
-  const copyToClipboard = async () => {
-    if (!textOutput) return
+  const copyToClipboard = async (text: string) => {
+    if (!text) return
     try {
-      await navigator.clipboard.writeText(textOutput)
+      await navigator.clipboard.writeText(text)
       toast.success(t('copied'))
     } catch (error) {
       toast.error(t('copyError'))
@@ -172,7 +171,7 @@ export function VaultTool() {
               </Alert>
 
               <div className="grid md:grid-cols-2 gap-6">
-                {/* Input Section */}
+                {/* Bloque Texto Plano */}
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="text-input" className="text-zinc-300">
@@ -180,7 +179,7 @@ export function VaultTool() {
                     </Label>
                     <Textarea
                       id="text-input"
-                      placeholder={textMode === 'encrypt' ? 'Pega aquí el texto sensible...' : 'El resultado aparecerá aquí...'}
+                      placeholder={textMode === 'encrypt' ? 'Escribe aquí tu mensaje secreto...' : 'Aquí aparecerá tu mensaje una vez desencriptado...'}
                       value={textInput}
                       onChange={(e) => setTextInput(e.target.value)}
                       rows={10}
@@ -189,6 +188,35 @@ export function VaultTool() {
                     />
                   </div>
 
+                  {textMode === 'decrypt' && (
+                    <Button
+                      onClick={() => setTextMode('encrypt')}
+                      variant="outline"
+                      className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      {t('changeToEncrypt')}
+                    </Button>
+                  )}
+                  
+                  {textMode === 'encrypt' && (
+                    <Button
+                      onClick={handleTextEncrypt}
+                      disabled={textProcessing || !textInput || !textPassword}
+                      className="w-full bg-cyan-600 hover:bg-cyan-500 text-white"
+                    >
+                      {textProcessing ? 'Encriptando...' : (
+                        <>
+                          <Lock className="w-4 h-4 mr-2" />
+                          {t('encrypt')}
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+
+                {/* Bloque Configuración y Output */}
+                <div className="space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="text-password">{t('password')}</Label>
                     <div className="relative">
@@ -210,59 +238,16 @@ export function VaultTool() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
-                    {textMode === 'encrypt' ? (
-                      <Button
-                        onClick={handleTextEncrypt}
-                        disabled={textProcessing || !textInput || !textPassword}
-                        className="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white"
-                      >
-                        {textProcessing ? 'Encriptando...' : (
-                          <>
-                            <Lock className="w-4 h-4 mr-2" />
-                            {t('encrypt')}
-                          </>
-                        )}
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={handleTextDecrypt}
-                        disabled={textProcessing || !textOutput || !textPassword}
-                        className="flex-1 bg-green-600 hover:bg-green-500 text-white"
-                      >
-                        {textProcessing ? 'Desencriptando...' : (
-                          <>
-                            <Unlock className="w-4 h-4 mr-2" />
-                            {t('decrypt')}
-                          </>
-                        )}
-                      </Button>
-                    )}
-                    {textMode === 'encrypt' && (
-                      <Button
-                        onClick={() => setTextMode('decrypt')}
-                        variant="outline"
-                        disabled={!textOutput}
-                        className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
-                      >
-                        {t('changeToDecrypt')}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Output Section */}
-                <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="text-output" className="text-zinc-300">
                       {textMode === 'encrypt' ? t('encryptedText') : t('encrypted')}
                     </Label>
                     <Textarea
                       id="text-output"
-                      placeholder="El resultado encriptado aparecerá aquí..."
+                      placeholder="Pega aquí el código JSON encriptado para recuperarlo..."
                       value={textOutput}
                       onChange={(e) => setTextOutput(e.target.value)}
-                      rows={10}
+                      rows={7}
                       className="bg-zinc-900/50 border-zinc-800 text-cyan-400 font-mono text-sm placeholder:text-zinc-700"
                       readOnly={textMode === 'encrypt'}
                     />
@@ -271,33 +256,37 @@ export function VaultTool() {
                   <div className="flex gap-2">
                     {textMode === 'encrypt' ? (
                       <Button
-                        onClick={copyToClipboard}
-                        disabled={!textOutput}
+                        onClick={() => setTextMode('decrypt')}
                         variant="outline"
-                        className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                        className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800"
                       >
-                        <Copy className="w-4 h-4 mr-2" />
-                        {tCommon('copy')}
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        {t('changeToDecrypt')}
                       </Button>
                     ) : (
                       <Button
-                        onClick={() => setTextMode('encrypt')}
-                        variant="outline"
-                        disabled={!textInput}
-                        className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                        onClick={handleTextDecrypt}
+                        disabled={textProcessing || !textOutput || !textPassword}
+                        className="flex-1 bg-green-600 hover:bg-green-500 text-white"
                       >
-                        {t('changeToEncrypt')}
+                        {textProcessing ? 'Procesando...' : (
+                          <>
+                            <Unlock className="w-4 h-4 mr-2" />
+                            {t('decrypt')}
+                          </>
+                        )}
                       </Button>
                     )}
-                  </div>
 
-                  {/* Status Indicator */}
-                  {textOutput && (
-                    <div className="flex items-center gap-2 text-sm text-green-400 bg-green-950/20 p-2 rounded border border-green-900/50">
-                      <CheckCircle2 className="w-4 h-4" />
-                      {textMode === 'encrypt' ? t('encryptedSuccess') : t('readyToDecrypt')}
-                    </div>
-                  )}
+                    <Button
+                      onClick={() => copyToClipboard(textMode === 'encrypt' ? textOutput : textInput)}
+                      disabled={!(textMode === 'encrypt' ? textOutput : textInput)}
+                      variant="outline"
+                      className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </TabsContent>
@@ -461,4 +450,3 @@ export function VaultTool() {
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/vault/VaultTool.tsx =============== //

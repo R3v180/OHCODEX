@@ -1,4 +1,3 @@
-// =============== INICIO ARCHIVO: src/app/[locale]/tools/image-optimizer/page.tsx =============== //
 import React from 'react'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
@@ -6,9 +5,14 @@ import { ImageOptimizerTool } from '@/components/tools/image-optimizer/ImageOpti
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { AdSlot } from '@/components/shared/AdSlot'
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+type Props = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'tools.imageOptimizer.seo' })
+  // CORRECCIÓN: Usamos el nombre con guion 'image-optimizer'
+  const t = await getTranslations({ locale, namespace: 'tools.image-optimizer.seo' })
 
   return {
     title: t('title'),
@@ -19,10 +23,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 }
 
-export default async function ImageOptimizerPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ImageOptimizerPage({ params }: Props) {
   const { locale } = await params
   const t = await getTranslations('common')
-  const tTool = await getTranslations('tools.imageOptimizer')
+  // CORRECCIÓN: Usamos el nombre con guion 'image-optimizer'
+  const tTool = await getTranslations('tools.image-optimizer')
 
   return (
     <div className="min-h-screen bg-black pt-20 pb-20">
@@ -54,4 +59,3 @@ export default async function ImageOptimizerPage({ params }: { params: Promise<{
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/app/[locale]/tools/image-optimizer/page.tsx =============== //

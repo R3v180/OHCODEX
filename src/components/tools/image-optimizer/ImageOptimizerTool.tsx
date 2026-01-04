@@ -1,4 +1,3 @@
-// =============== INICIO ARCHIVO: src/components/tools/image-optimizer/ImageOptimizerTool.tsx =============== //
 'use client'
 
 import React, { useState, useCallback } from 'react'
@@ -17,8 +16,10 @@ import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 export function ImageOptimizerTool() {
-  const t = useTranslations('tools.imageOptimizer')
+  // CORRECCIÓN: Namespace con guion para coincidir con es.json
+  const t = useTranslations('tools.image-optimizer')
   const tCommon = useTranslations('common.buttons')
+  
   const [files, setFiles] = useState<File[]>([])
   const [results, setResults] = useState<Array<{ original: File; processed: any }>>([])
   const [processing, setProcessing] = useState(false)
@@ -65,7 +66,6 @@ export function ImageOptimizerTool() {
         }
       )
 
-      // Mapeamos los resultados para mantener la referencia
       const newResults = processedImages.map((processed, index) => ({
         original: files[index],
         processed
@@ -97,7 +97,6 @@ export function ImageOptimizerTool() {
 
     try {
       const zip = new JSZip()
-
       results.forEach((result) => {
         const ext = format === 'image/webp' ? 'webp' : format === 'image/jpeg' ? 'jpg' : 'png'
         const fileName = `${result.original.name.split('.')[0]}_optimized.${ext}`
@@ -111,7 +110,6 @@ export function ImageOptimizerTool() {
       a.download = 'optimized-images.zip'
       a.click()
       URL.revokeObjectURL(url)
-
       toast.success('ZIP downloaded successfully')
     } catch (error) {
       console.error(error)
@@ -189,7 +187,6 @@ export function ImageOptimizerTool() {
         {/* Main Content */}
         <Card className="lg:col-span-2 border-zinc-800 bg-zinc-950/50 backdrop-blur-xl">
           <CardContent className="p-6">
-            {/* Dropzone */}
             <div
               className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
                 files.length > 0 ? 'border-cyan-500 bg-cyan-950/10' : 'border-zinc-700 hover:border-cyan-500/50 hover:bg-zinc-900 cursor-pointer'
@@ -227,7 +224,6 @@ export function ImageOptimizerTool() {
               )}
             </div>
 
-            {/* Progress */}
             {processing && (
               <div className="mt-6 space-y-2">
                 <div className="flex justify-between text-sm text-zinc-400">
@@ -238,7 +234,6 @@ export function ImageOptimizerTool() {
               </div>
             )}
 
-            {/* Results Grid */}
             {results.length > 0 && (
               <div className="mt-6 space-y-4">
                 <div className="flex items-center justify-between">
@@ -280,4 +275,3 @@ export function ImageOptimizerTool() {
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/image-optimizer/ImageOptimizerTool.tsx =============== //

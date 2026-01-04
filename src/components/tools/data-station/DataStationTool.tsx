@@ -1,7 +1,6 @@
-// =============== INICIO ARCHIVO: src/components/tools/data-station/DataStationTool.tsx =============== //
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -14,22 +13,22 @@ import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 
 export function DataStationTool() {
-  const t = useTranslations('tools.dataStation')
+  // CORRECCIÓN: Namespace 'data-station' con guion
+  const t = useTranslations('tools.data-station')
   const tCommon = useTranslations('common.buttons')
+  
   const [activeTab, setActiveTab] = useState<'json' | 'convert' | 'sql'>('json')
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [indent, setIndent] = useState(2)
   
-  // Monaco editor configuration
   const handleEditorDidMount = (editor: any, monaco: Monaco) => {
-    // Configuración adicional del tema si fuera necesaria
     monaco.editor.defineTheme('ohcodex-dark', {
       base: 'vs-dark',
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': '#09090b', // zinc-950
+        'editor.background': '#09090b',
       }
     })
   }
@@ -104,7 +103,7 @@ export function DataStationTool() {
   const copyOutput = async () => {
     if (!output) return
     await navigator.clipboard.writeText(output)
-    toast.success(t('copied')) // "Copied to clipboard"
+    toast.success(tCommon('copy')) 
   }
 
   const handleClear = () => {
@@ -114,7 +113,6 @@ export function DataStationTool() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
-      {/* Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="p-3 rounded-lg bg-green-500/10 text-green-400">
@@ -145,7 +143,6 @@ export function DataStationTool() {
               </TabsTrigger>
             </TabsList>
 
-            {/* JSON Tab */}
             <TabsContent value="json" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -168,16 +165,7 @@ export function DataStationTool() {
                       theme="vs-dark"
                       value={input}
                       onChange={(value) => setInput(value || '')}
-                      onMount={handleEditorDidMount}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        automaticLayout: true,
-                        padding: { top: 16 }
-                      }}
+                      options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true }}
                     />
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -210,23 +198,13 @@ export function DataStationTool() {
                       language="json"
                       theme="vs-dark"
                       value={output}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        readOnly: true,
-                        automaticLayout: true,
-                        padding: { top: 16 }
-                      }}
+                      options={{ minimap: { enabled: false }, readOnly: true, automaticLayout: true }}
                     />
                   </div>
                 </div>
               </div>
             </TabsContent>
 
-            {/* Converter Tab */}
             <TabsContent value="convert" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -238,14 +216,7 @@ export function DataStationTool() {
                       theme="vs-dark"
                       value={input}
                       onChange={(value) => setInput(value || '')}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        automaticLayout: true,
-                      }}
+                      options={{ minimap: { enabled: false }, automaticLayout: true }}
                     />
                   </div>
                   <div className="flex gap-2">
@@ -272,22 +243,13 @@ export function DataStationTool() {
                       language="plaintext" 
                       theme="vs-dark"
                       value={output}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        readOnly: true,
-                        automaticLayout: true,
-                      }}
+                      options={{ minimap: { enabled: false }, readOnly: true, automaticLayout: true }}
                     />
                   </div>
                 </div>
               </div>
             </TabsContent>
 
-            {/* SQL Tab */}
             <TabsContent value="sql" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -299,14 +261,7 @@ export function DataStationTool() {
                       theme="vs-dark"
                       value={input}
                       onChange={(value) => setInput(value || '')}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        automaticLayout: true,
-                      }}
+                      options={{ minimap: { enabled: false }, automaticLayout: true }}
                     />
                   </div>
                   <Button onClick={handleFormatSQL} className="w-full bg-green-600 hover:bg-green-500 text-white">
@@ -328,15 +283,7 @@ export function DataStationTool() {
                       language="sql"
                       theme="vs-dark"
                       value={output}
-                      options={{
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        wordWrap: 'on',
-                        readOnly: true,
-                        automaticLayout: true,
-                      }}
+                      options={{ minimap: { enabled: false }, readOnly: true, automaticLayout: true }}
                     />
                   </div>
                 </div>
@@ -348,4 +295,3 @@ export function DataStationTool() {
     </div>
   )
 }
-// =============== FIN ARCHIVO: src/components/tools/data-station/DataStationTool.tsx =============== //

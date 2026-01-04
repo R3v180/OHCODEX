@@ -5,58 +5,81 @@ import configPromise from '@payload-config'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config: configPromise })
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
-  
-  // Definimos los idiomas que soporta la web
   const locales = ['es', 'en'] as const
+
+  const tools = [
+    'vault',
+    'image-optimizer',
+    'pdf-studio',
+    'data-station',
+    'qr-factory',
+  ]
 
   let sitemapEntries: MetadataRoute.Sitemap = []
 
-  // Recorremos cada idioma para generar sus URLs específicas
   for (const locale of locales) {
-    
-    // 1. Obtener PRODUCTOS en el idioma actual (para tener el slug traducido)
+    // 1. Consultar PRODUCTOS
     const { docs: products } = await payload.find({
       collection: 'products',
-      where: {
-        status: { in: ['live', 'beta', 'development', 'concept'] },
-      },
       depth: 0,
       limit: 1000,
-      locale: locale, // 👈 Clave: Pedimos el slug en este idioma
+      locale: locale,
     })
 
-    // 2. Obtener POSTS en el idioma actual
+    // 2. Consultar POSTS
     const { docs: posts } = await payload.find({
       collection: 'posts',
       depth: 0,
       limit: 1000,
-      locale: locale, // 👈 Clave: Pedimos el slug en este idioma
+      locale: locale,
     })
 
-    // 3. URLs ESTÁTICAS (Home, Blog Index, Legales)
-    // Nota: Añadimos el prefijo /es o /en a todas
+    // 3. RUTAS ESTÁTICAS
     const staticRoutes = [
-      '', // Home
+      '',
       '/blog',
       '/aviso-legal',
       '/privacidad',
       '/terminos',
+      '/tools',
     ].map(route => ({
       url: `${baseUrl}/${locale}${route}`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
-      priority: route === '' ? 1 : 0.8, // Home prioridad 1
+      priority: route === '' ? 1 : 0.8,
+      // Esto le dice a Google que existen versiones en otros idiomas para esta misma ruta
+      alternates: {
+        languages: {
+          es: `${baseUrl}/es${route}`,
+          en: `${baseUrl}/en${route}`,
+        },
+      },
     }))
 
-    // 4. URLs PRODUCTOS
+    // 4. RUTAS DE TOOLS
+    const toolsRoutes = tools.map(tool => ({
+      url: `${baseUrl}/${locale}/tools/${tool}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+      alternates: {
+        languages: {
+          es: `${baseUrl}/es/tools/${tool}`,
+          en: `${baseUrl}/en/tools/${tool}`,
+        },
+      },
+    }))
+
+    // 5. URLs DE PRODUCTOS
+    // Nota: Como los slugs cambian, aquí Google los indexará por separado.
     const productUrls = products.map((product) => ({
       url: `${baseUrl}/${locale}/products/${product.slug}`,
       lastModified: new Date(product.updatedAt),
       changeFrequency: 'weekly' as const,
-      priority: product.isFeatured ? 0.9 : 0.7,
+      priority: 0.7,
     }))
 
-    // 5. URLs POSTS
+    // 6. URLs DE POSTS
     const postUrls = posts.map((post) => ({
       url: `${baseUrl}/${locale}/blog/${post.slug}`,
       lastModified: new Date(post.updatedAt),
@@ -64,8 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }))
 
-    // Añadir todo al array principal
-    sitemapEntries.push(...staticRoutes, ...productUrls, ...postUrls)
+    sitemapEntries.push(...staticRoutes, ...toolsRoutes, ...productUrls, ...postUrls)
   }
 
   return sitemapEntries

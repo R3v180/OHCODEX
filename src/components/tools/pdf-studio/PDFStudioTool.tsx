@@ -1,17 +1,20 @@
-"use client"
+'use client'
 
 import React, { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Upload, Download, FileText, RotateCw, Merge, Trash2, CheckCircle2, PenLine } from 'lucide-react'
+import { Upload, Download, FileText, RotateCw, Merge, Trash2, CheckCircle2, PenLine, Plus, Info } from 'lucide-react'
 import { PDFDocument, degrees } from 'pdf-lib'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { SignatureDialog } from './SignatureDialog'
+import { Badge } from '@/components/ui/badge'
 
 export function PDFStudioTool() {
   const t = useTranslations('tools.pdf-studio')
+  const tCommon = useTranslations('common.buttons')
+  
   const [files, setFiles] = useState<File[]>([])
   const [signatures, setSignatures] = useState<Record<number, string>>({})
   const [processing, setProcessing] = useState(false)
@@ -23,6 +26,7 @@ export function PDFStudioTool() {
     if (!selectedFiles) return
     const pdfFiles = Array.from(selectedFiles).filter(f => f.type === 'application/pdf')
     setFiles(prev => [...prev, ...pdfFiles])
+    toast.success(`${pdfFiles.length} archivos añadidos`)
   }
 
   const handleRotate = async (index: number, angle: number) => {
@@ -84,7 +88,7 @@ export function PDFStudioTool() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = 'merged.pdf'
+      a.download = 'merged_ohcodex.pdf'
       a.click()
       URL.revokeObjectURL(url)
       toast.success(t('mergeSuccess'))
@@ -143,7 +147,7 @@ export function PDFStudioTool() {
       a.click()
       URL.revokeObjectURL(url)
 
-      toast.success(t('download'))
+      toast.success(tCommon('download'))
     } catch (error) {
       console.error('Error downloading:', error)
       toast.error(t('downloadError'))
@@ -160,132 +164,121 @@ export function PDFStudioTool() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-6xl">
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400">
-            <FileText className="w-8 h-8" />
+    <div className="space-y-8">
+      {/* 1. ZONA DE CARGA (DROPZONE) */}
+      <Card className="border-zinc-800 bg-zinc-950/50 backdrop-blur-xl border-dashed border-2 hover:border-purple-500/50 transition-colors group">
+        <CardContent className="p-10 flex flex-col items-center justify-center text-center cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="application/pdf"
+            className="hidden"
+            onChange={(e) => handleFiles(e.target.files)}
+          />
+          <div className="h-16 w-16 bg-purple-500/10 text-purple-400 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <Upload className="h-8 w-8" />
           </div>
-          <h1 className="text-4xl font-bold text-white">{t('header')}</h1>
-        </div>
-        <p className="text-zinc-400 text-lg">
-          {t('subtitle')}
-        </p>
-      </div>
-
-      <Alert className="mb-8 bg-purple-950/20 border-purple-900/50 text-purple-200">
-        <FileText className="h-4 w-4 text-purple-400" />
-        <AlertDescription>
-          {t('infoAlert')}
-        </AlertDescription>
-      </Alert>
-
-      <Card className="mb-8 border-zinc-800 bg-zinc-950/50 backdrop-blur-xl">
-        <CardContent className="p-6">
-          <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              files.length > 0 ? 'border-purple-500 bg-purple-950/10' : 'border-zinc-700 hover:border-purple-500/50 hover:bg-zinc-800 cursor-pointer'
-            }`}
-            onClick={() => fileInputRef.current?.click()}
-            onDragOver={(e) => {
-              e.preventDefault()
-              e.currentTarget.classList.add('border-purple-500', 'bg-purple-950/10')
-            }}
-            onDragLeave={(e) => {
-              e.preventDefault()
-              e.currentTarget.classList.remove('border-purple-500', 'bg-purple-950/10')
-            }}
-            onDrop={(e) => {
-              e.preventDefault()
-              e.currentTarget.classList.remove('border-purple-500', 'bg-purple-950/10')
-              handleFiles(e.dataTransfer.files)
-            }}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              accept="application/pdf"
-              className="hidden"
-              onChange={(e) => handleFiles(e.target.files)}
-            />
-            {files.length === 0 ? (
-              <div className="space-y-2">
-                <Upload className="w-12 h-12 mx-auto text-zinc-500" />
-                <p className="text-white font-medium">{t('dragPdfs')}</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <CheckCircle2 className="w-12 h-12 mx-auto text-green-400" />
-                <p className="text-white font-medium">{t('pdfsSelected', { count: files.length })}</p>
-              </div>
-            )}
-          </div>
-
-          {files.length > 1 && (
-            <Button onClick={handleMerge} disabled={processing} className="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white">
-              {processing ? t('merging') : (
-                <>
-                  <Merge className="w-4 h-4 mr-2" />
-                  {t('mergeAll')}
-                </>
-              )}
-            </Button>
-          )}
+          <h3 className="text-xl font-semibold text-white mb-2">{t('dragPdfs')}</h3>
+          <p className="text-zinc-500 max-w-sm">
+            O haz clic para seleccionar archivos. Procesamiento local 100% privado.
+          </p>
         </CardContent>
       </Card>
 
+      {/* 2. ALERTA DE PRIVACIDAD */}
+      <Alert className="bg-purple-950/10 border-purple-900/30 text-purple-300">
+        <Info className="h-4 w-4 text-purple-400" />
+        <AlertDescription>
+          Tus documentos nunca se suben a ningún servidor. La fusión y firma ocurre en tu navegador.
+        </AlertDescription>
+      </Alert>
+
+      {/* 3. LISTA DE ARCHIVOS */}
       {files.length > 0 && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {files.map((file, index) => (
-            <Card key={index} className="border-zinc-800 bg-zinc-950/50">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between mb-2">
-                  {signatures[index] ? (
-                    <div className="w-8 h-8 rounded-full bg-green-950/30 border border-green-900/50 flex items-center justify-center text-green-400">
-                      <CheckCircle2 className="w-5 h-5" />
-                    </div>
-                  ) : (
-                    <div className="w-8 h-8" />
-                  )}
-                  <div className="flex gap-1">
-                    <Button size="sm" variant="outline" onClick={() => handleOpenSignature(index)} className="border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800">
-                      <PenLine className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleRotate(index, 90)} className="border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800">
-                      <RotateCw className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                <CardTitle className="text-base truncate text-white" title={file.name}>{file.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {signatures[index] && (
-                  <div className="relative rounded-lg overflow-hidden bg-white/10 p-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={signatures[index]}
-                      alt="Signature"
-                      className="w-full h-12 object-contain"
-                    />
-                  </div>
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <FileText className="h-5 w-5 text-purple-500" />
+              Documentos ({files.length})
+            </h3>
+            {files.length > 1 && (
+              <Button onClick={handleMerge} disabled={processing} className="bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-900/20">
+                {processing ? t('merging') : (
+                  <>
+                    <Merge className="w-4 h-4 mr-2" />
+                    {t('mergeAll')}
+                  </>
                 )}
-                <div className="flex items-center justify-between text-sm text-zinc-500">
-                  <span>{t('page', { page: 1 })}</span>
-                  <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={() => handleDownload(index)} className="flex-1 border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800">
-                    <Download className="w-4 h-4 mr-2" />
-                    {t('download')}
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleRemove(index)} className="border-red-900/30 text-red-400 hover:bg-red-950/20 hover:text-red-300">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+              </Button>
+            )}
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {files.map((file, index) => (
+              <Card key={index} className="border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 transition-colors group">
+                <CardHeader className="pb-3 flex flex-row items-start justify-between space-y-0">
+                  <div className="h-10 w-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400">
+                    <FileText className="h-6 w-6" />
+                  </div>
+                  {signatures[index] && (
+                    <Badge className="bg-green-500/10 text-green-400 border-green-500/20">
+                      Firmado
+                    </Badge>
+                  )}
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  <div>
+                    <CardTitle className="text-sm font-medium text-white truncate mb-1" title={file.name}>
+                      {file.name}
+                    </CardTitle>
+                    <p className="text-xs text-zinc-500">
+                      {(file.size / 1024 / 1024).toFixed(2)} MB • PDF Document
+                    </p>
+                  </div>
+
+                  {/* PREVISUALIZACIÓN DE FIRMA */}
+                  {signatures[index] && (
+                    <div className="relative rounded-md overflow-hidden bg-white/5 border border-white/10 p-2 h-12 flex items-center justify-center">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={signatures[index]} alt="Firma" className="max-h-full object-contain opacity-80" />
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button size="sm" variant="outline" onClick={() => handleRotate(index, 90)} className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800">
+                      <RotateCw className="w-3.5 h-3.5 mr-2" />
+                      {t('rotate')}
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleOpenSignature(index)} className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800">
+                      <PenLine className="w-3.5 h-3.5 mr-2" />
+                      Firmar
+                    </Button>
+                  </div>
+
+                  <div className="flex gap-2 pt-2 border-t border-zinc-800/50">
+                    <Button size="sm" className="flex-1 bg-zinc-100 text-zinc-900 hover:bg-white" onClick={() => handleDownload(index)}>
+                      <Download className="w-3.5 h-3.5 mr-2" />
+                      {tCommon('download')}
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={() => handleRemove(index)} className="text-red-400 hover:bg-red-950/20 hover:text-red-300">
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            
+            {/* BOTÓN AÑADIR MÁS (TARJETA VACÍA) */}
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="border border-dashed border-zinc-800 bg-transparent rounded-xl flex flex-col items-center justify-center p-6 cursor-pointer hover:border-purple-500/50 hover:bg-purple-950/5 transition-all min-h-[240px]"
+            >
+              <Plus className="h-8 w-8 text-zinc-600 mb-2" />
+              <span className="text-sm text-zinc-500">Añadir otro PDF</span>
+            </div>
+          </div>
         </div>
       )}
 

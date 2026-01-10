@@ -6,7 +6,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { es } from 'payload/i18n/es'
-// import { en } from 'payload/i18n/en' // ❌ Desactivado para que el admin sea solo ES
+// import { en } from 'payload/i18n/en' 
 
 // 1. Colecciones
 import { Users } from './collections/Users'
@@ -16,16 +16,17 @@ import { ContactSubmissions } from './collections/ContactSubmissions'
 import { Posts } from './collections/Posts'
 import { Categories } from './collections/Categories'
 import { Analytics } from './collections/Analytics'
+import { Tools } from './collections/Tools' // 👈 NUEVA IMPORTACIÓN
 
 // 2. Globales
 import { Company } from './globals/Company'
 import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
 import { EmailSettings } from './globals/EmailSettings'
-// import { AnalyticsDashboard } from './globals/AnalyticsDashboard' // ⚠️ Comentado por error de build
+// import { AnalyticsDashboard } from './globals/AnalyticsDashboard' 
 
 // 3. Componentes UI
-// import { NotificationBell } from './components/admin/NotificationBell' // ⚠️ Comentado por error de build
+// import { NotificationBell } from './components/admin/NotificationBell' 
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -37,21 +38,20 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     // components: {
-    //   actions: [NotificationBell as any], // ⚠️ Desactivado temporalmente
+    //   actions: [NotificationBell as any], 
     // },
   },
   
-  // 2. Configuración de Localización de Contenido (Base de Datos)
-  // Esto permite que tus campos (título, contenido) sigan teniendo inglés y español
+  // 2. Configuración de Localización de Contenido
   localization: {
     locales: ['es', 'en'],
     defaultLocale: 'es',
     fallback: true,
   },
 
-  // 3. Configuración de Idioma de la INTERFAZ del Admin (Botones, menús, etc)
+  // 3. Configuración de Idioma de la INTERFAZ
   i18n: {
-    supportedLanguages: { es }, // ✅ Forzado solo Español
+    supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
 
@@ -63,9 +63,10 @@ export default buildConfig({
     Posts,      
     Categories,
     Analytics,
+    Tools, // 👈 NUEVA COLECCIÓN REGISTRADA
   ],
   globals: [
-    // AnalyticsDashboard, // ⚠️ Desactivado temporalmente
+    // AnalyticsDashboard, 
     Company, 
     Legal, 
     Landing, 

@@ -10,13 +10,13 @@ import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import JSZip from 'jszip'
-import { Upload, Download, Image as ImageIcon, CheckCircle2, Zap, FileArchive } from 'lucide-react'
+import { Upload, Download, Image as ImageIcon, CheckCircle2, Zap, FileArchive, ArrowRight, Settings2, Trash2 } from 'lucide-react'
 import { processBatch, formatFileSize, calculateReduction } from '@/lib/engines/image-engine'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
 
 export function ImageOptimizerTool() {
-  // CORRECCIÓN: Namespace con guion para coincidir con es.json
   const t = useTranslations('tools.image-optimizer')
   const tCommon = useTranslations('common.buttons')
   
@@ -25,7 +25,7 @@ export function ImageOptimizerTool() {
   const [processing, setProcessing] = useState(false)
   const [progress, setProgress] = useState(0)
 
-  // Settings
+  // Configuración
   const [quality, setQuality] = useState([80])
   const [format, setFormat] = useState<'image/webp' | 'image/jpeg' | 'image/png'>('image/webp')
   const [maxWidth, setMaxWidth] = useState<number>(1920)
@@ -34,20 +34,25 @@ export function ImageOptimizerTool() {
   const handleFiles = useCallback((selectedFiles: FileList | null) => {
     if (!selectedFiles) return
     const imageFiles = Array.from(selectedFiles).filter(f => f.type.startsWith('image/'))
-    setFiles(imageFiles)
-    setResults([])
-  }, [])
+    
+    // Limpiamos resultados anteriores si suben nuevos archivos
+    if (results.length > 0) {
+        setResults([])
+        setFiles(imageFiles)
+    } else {
+        setFiles(prev => [...prev, ...imageFiles])
+    }
+    toast.success(`${imageFiles.length} imágenes añadidas`)
+  }, [results.length])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     handleFiles(e.dataTransfer.files)
   }, [handleFiles])
 
   const handleProcess = async () => {
-    if (files.length === 0) {
-      toast.error(t('selectImages'))
-      return
-    }
+    if (files.length === 0) return
 
     setProcessing(true)
     setProgress(0)
@@ -73,17 +78,17 @@ export function ImageOptimizerTool() {
 
       setResults(newResults)
       toast.success(t('processedSuccess', { count: processedImages.length }))
-      setProcessing(false)
-      setProgress(100)
     } catch (error) {
       console.error(error)
       toast.error(t('processingError'))
+    } finally {
       setProcessing(false)
+      setProgress(100)
     }
   }
 
   const downloadImage = (result: any) => {
-    const url = URL.createObjectURL(result.blob)
+    const url = URL.createObjectURL(result.processed.blob)
     const a = document.createElement('a')
     a.href = url
     const ext = format === 'image/webp' ? 'webp' : format === 'image/jpeg' ? 'jpg' : 'png'
@@ -107,170 +112,235 @@ export function ImageOptimizerTool() {
       const url = URL.createObjectURL(content)
       const a = document.createElement('a')
       a.href = url
-      a.download = 'optimized-images.zip'
+      a.download = 'optimized_images_ohcodex.zip'
       a.click()
       URL.revokeObjectURL(url)
-      toast.success('ZIP downloaded successfully')
+      toast.success('ZIP generado correctamente')
     } catch (error) {
       console.error(error)
-      toast.error('Error creating ZIP')
+      toast.error('Error al crear ZIP')
     }
   }
 
-  return (
-    <div className="container mx-auto py-8 px-4 max-w-6xl">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="p-3 rounded-lg bg-cyan-500/10 text-cyan-400">
-            <Zap className="w-8 h-8" />
-          </div>
-          <h1 className="text-4xl font-bold text-white">{t('header')}</h1>
-        </div>
-        <p className="text-zinc-400 text-lg">
-          {t('subtitle')}
-        </p>
-      </div>
+  const clearAll = () => {
+    setFiles([])
+    setResults([])
+    setProgress(0)
+  }
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Settings Panel */}
-        <Card className="border-zinc-800 bg-zinc-950/50 backdrop-blur-xl h-fit">
-          <CardHeader>
-            <CardTitle className="text-white">{t('settings')}</CardTitle>
+  return (
+    <div className="grid lg:grid-cols-12 gap-8">
+      
+      {/* 1. PANEL LATERAL DE AJUSTES */}
+      <div className="lg:col-span-4 space-y-6 order-2 lg:order-1">
+        <Card className="border-zinc-800 bg-zinc-900/50 backdrop-blur-xl sticky top-24">
+          <CardHeader className="border-b border-zinc-800 pb-4">
+            <CardTitle className="text-white flex items-center gap-2 text-lg">
+              <Settings2 className="w-5 h-5 text-cyan-500" />
+              {t('settings')}
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label className="text-zinc-300">{t('outputFormat')}</Label>
+          <CardContent className="space-y-6 pt-6">
+            
+            {/* Formato */}
+            <div className="space-y-3">
+              <Label className="text-zinc-300 font-medium">{t('outputFormat')}</Label>
               <Select value={format} onValueChange={(v: any) => setFormat(v)}>
-                <SelectTrigger className="bg-zinc-900 border-zinc-700 text-white">
+                <SelectTrigger className="bg-black border-zinc-700 text-white h-10">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
-                  <SelectItem value="image/webp">{t('webp')}</SelectItem>
-                  <SelectItem value="image/jpeg">JPEG</SelectItem>
-                  <SelectItem value="image/png">PNG</SelectItem>
+                  <SelectItem value="image/webp">WebP (Ultraligero)</SelectItem>
+                  <SelectItem value="image/jpeg">JPEG (Universal)</SelectItem>
+                  <SelectItem value="image/png">PNG (Sin pérdida)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-zinc-300">{t('quality')}: {quality[0]}%</Label>
-              <Slider value={quality} onValueChange={setQuality} min={1} max={100} className="py-4" />
+            {/* Calidad */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <Label className="text-zinc-300 font-medium">{t('quality')}</Label>
+                <Badge variant="outline" className="bg-zinc-950 text-cyan-400 border-cyan-900">{quality[0]}%</Badge>
+              </div>
+              <Slider value={quality} onValueChange={setQuality} min={10} max={100} step={5} className="py-2 cursor-pointer" />
+              <p className="text-xs text-zinc-500">Menor calidad = Menor peso de archivo.</p>
             </div>
 
-            <div className="space-y-3">
+            {/* Redimensionar */}
+            <div className="space-y-4 pt-2 border-t border-zinc-800/50">
               <div className="flex items-center justify-between">
-                <Label htmlFor="resize" className="text-zinc-300">{t('resize')}</Label>
+                <Label htmlFor="resize" className="text-zinc-300 font-medium cursor-pointer">{t('resize')}</Label>
                 <Switch id="resize" checked={resizeEnabled} onCheckedChange={setResizeEnabled} />
               </div>
               {resizeEnabled && (
-                <div className="space-y-2">
-                  <Label className="text-zinc-300">{t('maxWidth')}: {maxWidth}px</Label>
-                  <Slider value={[maxWidth]} onValueChange={([v]) => setMaxWidth(v)} min={100} max={4000} step={100} className="py-4" />
+                <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                  <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                    <span>Ancho Máximo</span>
+                    <span>{maxWidth}px</span>
+                  </div>
+                  <Slider value={[maxWidth]} onValueChange={([v]) => setMaxWidth(v)} min={500} max={3840} step={100} />
                 </div>
               )}
             </div>
 
-            <Alert className="bg-green-950/20 border-green-900/50 text-green-200">
-              <Zap className="h-4 w-4 text-green-400" />
-              <AlertDescription className="text-xs">
-                {t('privacyAlert')}
-              </AlertDescription>
-            </Alert>
-
-            <Button onClick={handleProcess} disabled={processing || files.length === 0} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white">
-              {processing ? t('processing') : t('processAll')}
+            {/* Botón de Acción Principal */}
+            <Button 
+                onClick={handleProcess} 
+                disabled={processing || files.length === 0} 
+                className="w-full h-12 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-base shadow-lg shadow-cyan-900/20"
+            >
+              {processing ? (
+                <span className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 animate-pulse" /> {t('processing')}
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                    <Zap className="w-4 h-4" /> {t('processAll')}
+                </span>
+              )}
             </Button>
+
+            {/* Aviso Privacidad */}
+            <div className="bg-green-950/20 border border-green-900/30 rounded-lg p-3 flex gap-3 items-start">
+              <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+              <p className="text-xs text-green-200/80 leading-relaxed">
+                {t('privacyAlert')}
+              </p>
+            </div>
+
           </CardContent>
         </Card>
+      </div>
 
-        {/* Main Content */}
-        <Card className="lg:col-span-2 border-zinc-800 bg-zinc-950/50 backdrop-blur-xl">
-          <CardContent className="p-6">
+      {/* 2. ZONA DE TRABAJO PRINCIPAL */}
+      <div className="lg:col-span-8 space-y-6 order-1 lg:order-2">
+        
+        {/* Dropzone */}
+        {results.length === 0 && (
             <div
-              className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
-                files.length > 0 ? 'border-cyan-500 bg-cyan-950/10' : 'border-zinc-700 hover:border-cyan-500/50 hover:bg-zinc-900 cursor-pointer'
-              }`}
-              onDragOver={(e) => {
-                e.preventDefault()
-                e.currentTarget.classList.add('border-cyan-500', 'bg-cyan-950/10')
-              }}
-              onDragLeave={(e) => {
-                e.preventDefault()
-                e.currentTarget.classList.remove('border-cyan-500', 'bg-cyan-950/10')
-              }}
-              onDrop={handleDrop}
-              onClick={() => document.getElementById('file-input')?.click()}
+                className={`border-2 border-dashed rounded-xl p-12 text-center transition-all duration-300 h-[300px] flex flex-col items-center justify-center ${
+                files.length > 0 
+                    ? 'border-cyan-500 bg-cyan-950/5' 
+                    : 'border-zinc-700 bg-zinc-900/30 hover:border-cyan-500/50 hover:bg-zinc-900 cursor-pointer'
+                }`}
+                onDragOver={(e) => {
+                    e.preventDefault()
+                    e.currentTarget.classList.add('border-cyan-500', 'bg-cyan-950/10')
+                }}
+                onDragLeave={(e) => {
+                    e.preventDefault()
+                    e.currentTarget.classList.remove('border-cyan-500', 'bg-cyan-950/10')
+                }}
+                onDrop={handleDrop}
+                onClick={() => document.getElementById('file-input')?.click()}
             >
-              <input
-                id="file-input"
-                type="file"
-                multiple
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => handleFiles(e.target.files)}
-              />
-              {files.length === 0 ? (
-                <div className="space-y-2">
-                  <Upload className="w-12 h-12 mx-auto text-zinc-500" />
-                  <p className="text-white font-medium">{t('dragImages')}</p>
-                  <p className="text-zinc-500 text-sm">{t('clickToSelect')}</p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <CheckCircle2 className="w-12 h-12 mx-auto text-green-400" />
-                  <p className="text-white font-medium">{t('imagesSelected', { count: files.length })}</p>
-                </div>
-              )}
-            </div>
-
-            {processing && (
-              <div className="mt-6 space-y-2">
-                <div className="flex justify-between text-sm text-zinc-400">
-                  <span>{t('processing')}</span>
-                  <span>{Math.round(progress)}%</span>
-                </div>
-                <Progress value={progress} className="h-2" />
-              </div>
-            )}
-
-            {results.length > 0 && (
-              <div className="mt-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">{t('results')}</h3>
-                  <Button onClick={handleDownloadAll} variant="outline" className="flex items-center gap-2 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white">
-                    <FileArchive className="w-4 h-4" />
-                    {tCommon('download')} ZIP
-                  </Button>
-                </div>
-                <div className="grid gap-4">
-                  {results.map((result, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-                      <div className="flex items-center gap-4">
-                        <div className="p-2 rounded bg-cyan-950/30 text-cyan-400 border border-cyan-900/50">
-                          <ImageIcon className="w-6 h-6" />
+                <input
+                    id="file-input"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleFiles(e.target.files)}
+                />
+                
+                {files.length === 0 ? (
+                    <div className="space-y-4 group">
+                        <div className="w-20 h-20 bg-zinc-800 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 group-hover:bg-zinc-700">
+                            <Upload className="w-10 h-10 text-zinc-400 group-hover:text-white" />
                         </div>
                         <div>
-                          <p className="text-white font-medium truncate max-w-[200px] sm:max-w-xs">{result.original.name}</p>
-                          <p className="text-sm text-zinc-500">
-                            {formatFileSize(result.original.size)} → {formatFileSize(result.processed.processedSize)}
-                            <span className="ml-2 text-green-400 font-mono">
-                              (-{calculateReduction(result.original.size, result.processed.processedSize)}%)
+                            <p className="text-xl font-medium text-white mb-2">{t('dragImages')}</p>
+                            <p className="text-zinc-500 text-sm">JPG, PNG, WebP (Máx 50MB)</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="space-y-4 animate-in zoom-in-95 duration-300">
+                        <div className="w-20 h-20 bg-cyan-950/30 border border-cyan-500/30 rounded-full flex items-center justify-center mx-auto">
+                            <ImageIcon className="w-10 h-10 text-cyan-400" />
+                        </div>
+                        <div>
+                            <p className="text-xl font-medium text-white mb-1">{t('imagesSelected', { count: files.length })}</p>
+                            <p className="text-zinc-400 text-sm">Listas para optimizar</p>
+                        </div>
+                    </div>
+                )}
+            </div>
+        )}
+
+        {/* Barra de Progreso */}
+        {processing && (
+          <div className="space-y-2 bg-zinc-900 p-4 rounded-lg border border-zinc-800 animate-in fade-in">
+            <div className="flex justify-between text-sm">
+              <span className="text-cyan-400 font-medium">Optimizando...</span>
+              <span className="text-zinc-400">{Math.round(progress)}%</span>
+            </div>
+            <Progress value={progress} className="h-2 bg-zinc-800" />
+          </div>
+        )}
+
+        {/* Resultados */}
+        {results.length > 0 && (
+          <div className="space-y-4 animate-in slide-in-from-bottom-4">
+            <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xl font-bold text-white">Resultados</h3>
+                <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" onClick={clearAll} className="text-zinc-400 hover:text-white">
+                        <Trash2 className="w-4 h-4 mr-2" /> Limpiar
+                    </Button>
+                    <Button onClick={handleDownloadAll} className="bg-white text-black hover:bg-zinc-200 font-semibold">
+                        <FileArchive className="w-4 h-4 mr-2" />
+                        Descargar ZIP
+                    </Button>
+                </div>
+            </div>
+
+            <div className="grid gap-3">
+              {results.map((result, index) => {
+                const reduction = calculateReduction(result.original.size, result.processed.processedSize)
+                const isPositive = reduction > 0
+
+                return (
+                  <div key={index} className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-900 transition-colors gap-4">
+                    
+                    {/* Info Archivo */}
+                    <div className="flex items-center gap-4 w-full sm:w-auto">
+                      <div className="w-12 h-12 rounded-lg bg-black/50 border border-zinc-800 flex items-center justify-center shrink-0">
+                        <ImageIcon className="w-6 h-6 text-zinc-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-white font-medium truncate max-w-[200px]" title={result.original.name}>
+                            {result.original.name}
+                        </p>
+                        <div className="flex items-center gap-2 text-xs text-zinc-500 mt-1">
+                            <span className="bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-400">
+                                {formatFileSize(result.original.size)}
                             </span>
-                          </p>
+                            <ArrowRight className="w-3 h-3" />
+                            <span className="bg-cyan-950/30 text-cyan-400 px-1.5 py-0.5 rounded border border-cyan-900/30">
+                                {formatFileSize(result.processed.processedSize)}
+                            </span>
                         </div>
                       </div>
-                      <Button size="sm" onClick={() => downloadImage(result.processed)} className="bg-zinc-800 hover:bg-zinc-700 text-white">
-                        <Download className="w-4 h-4 mr-2" />
-                        {tCommon('download')}
-                      </Button>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+
+                    {/* Badge Ahorro y Botón */}
+                    <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                        <Badge className={`h-8 px-3 text-sm ${isPositive ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-zinc-800 text-zinc-400'}`}>
+                            {isPositive ? `-${reduction}%` : '0%'}
+                        </Badge>
+                        
+                        <Button size="sm" onClick={() => downloadImage(result)} variant="outline" className="border-zinc-700 bg-transparent text-white hover:bg-zinc-800">
+                            <Download className="w-4 h-4 mr-2" />
+                            Guardar
+                        </Button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -18,6 +18,7 @@ export interface Config {
     posts: Post;
     categories: Category;
     analytics: Analytics;
+    tools: Tool;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -31,6 +32,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     analytics: AnalyticsSelect<false> | AnalyticsSelect<true>;
+    tools: ToolsSelect<false> | ToolsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -236,6 +238,48 @@ export interface Analytics {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tools".
+ */
+export interface Tool {
+  id: number;
+  title: string;
+  slug: string;
+  codeKey: 'vault' | 'image-optimizer' | 'pdf-studio' | 'data-station' | 'qr-factory';
+  badge?: string | null;
+  icon?: ('lock' | 'image' | 'file-text' | 'database' | 'qr-code' | 'box') | null;
+  shortDescription: string;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  faqs?:
+    | {
+        question?: string | null;
+        answer?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  ctaTitle?: string | null;
+  ctaDescription?: string | null;
+  ctaLink?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -268,6 +312,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'analytics';
         value: number | Analytics;
+      } | null)
+    | ({
+        relationTo: 'tools';
+        value: number | Tool;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -429,6 +477,33 @@ export interface AnalyticsSelect<T extends boolean = true> {
   source?: T;
   companyName?: T;
   ipHash?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tools_select".
+ */
+export interface ToolsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  codeKey?: T;
+  badge?: T;
+  icon?: T;
+  shortDescription?: T;
+  content?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  ctaTitle?: T;
+  ctaDescription?: T;
+  ctaLink?: T;
+  metaTitle?: T;
+  metaDescription?: T;
   updatedAt?: T;
   createdAt?: T;
 }

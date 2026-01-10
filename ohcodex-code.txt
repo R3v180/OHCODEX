@@ -321,158 +321,162 @@ CMD HOSTNAME="0.0.0.0" node server.js
 // =============== FIN ARCHIVO [6]: Dockerfile =============== //
 
 // =============== INICIO ARCHIVO [7]: ROADMAP.md =============== //
-````markdown
-# 🗺️ ROADMAP TÉCNICO: FUSIÓN OHCODEX + TOOLS
+# 🗺️ ROADMAP OHCODEX v3.0: LA GUÍA MAESTRA (2026)
 
-**Objetivo:** Integrar la suite de herramientas SEO (Client-Side) en la arquitectura Next.js + Payload existente, migrando a una estructura internacionalizada (i18n).
+## 🏗️ CONTEXTO TÉCNICO ACTUAL
 
----
-
-## 🟢 FASE 0: PREPARACIÓN Y DEPENDENCIAS
-
-_Objetivo: Preparar el terreno para que el código de las herramientas no falle al ser copiado._
-
-### 0.1. Unificación de Dependencias
-
-Instalar en el `package.json` raíz las librerías necesarias para las herramientas que actualmente solo existen en `ohcodextools`.
-
-**Acción:** Ejecutar en la raíz:
-
-```bash
-npm install next-intl pdf-lib qrcode.react jsbarcode jszip @monaco-editor/react react-signature-canvas html5-qrcode papaparse framer-motion sonner
-```
-````
-
-### 0.2. Estandarización UI (Shadcn)
-
-Asegurar que el proyecto principal tiene todos los componentes UI que usan las herramientas.
-
-- **Instalar/Verificar componentes:** `Tabs`, `Select`, `Slider`, `Switch`, `Dialog`, `Sonner` (Toast), `Progress`.
-- _Nota:_ Usaremos la carpeta `src/components/ui` actual como fuente única de verdad.
+- **Frontend:** Next.js 15 (App Router) + React 19 (Stable target).
+- **Estilos:** Tailwind CSS + Shadcn/UI + Framer Motion.
+- **Backend/CMS:** Payload CMS 3.0 (Estructura Next.js nativa).
+- **Base de Datos:** PostgreSQL alojado en Neon.tech (Serverless).
+- **Internacionalización (i18n):** `next-intl` con rutas `/[locale]/` y diccionarios en `src/messages/*.json`.
+- **Procesamiento:** Motores lógicos en el cliente (`src/lib/engines`) para garantizar privacidad total.
 
 ---
 
-## 🟡 FASE 1: BACKEND I18N (PAYLOAD CMS)
+## 🔴 FASE 1: ESTABILIDAD DE CORE Y RENDIMIENTO CRÍTICO
 
-_Objetivo: Que la base de datos soporte múltiples idiomas antes de cambiar el frontend._
+_Objetivo: Eliminar errores de compilación y asegurar que la web cargue en menos de 1 segundo._
 
-### 1.1. Configuración de Payload
+### 1.1. Lazy Loading de Componentes Pesados (Monaco Editor)
 
-- Modificar `src/payload.config.ts`.
-- Añadir configuración de localización:
-  ```typescript
-  localization: {
-    locales: ['es', 'en'],
-    defaultLocale: 'es',
-    fallback: true,
-  },
+- **Qué:** Implementar `next/dynamic` en `DataStationTool.tsx`.
+- **Por qué:** El editor de código Monaco pesa más de 1MB. Sin carga diferida, penaliza el SEO de la página de herramientas porque Google detecta una carga inicial lenta.
+- **Cómo:**
+  ```tsx
+  const Editor = dynamic(() => import('@monaco-editor/react'), {
+    ssr: false,
+    loading: () => <Skeleton className="h-[400px] w-full" />,
+  })
   ```
 
-### 1.2. Migración de Colecciones
+### 1.2. Saneamiento de Dependencias
 
-- Editar `src/collections/Posts.ts`, `Products.ts`, `Legal.ts`.
-- Añadir `localized: true` a los campos de texto (título, contenido, slug, extracto).
-- **Script de Migración (Opcional):** Si hay mucho contenido, crear un script para copiar el contenido "sin idioma" al campo `es`. Si es poco, se puede hacer manual tras el despliegue.
+- **Qué:** Actualizar `package.json` de versiones `beta` y `rc` a versiones estables (React 19, Payload 3.0).
+- **Por qué:** Las versiones candidatas (RC) pueden tener fugas de memoria en entornos de producción como Heroku.
 
----
+### 1.3. Optimización de i18n (Kebab-Case Strict)
 
-## 🟠 FASE 2: ARQUITECTURA FRONTEND (ROUTING)
-
-_Objetivo: Implementar la estructura de carpetas `[locale]` sin romper el Admin._
-
-### 2.1. Configuración Next-Intl
-
-- Crear `src/i18n.ts` (Configuración de solicitud).
-- Crear `src/messages/es.json` y `src/messages/en.json`.
-  - _Acción:_ Copiar los textos de `ohcodextools/src/messages/*.json` a estos archivos.
-
-### 2.2. Middleware Inteligente
-
-- Crear `src/middleware.ts`.
-- **CRÍTICO:** Configurar el `matcher` para **EXCLUIR** las rutas de Payload.
-  ```typescript
-  export const config = {
-    matcher: [
-      '/((?!api|admin|_next|static|.*\\..*).*)', // Ignorar admin y api
-    ],
-  }
-  ```
-
-### 2.3. Migración de Rutas
-
-1.  Crear carpeta `src/app/[locale]`.
-2.  Mover todo el contenido de `src/app/(frontend)/*` adentro de `src/app/[locale]/`.
-3.  Actualizar `src/app/[locale]/layout.tsx` para envolver la app en `NextIntlClientProvider`.
-
-### 2.4. Refactorización de Enlaces
-
-- Revisar `Header.tsx`, `Footer.tsx` y componentes internos.
-- Cambiar `<Link href="/blog">` por uso de `Link` de `next-intl` o prefijar manualmente según el idioma actual.
+- **Qué:** Auditar todos los archivos `es.json` y `en.json`.
+- **Por qué:** Hemos detectado errores donde el código busca `pdfStudio` (camelCase) pero el JSON tiene `pdf-studio` (kebab-case).
+- **Regla de Oro:** Todo namespace de herramienta en el JSON DEBE ser kebab-case.
 
 ---
 
-## 🔵 FASE 3: INYECCIÓN DE HERRAMIENTAS (THE MERGE)
+## 🟠 FASE 2: UX TRANSFORMATION (DE "SOSO" A "PRO")
 
-_Objetivo: Mover el código de las herramientas y adaptarlo al entorno principal._
+_Objetivo: Que un usuario sin conocimientos técnicos pueda usar las herramientas sin miedo._
 
-### 3.1. Migración de Motores Lógicos
+### 2.1. El fin de la Pantalla Vacía (Placeholders e Inyección de Ejemplos)
 
-- Copiar carpeta `ohcodextools/src/lib/engines` -> `src/lib/engines`.
-- Estos archivos son JS/TS puro, no deberían dar problemas.
+- **Qué:** Añadir placeholders realistas en todos los `Textarea` y un botón de "Cargar ejemplo" (Load Sample).
+- **Por qué:** Un usuario no siempre tiene un JSON a mano para probar **Data Station**. Si le das un botón de "Cargar ejemplo", verá la magia instantáneamente.
+- **Implementación:** Añadir un objeto `const SAMPLES` en cada herramienta con datos de prueba.
 
-### 3.2. Migración de Componentes de Herramientas
+### 2.2. Sistema de Guía Visual "3-Steps"
 
-- Copiar `ohcodextools/src/components/tools` -> `src/components/tools`.
-- **REFACTORIZACIÓN OBLIGATORIA:**
-  - Abrir cada archivo de herramienta (ej: `VaultTool.tsx`).
-  - Cambiar los imports de UI.
-  - _De:_ `import { Button } from '@/components/ui/button'` (que apuntaba al otro proyecto).
-  - _A:_ Asegurarse que apunta correctamente a la UI del proyecto principal.
-  - Verificar que los estilos (Tailwind) sean coherentes con el modo oscuro de OHCodex (Negro puro vs Zinc gris).
+- **Qué:** Añadir un componente de cabecera en cada herramienta que resuma el proceso en 3 pasos.
+- **Ejemplo (Vault):**
+  1. Escribe o pega tu texto.
+  2. Elige una contraseña fuerte.
+  3. Copia tu código encriptado.
+- **Por qué:** Reduce la carga cognitiva y hace que la herramienta parezca un flujo guiado.
 
-### 3.3. Creación de Páginas
+### 2.3. Micro-interacciones de Confianza
 
-- Crear estructura de rutas en `src/app/[locale]/tools/`:
-  - `/page.tsx` (Índice de herramientas)
-  - `/vault/page.tsx`
-  - `/pdf-studio/page.tsx`
-  - Etc.
-- Importar los componentes migrados en el paso 3.2.
+- **Qué:** Añadir animaciones de "Éxito" (checkmarks verdes con Framer Motion) y feedback visual al arrastrar archivos (Dropzone borders que brillan en cian).
+- **Por qué:** El usuario necesita sentir que la web "está viva" y que su acción ha tenido éxito.
 
 ---
 
-## 🟣 FASE 4: LIMPIEZA Y SEO
+## 🟡 FASE 3: MONETIZACIÓN Y GESTIÓN DE ANUNCIOS (ADMIN CONTROL)
 
-_Objetivo: Pulir la fusión y asegurar indexación._
+_Objetivo: Controlar los ingresos desde el panel de administración sin tocar código._
 
-### 4.1. Generación de Metadatos
+### 3.1. Creación de la Global `AdvertisingSettings` en Payload
 
-- Actualizar `generateMetadata` en las nuevas páginas de tools para usar `getTranslations` de `next-intl` (títulos dinámicos según idioma).
+- **Qué:** Crear un panel en el Admin con los siguientes campos:
+  - `enableAds` (Toggle): Activar/Desactivar todo.
+  - `provider` (Select): Google AdSense / Carbon Ads / EthicalAds.
+  - `headerScript` (Code): Para el script de carga de la red.
+  - `slots` (Array): Lista de IDs de bloques publicitarios para Superior, Lateral e Inferior.
+- **Por qué:** Permite cambiar de red publicitaria o apagar anuncios en segundos si detectas un problema de rendimiento.
 
-### 4.2. Sitemap Dinámico
+### 3.2. Integración de Redes Publicitarias (Recomendación 2026)
 
-- Actualizar `src/app/sitemap.ts`.
-- Añadir lógica para generar URLs dobles (ES y EN) para cada ruta existente.
+- **Prioridad 1: Carbon Ads.** Por estética y relevancia (público tech).
+- **Prioridad 2: EthicalAds.** Por respeto a la privacidad (encaja con los valores de OHCodex).
+- **Prioridad 3: Google AdSense.** Como fallback si las anteriores no aceptan el sitio inicialmente.
 
-### 4.3. Limpieza
+### 3.3. Componente `AdSlot.tsx` Inteligente
 
-- Eliminar carpeta `ohcodextools`.
-- Eliminar archivos de configuración duplicados (`tailwind.config` viejo, etc).
-
----
-
-## 🛡️ ESTRATEGIA DE ROLLBACK
-
-Si algo sale mal en producción:
-
-1.  Mantener un backup de la base de datos de Production antes de desplegar la FASE 1.
-2.  El código está versionado en Git: hacer revert al commit previo a la fusión de carpetas.
-
-```
+- **Qué:** Modificar el componente actual para que lea la configuración de la Global del CMS.
+- **Por qué:** Evita cargar contenedores vacíos y previene el "layout shift" (saltos en la página) reservando el espacio exacto del anuncio.
 
 ---
 
-```
+## 🟢 FASE 4: SEO DE AUTORIDAD Y "AI SEARCH OPTIMIZATION"
+
+_Objetivo: Que Google nos dé estrellas y las IAs nos recomienden como "Mejor herramienta de 2026"._
+
+### 4.1. Esquemas JSON-LD de Aplicación (Schema.org)
+
+- **Qué:** Implementar el esquema `SoftwareApplication` en cada página de herramienta.
+- **Por qué:** Para que en los resultados de búsqueda aparezca la categoría (Utilities), el precio (Free) y el sistema operativo (Web Browser).
+- **Cómo:** Inyectar en el `<head>` mediante el objeto `metadata` de Next.js.
+
+### 4.2. Estrategia de Contenido Semántico (SEO Long-Tail)
+
+- **Qué:** Añadir 500+ palabras de texto útil DEBAJO de cada herramienta.
+  - **Sección 1:** ¿Qué es [Nombre Herramienta] y para qué sirve?
+  - **Sección 2:** Diferencias entre procesamiento local vs servidor (Vender privacidad).
+  - **Sección 3:** FAQ (Preguntas Frecuentes) usando el componente `Accordion`.
+- **Por qué:** Google no puede "leer" la lógica de JavaScript. Necesita texto HTML para indexar palabras clave como "encriptar archivos gratis online".
+
+### 4.3. Marketing de Privacidad (Zero-Knowledge)
+
+- **Qué:** Destacar en toda la web el sello: **"Privacy by Design: Tus archivos nunca tocan nuestro servidor"**.
+- **Por qué:** Es el factor diferencial de OHCodex frente a herramientas que roban datos.
+
+---
+
+## 🔵 FASE 5: CONVERSIÓN (LEADS DE SOFTWARE A MEDIDA)
+
+_Objetivo: Convertir al usuario de las herramientas gratuitas en cliente de consultoría._
+
+### 5.1. Cross-Selling Dinámico
+
+- **Qué:** Activar el `CrossSellBanner` al final de cada herramienta.
+- **Contenido:** "¿Necesitas una arquitectura escalable como esta para tu empresa? Hablemos."
+- **Por qué:** El usuario ya está validando tu capacidad técnica al usar la herramienta; es el momento perfecto para ofrecer tus servicios de desarrollo.
+
+### 5.2. Seguridad en Captación (Captcha Turnstile)
+
+- **Qué:** Integrar Cloudflare Turnstile en el `ContactSection`.
+- **Por qué:** Es invisible (mejor UX que Google Captcha) y protege tu base de datos Neon de ataques de spam que podrían inflar tu factura cloud.
+
+---
+
+## 🟣 FASE 6: MANTENIMIENTO Y ESCALABILIDAD
+
+### 6.1. Automatización de Backups
+
+- **Qué:** Programar el script `src/scripts/local-backup.ts` mediante una GitHub Action o un CRON externo.
+- **Por qué:** Seguridad ante desastres en Neon o errores humanos.
+
+### 6.2. Monitoreo de Errores (Sentry)
+
+- **Qué:** Instalar Sentry para capturar errores de los motores de procesamiento en los navegadores de los usuarios.
+
+---
+
+## 💡 NOTAS PARA LA IA (REGLAS DE DESARROLLO)
+
+1.  **Archivos de Idioma:** No añadir textos directamente en los componentes. Siempre usar `t('clave')` y actualizar `es.json` y `en.json`.
+2.  **Naming Convention:** Usar **kebab-case** para los archivos y las claves de traducción de herramientas (`image-optimizer`, `pdf-studio`).
+3.  **Client-Side Priority:** Si una función puede ejecutarse en el navegador (crypto, resize, format), **debe** hacerse ahí. El servidor de Heroku solo debe servir el HTML inicial y la API de Payload.
+
+---
 
 // =============== FIN ARCHIVO [7]: ROADMAP.md =============== //
 
@@ -559,6 +563,37 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+
+  // 👇 PASO PARA SEO: Redirecciones 301 para limpiar Search Console
+  async redirects() {
+    return [
+      {
+        source: '/privacidad',
+        destination: '/es/privacidad',
+        permanent: true,
+      },
+      {
+        source: '/terminos',
+        destination: '/es/terminos',
+        permanent: true,
+      },
+      {
+        source: '/aviso-legal',
+        destination: '/es/aviso-legal',
+        permanent: true,
+      },
+      {
+        source: '/terms', // Soluciona el 404 específico detectado por Google
+        destination: '/es/terminos',
+        permanent: true,
+      },
+      {
+        source: '/productos/:path*', // Redirige rutas antiguas de productos
+        destination: '/es/products/:path*',
+        permanent: true,
+      },
+    ]
   },
 }
 
@@ -1115,8 +1150,9 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     description: locale === 'en' 
       ? 'Legal information and ownership of the OHCodex website.' 
       : 'Información legal y titularidad del sitio web OHCodex.',
+    // 👇 CORRECCIÓN SEO: Cambiamos index de false a true para que Google las indexe
     robots: {
-      index: false,
+      index: true, 
       follow: true,
     },
   }
@@ -1181,7 +1217,6 @@ export default async function AvisoLegalPage({ params }: Args) {
           {t('legalNotice')}
         </h1>
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* CORRECCIÓN: Usamos camelCase 'legalNotice' según payload-types.ts */}
           {legal?.legalNotice && (legal.legalNotice as any).root ? (
             <SerializeLexical nodes={(legal.legalNotice as any).root.children} />
           ) : (
@@ -1823,8 +1858,9 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     description: locale === 'en' 
       ? 'Privacy Policy and data protection at OHCodex.' 
       : 'Política de Privacidad y protección de datos de OHCodex.',
+    // 👇 CORRECCIÓN SEO: Permitimos que Google indexe la página de privacidad
     robots: {
-      index: false,
+      index: true, 
       follow: true,
     },
   }
@@ -1889,7 +1925,6 @@ export default async function PrivacidadPage({ params }: Args) {
           {t('privacy')}
         </h1>
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* CORRECCIÓN: Usamos camelCase 'privacyPolicy' según payload-types.ts */}
           {legal?.privacyPolicy && (legal.privacyPolicy as any).root ? (
             <SerializeLexical nodes={(legal.privacyPolicy as any).root.children} />
           ) : (
@@ -2248,8 +2283,9 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     description: locale === 'en' 
       ? 'Terms of use for OHCodex services and software.' 
       : 'Condiciones de uso de los servicios y software de OHCodex.',
+    // 👇 CORRECCIÓN SEO: Habilitamos la indexación en Google
     robots: {
-      index: false,
+      index: true, 
       follow: true,
     },
   }
@@ -2314,7 +2350,6 @@ export default async function TerminosPage({ params }: Args) {
           {t('terms')}
         </h1>
         <div className="prose prose-invert prose-zinc max-w-none">
-          {/* CORRECCIÓN: Propiedad 'termsConditions' según payload-types.ts */}
           {legal?.termsConditions && (legal.termsConditions as any).root ? (
             <SerializeLexical nodes={(legal.termsConditions as any).root.children} />
           ) : (

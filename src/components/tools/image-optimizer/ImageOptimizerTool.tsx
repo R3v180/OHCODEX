@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import JSZip from 'jszip'
 import { Upload, Download, Image as ImageIcon, CheckCircle2, Zap, FileArchive, ArrowRight, Settings2, Trash2 } from 'lucide-react'
 import { processBatch, formatFileSize, calculateReduction } from '@/lib/engines/image-engine'
@@ -18,7 +17,6 @@ import { Badge } from '@/components/ui/badge'
 
 export function ImageOptimizerTool() {
   const t = useTranslations('tools.image-optimizer')
-  const tCommon = useTranslations('common.buttons')
   
   const [files, setFiles] = useState<File[]>([])
   const [results, setResults] = useState<Array<{ original: File; processed: any }>>([])
@@ -33,8 +31,18 @@ export function ImageOptimizerTool() {
 
   const handleFiles = useCallback((selectedFiles: FileList | null) => {
     if (!selectedFiles) return
-    const imageFiles = Array.from(selectedFiles).filter(f => f.type.startsWith('image/'))
+    // Aceptamos imágenes y específicamente HEIC
+    const imageFiles = Array.from(selectedFiles).filter(f => 
+      f.type.startsWith('image/') || 
+      f.name.toLowerCase().endsWith('.heic') || 
+      f.name.toLowerCase().endsWith('.heif')
+    )
     
+    if (imageFiles.length === 0) {
+      toast.error('Formato no soportado. Usa JPG, PNG o HEIC.')
+      return
+    }
+
     // Limpiamos resultados anteriores si suben nuevos archivos
     if (results.length > 0) {
         setResults([])
@@ -235,11 +243,12 @@ export function ImageOptimizerTool() {
                 onDrop={handleDrop}
                 onClick={() => document.getElementById('file-input')?.click()}
             >
+                {/* 👇 MODIFICADO: Accept explicito para HEIC/HEIF */}
                 <input
                     id="file-input"
                     type="file"
                     multiple
-                    accept="image/*"
+                    accept="image/*,.heic,.heif"
                     className="hidden"
                     onChange={(e) => handleFiles(e.target.files)}
                 />
@@ -251,7 +260,8 @@ export function ImageOptimizerTool() {
                         </div>
                         <div>
                             <p className="text-xl font-medium text-white mb-2">{t('dragImages')}</p>
-                            <p className="text-zinc-500 text-sm">JPG, PNG, WebP (Máx 50MB)</p>
+                            {/* 👇 MODIFICADO: Texto explicito para el usuario */}
+                            <p className="text-zinc-500 text-sm">JPG, PNG, WebP, HEIC (iPhone)</p>
                         </div>
                     </div>
                 ) : (

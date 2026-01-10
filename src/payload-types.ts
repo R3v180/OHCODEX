@@ -244,9 +244,9 @@ export interface Tool {
   id: number;
   title: string;
   slug: string;
-  codeKey: 'vault' | 'image-optimizer' | 'pdf-studio' | 'data-station' | 'qr-factory';
+  codeKey: 'vault' | 'image-optimizer' | 'pdf-studio' | 'data-station' | 'qr-factory' | 'ocr-vision';
   badge?: string | null;
-  icon?: ('lock' | 'image' | 'file-text' | 'database' | 'qr-code' | 'box') | null;
+  icon?: ('lock' | 'image' | 'file-text' | 'database' | 'qr-code' | 'scan' | 'box') | null;
   shortDescription: string;
   steps: {
     stepTitle: string;

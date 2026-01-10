@@ -11,6 +11,7 @@ import { ImageOptimizerTool } from '@/components/tools/image-optimizer/ImageOpti
 import { PDFStudioTool } from '@/components/tools/pdf-studio/PDFStudioTool'
 import { DataStationTool } from '@/components/tools/data-station/DataStationTool'
 import { QRFactoryTool } from '@/components/tools/qr-factory/QRFactoryTool'
+import { OCRTool } from '@/components/tools/ocr/OCRTool' // <--- NUEVA IMPORTACIÓN
 
 // Componentes de UI
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -26,30 +27,33 @@ import {
   Download, 
   Lock, 
   PenLine,
-  LucideIcon 
+  LucideIcon,
+  ScanLine 
 } from 'lucide-react'
 
 // Tipos generados
 import type { Tool } from '@/payload-types'
 
 // --- MAPA DE HERRAMIENTAS ---
+// Conecta el "codeKey" del CMS con el Componente React real
 const TOOL_COMPONENTS: Record<string, React.ComponentType<any>> = {
   'vault': VaultTool,
   'image-optimizer': ImageOptimizerTool,
   'pdf-studio': PDFStudioTool,
   'data-station': DataStationTool,
   'qr-factory': QRFactoryTool,
+  'ocr-vision': OCRTool, // <--- NUEVA ENTRADA
 }
 
 // --- MAPA DE ICONOS PARA LOS PASOS ---
-// Conecta el string guardado en BD con el icono real de Lucide
 const STEP_ICONS: Record<string, LucideIcon> = {
   upload: Upload,
   settings: Settings,
   zap: Zap,
   download: Download,
   lock: Lock,
-  edit: PenLine
+  edit: PenLine,
+  scan: ScanLine
 }
 
 // --- SERIALIZADOR LEXICAL ---
@@ -192,7 +196,7 @@ export default async function ToolPage({ params }: Props) {
           </p>
         </div>
 
-        {/* --- NUEVA SECCIÓN: GUÍA DE 3 PASOS --- */}
+        {/* --- GUÍA DE 3 PASOS --- */}
         {tool.steps && tool.steps.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 relative">
             {/* Línea conectora decorativa (solo desktop) */}

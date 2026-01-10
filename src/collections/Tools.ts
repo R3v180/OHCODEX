@@ -79,6 +79,7 @@ export const Tools: CollectionConfig = {
                     { label: 'PDF Studio', value: 'pdf-studio' },
                     { label: 'Data Station (JSON/SQL)', value: 'data-station' },
                     { label: 'QR Factory', value: 'qr-factory' },
+                    { label: 'OCR Vision (IA)', value: 'ocr-vision' }, // <--- NUEVA OPCIÓN AÑADIDA
                   ],
                 },
               ],
@@ -107,6 +108,7 @@ export const Tools: CollectionConfig = {
                     { label: 'Documento PDF', value: 'file-text' },
                     { label: 'Base de Datos', value: 'database' },
                     { label: 'Código QR', value: 'qr-code' },
+                    { label: 'Escáner OCR', value: 'scan' }, // <--- NUEVA OPCIÓN AÑADIDA
                     { label: 'Caja Genérica', value: 'box' },
                   ],
                   admin: { width: '50%' },

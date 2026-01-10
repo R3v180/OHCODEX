@@ -161,13 +161,13 @@
     },
     "image-optimizer": {
       "title": "Pixel Optimizer",
-      "description": "Comprime, redimensiona, añade marca de agua y convierte a WebP por lotes.",
+      "description": "Comprime, redimensiona y convierte HEIC/JPG a WebP por lotes.",
       "seo": {
-        "title": "Comprimir y Optimizar Imágenes Online (WebP, JPG) - OHCodex",
-        "description": "Reducir peso de fotos, añadir marca de agua y convertir a WebP gratis. Procesamiento por lotes en tu navegador. Privado y sin límites."
+        "title": "Convertir HEIC a JPG y Optimizar Imágenes - OHCodex",
+        "description": "Reducir peso de fotos, añadir marca de agua y convertir HEIC de iPhone a JPG/WebP gratis. Procesamiento privado en tu navegador."
       },
       "header": "Pixel Optimizer",
-      "subtitle": "Comprime, redimensiona y convierte imágenes por lotes. 100% en el navegador.",
+      "subtitle": "Comprime, redimensiona y convierte imágenes (incluido HEIC) por lotes. 100% en el navegador.",
       "settings": "Ajustes",
       "outputFormat": "Formato de salida",
       "webp": "WebP (Recomendado)",
@@ -296,6 +296,24 @@
       "scanError": "Error al escanear",
       "qrGenerated": "QR generado exitosamente",
       "barcodeGenerated": "Código de barras generado exitosamente"
+    },
+    "ocr-vision": {
+      "title": "OCR Vision",
+      "description": "Extrae texto de imágenes y documentos escaneados. Tecnología IA local que soporta múltiples idiomas.",
+      "seo": {
+        "title": "OCR Online Gratis con IA - Extraer Texto de Imagen - OHCodex",
+        "description": "Herramienta OCR gratuita para convertir imágenes a texto editable. Funciona en tu navegador con IA (Tesseract). Soporta Español, Inglés y más."
+      },
+      "header": "OCR Vision",
+      "subtitle": "Transforma imágenes en texto editable al instante. Privacidad total: tu DNI o facturas nunca salen de tu dispositivo.",
+      "sourceImage": "Imagen Origen",
+      "dragImage": "Arrastra una imagen",
+      "extractText": "Extraer Texto",
+      "extracting": "Analizando...",
+      "result": "Texto Extraído",
+      "placeholder": "El texto reconocido aparecerá aquí para que puedas editarlo...",
+      "success": "Texto extraído correctamente",
+      "error": "No se pudo reconocer el texto"
     }
   },
   "footer": {

@@ -161,13 +161,13 @@
     },
     "image-optimizer": {
       "title": "Pixel Optimizer",
-      "description": "Compress, resize, watermark and convert to WebP in batches.",
+      "description": "Compress, resize and convert HEIC/JPG to WebP in batches.",
       "seo": {
-        "title": "Compress and Optimize Images Online (WebP, JPG) - OHCodex",
-        "description": "Reduce photo weight, add watermark and convert to WebP for free. Batch processing in your browser. Private and no limits."
+        "title": "Convert HEIC to JPG and Optimize Images - OHCodex",
+        "description": "Reduce photo weight, add watermark and convert HEIC from iPhone to JPG/WebP for free. Private processing in your browser."
       },
       "header": "Pixel Optimizer",
-      "subtitle": "Compress, resize and convert images in batches. 100% in the browser.",
+      "subtitle": "Compress, resize and convert images (including HEIC) in batches. 100% in the browser.",
       "settings": "Settings",
       "outputFormat": "Output Format",
       "webp": "WebP (Recommended)",
@@ -296,6 +296,24 @@
       "scanError": "Scan error",
       "qrGenerated": "QR generated successfully",
       "barcodeGenerated": "Barcode generated successfully"
+    },
+    "ocr-vision": {
+      "title": "OCR Vision",
+      "description": "Extract text from images and scanned documents. Local AI technology supporting multiple languages.",
+      "seo": {
+        "title": "Free Online OCR with AI - Extract Text from Image - OHCodex",
+        "description": "Free OCR tool to convert images to editable text. Runs in your browser with AI (Tesseract). Supports Spanish, English, and more."
+      },
+      "header": "OCR Vision",
+      "subtitle": "Transform images into editable text instantly. Total privacy: your ID or invoices never leave your device.",
+      "sourceImage": "Source Image",
+      "dragImage": "Drag an image",
+      "extractText": "Extract Text",
+      "extracting": "Analyzing...",
+      "result": "Extracted Text",
+      "placeholder": "Recognized text will appear here for editing...",
+      "success": "Text extracted successfully",
+      "error": "Could not recognize text"
     }
   },
   "footer": {

@@ -4,6 +4,8 @@
  * Client-side only, no server dependencies
  */
 
+import heic2any from 'heic2any'
+
 export interface ImageProcessingOptions {
   maxWidth?: number
   maxHeight?: number
@@ -42,6 +44,28 @@ export async function processImage(
     watermark,
     stripExif = true
   } = options
+
+  // --- BLOQUE HEIC (NUEVO) ---
+  // Si es un archivo de iPhone, lo convertimos a JPEG en memoria primero
+  let sourceFile = file
+  const lowerName = file.name.toLowerCase()
+  
+  if (lowerName.endsWith('.heic') || lowerName.endsWith('.heif')) {
+    try {
+      const convertedBlob = await heic2any({
+        blob: file,
+        toType: 'image/jpeg',
+        quality: 0.9
+      })
+      // heic2any puede devolver un array, nos aseguramos de tomar el primero
+      const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob
+      sourceFile = new File([blob], file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg'), { type: 'image/jpeg' })
+    } catch (e) {
+      console.error("Error convirtiendo HEIC:", e)
+      throw new Error("No se pudo procesar el archivo HEIC. Asegúrate de que es válido.")
+    }
+  }
+  // ---------------------------
 
   return new Promise((resolve, reject) => {
     const img = new Image()
@@ -91,7 +115,7 @@ export async function processImage(
             if (blob) {
               resolve({
                 blob,
-                originalSize: file.size,
+                originalSize: file.size, // Mantenemos el tamaño original del archivo subido (sea HEIC o JPG)
                 processedSize: blob.size,
                 width,
                 height
@@ -109,7 +133,8 @@ export async function processImage(
     }
 
     img.onerror = () => reject(new Error('Failed to load image'))
-    img.src = URL.createObjectURL(file)
+    // Usamos el sourceFile (que puede ser el original o el convertido desde HEIC)
+    img.src = URL.createObjectURL(sourceFile)
   })
 }
 

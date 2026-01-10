@@ -33,12 +33,12 @@ export function Header() {
     },
     { 
       name: t('tools'), 
-      href: `/${locale}/#tools`, // Apunta a la sección de la Home
+      href: `/${locale}/tools`, // <--- CAMBIO: Ahora lleva a la página dedicada
       external: false 
     },
     { 
       name: t('blog'), 
-      href: `/${locale}/blog`, // Enlace interno
+      href: `/${locale}/blog`, 
       external: false 
     },
     { 
@@ -71,7 +71,6 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                // CORREGIDO: Eliminado 'hover:text-white' para evitar conflicto con 'hover:text-cyan-400'
                 className="text-sm font-medium text-zinc-400 hover:text-cyan-400 transition-colors"
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}

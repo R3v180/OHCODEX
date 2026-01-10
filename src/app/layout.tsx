@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { GoogleAnalytics } from '@next/third-parties/google' // 1. IMPORTAR ESTO
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,18 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // Definimos el idioma base como 'es' por defecto para la raíz técnica,
-    // pero el contenido real será manejado por [locale]
     <html lang="es" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased bg-black text-white`}>
-        {/* 
-          IMPORTANTE:
-          Aquí NO cargamos Header, Footer ni Toaster.
-          Este layout solo sirve de contenedor base.
-          Toda la interfaz de usuario se carga en src/app/[locale]/layout.tsx
-        */}
         {children}
       </body>
+      {/* 2. AÑADIR EL COMPONENTE AQUÍ AL FINAL CON TU ID */}
+      <GoogleAnalytics gaId="G-DBB581X6G4" />
     </html>
   );
 }

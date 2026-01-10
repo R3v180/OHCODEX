@@ -248,6 +248,12 @@ export interface Tool {
   badge?: string | null;
   icon?: ('lock' | 'image' | 'file-text' | 'database' | 'qr-code' | 'box') | null;
   shortDescription: string;
+  steps: {
+    stepTitle: string;
+    stepDescription?: string | null;
+    stepIcon?: ('upload' | 'settings' | 'zap' | 'download' | 'lock' | 'edit') | null;
+    id?: string | null;
+  }[];
   content?: {
     root: {
       type: string;
@@ -491,6 +497,14 @@ export interface ToolsSelect<T extends boolean = true> {
   badge?: T;
   icon?: T;
   shortDescription?: T;
+  steps?:
+    | T
+    | {
+        stepTitle?: T;
+        stepDescription?: T;
+        stepIcon?: T;
+        id?: T;
+      };
   content?: T;
   faqs?:
     | T

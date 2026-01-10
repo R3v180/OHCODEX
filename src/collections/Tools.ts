@@ -19,16 +19,20 @@ export const Tools: CollectionConfig = {
   hooks: {
     afterChange: [
       async ({ doc, req }) => {
-        // 1. Regenerar el Hub de herramientas
-        revalidatePath(`/${req.locale}/tools`)
-        revalidatePath('/tools')
-        
-        // 2. Regenerar la página individual de la herramienta
-        if (doc.slug) {
-          revalidatePath(`/${req.locale}/tools/${doc.slug}`)
-        }
+        try {
+          if (req.locale) {
+             revalidatePath(`/${req.locale}/tools`)
+          }
+          revalidatePath('/tools')
+          
+          if (doc.slug && req.locale) {
+            revalidatePath(`/${req.locale}/tools/${doc.slug}`)
+          }
 
-        console.log(`🔄 Herramienta regenerada: ${doc.title}`)
+          console.log(`🔄 Herramienta regenerada: ${doc.title}`)
+        } catch (error) {
+          console.log(`⚠️ Skip revalidate: Contexto externo detectado para ${doc.title}`)
+        }
       },
     ],
   },
@@ -56,9 +60,6 @@ export const Tools: CollectionConfig = {
                   type: 'text',
                   required: true,
                   unique: true,
-                  // No localizado para mantener consistencia técnica en la URL si prefieres
-                  // O localized: true si quieres /es/tools/cifrado y /en/tools/encryption
-                  // Por simplicidad en la V3.0, lo dejaremos global (ej: /tools/vault en ambos)
                   label: 'Slug URL', 
                   admin: {
                     description: 'Identificador en la URL (ej: vault, pdf-studio).',
@@ -126,7 +127,55 @@ export const Tools: CollectionConfig = {
           ],
         },
 
-        // --- PESTAÑA 2: CONTENIDO SEO (Below the fold) ---
+        // --- PESTAÑA 2: GUÍA DE USO (3 PASOS) ---
+        // Nuevo campo para mejorar UX
+        {
+          label: 'Guía de Uso (Pasos)',
+          fields: [
+            {
+              name: 'steps',
+              type: 'array',
+              label: 'Pasos (Exactamente 3)',
+              minRows: 3,
+              maxRows: 3,
+              required: true,
+              localized: true,
+              labels: {
+                singular: 'Paso',
+                plural: 'Pasos',
+              },
+              fields: [
+                {
+                  name: 'stepTitle',
+                  type: 'text',
+                  label: 'Título del Paso',
+                  required: true,
+                },
+                {
+                  name: 'stepDescription',
+                  type: 'textarea',
+                  label: 'Breve explicación',
+                },
+                {
+                  name: 'stepIcon',
+                  type: 'select',
+                  label: 'Icono del Paso',
+                  defaultValue: 'upload',
+                  options: [
+                    { label: 'Subir / Cargar', value: 'upload' },
+                    { label: 'Ajustes / Config', value: 'settings' },
+                    { label: 'Procesar / Rayo', value: 'zap' },
+                    { label: 'Descargar', value: 'download' },
+                    { label: 'Candado / Seguridad', value: 'lock' },
+                    { label: 'Escribir / Editar', value: 'edit' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+
+        // --- PESTAÑA 3: CONTENIDO SEO (Below the fold) ---
         {
           label: 'Contenido SEO',
           fields: [
@@ -160,7 +209,7 @@ export const Tools: CollectionConfig = {
           ],
         },
 
-        // --- PESTAÑA 3: MARKETING (Cross-Selling) ---
+        // --- PESTAÑA 4: MARKETING (Cross-Selling) ---
         {
           label: 'Marketing & Venta',
           fields: [
@@ -189,7 +238,7 @@ export const Tools: CollectionConfig = {
           ],
         },
 
-        // --- PESTAÑA 4: META TAGS ---
+        // --- PESTAÑA 5: META TAGS ---
         {
           label: 'Metadatos',
           fields: [

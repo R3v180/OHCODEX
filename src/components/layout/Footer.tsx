@@ -1,6 +1,5 @@
-// =============== INICIO ARCHIVO: src/components/layout/Footer.tsx =============== //
+// src/components/layout/Footer.tsx
 import React from 'react'
-// 👇 CAMBIO IMPORTANTE: Usamos el Link de nuestra configuración i18n
 import { Link } from '@/i18n/routing'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -33,13 +32,14 @@ export async function Footer({ locale }: FooterProps) {
   const schedule = company?.schedule || 'L-V: 09:00 - 18:00' 
   const description = company?.description || tFooter('description')
 
-  // Lista de herramientas (Rutas base sin locale, el componente Link lo añade)
+  // Lista de herramientas actualizada incluyendo OCR Vision
   const toolsLinks = [
     { name: tTools('vault.title'), href: '/tools/vault' },
     { name: tTools('image-optimizer.title'), href: '/tools/image-optimizer' },
     { name: tTools('pdf-studio.title'), href: '/tools/pdf-studio' },
     { name: tTools('data-station.title'), href: '/tools/data-station' },
     { name: tTools('qr-factory.title'), href: '/tools/qr-factory' },
+    { name: tTools('ocr-vision.title'), href: '/tools/ocr-vision' },
   ]
 
   return (
@@ -79,7 +79,7 @@ export async function Footer({ locale }: FooterProps) {
 
           {/* 2. HERRAMIENTAS (TOOLS) */}
           <div>
-            <h3 className="text-white font-semibold mb-6">{t('tools')}</h3>
+            <h3 className="text-white font-semibold mb-6 uppercase tracking-wider text-xs">{t('tools')}</h3>
             <ul className="space-y-3 text-sm">
               {toolsLinks.map((tool) => (
                 <li key={tool.href}>
@@ -93,7 +93,7 @@ export async function Footer({ locale }: FooterProps) {
 
           {/* 3. NAVEGACIÓN CORPORATIVA */}
           <div>
-            <h3 className="text-white font-semibold mb-6">{tFooter('navigation')}</h3>
+            <h3 className="text-white font-semibold mb-6 uppercase tracking-wider text-xs">{tFooter('navigation')}</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link href="/#productos" className="text-zinc-400 hover:text-cyan-400 transition-colors">
@@ -106,6 +106,11 @@ export async function Footer({ locale }: FooterProps) {
                 </Link>
               </li>
               <li>
+                <Link href="/blog" className="text-zinc-400 hover:text-cyan-400 transition-colors">
+                  {t('blog')}
+                </Link>
+              </li>
+              <li>
                 <a href="/admin" target="_blank" className="text-zinc-400 hover:text-cyan-400 transition-colors flex items-center gap-1">
                   Admin Panel <ExternalLink className="h-3 w-3" />
                 </a>
@@ -115,7 +120,7 @@ export async function Footer({ locale }: FooterProps) {
 
           {/* 4. CONTACTO */}
           <div>
-            <h3 className="text-white font-semibold mb-6">{tFooter('contact')}</h3>
+            <h3 className="text-white font-semibold mb-6 uppercase tracking-wider text-xs">{tFooter('contact')}</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href={`mailto:${email}`} className="text-zinc-400 hover:text-cyan-400 transition-colors">
@@ -141,10 +146,6 @@ export async function Footer({ locale }: FooterProps) {
             &copy; {currentYear} OHCodex. {t('copyright')}.
           </p>
           <div className="flex flex-wrap justify-center gap-6 text-sm text-zinc-500">
-            {/* 
-               👇 MAGIA AQUÍ: Usamos las claves definidas en routing.ts 
-               Next-intl traducirá '/aviso-legal' a '/fr/mentions-legales' automáticamente.
-            */}
             <Link href="/aviso-legal" className="hover:text-zinc-300 transition-colors">
               {t('legal.legalNotice')}
             </Link>
@@ -160,4 +161,3 @@ export async function Footer({ locale }: FooterProps) {
     </footer>
   )
 }
-// =============== FIN ARCHIVO: src/components/layout/Footer.tsx =============== //

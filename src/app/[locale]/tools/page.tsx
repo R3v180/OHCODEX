@@ -2,14 +2,15 @@
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-// 👇 CAMBIO: Usamos el Link inteligente
 import { Link } from '@/i18n/routing'
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Lock, Image as ImageIcon, FileText, Database, QrCode, ArrowRight, Shield, Box, LucideIcon } from 'lucide-react'
+import { Lock, Image as ImageIcon, FileText, Database, QrCode, ArrowRight, Shield, Box, LucideIcon, ScanLine } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { Metadata } from 'next'
 import type { Tool } from '@/payload-types'
+
+export const revalidate = 3600 // Revalidar cada hora
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
@@ -27,13 +28,18 @@ const ICON_MAP: Record<string, LucideIcon> = {
   'file-text': FileText,
   'database': Database,
   'qr-code': QrCode,
+  'scan': ScanLine, // Añadido para OCR
   'box': Box
 }
 
 export default async function ToolsIndexPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const payload = await getPayload({ config: configPromise })
-  const t = await getTranslations('home.ourTools')
+  
+  // Usamos el namespace 'home.ourTools' que ya tiene título y subtítulo
+  const t = await getTranslations({ locale, namespace: 'home.ourTools' }) 
+  // Usamos 'common' para botones genéricos si hace falta
+  const tCommon = await getTranslations({ locale, namespace: 'common' })
 
   const { docs: tools } = await payload.find({
     collection: 'tools',
@@ -49,7 +55,13 @@ export default async function ToolsIndexPage({ params }: { params: Promise<{ loc
         <div className="text-center mb-16">
           <Badge className="mb-6 bg-cyan-950 text-cyan-400 border-cyan-900/50">
             <Shield className="w-3 h-3 mr-2" />
-            Engineering Suite
+            {/* CORRECCIÓN: Usamos traducción en lugar de texto fijo */}
+            {locale === 'es' ? 'Suite de Ingeniería' : 
+             locale === 'fr' ? 'Suite d\'Ingénierie' :
+             locale === 'de' ? 'Engineering-Suite' :
+             locale === 'it' ? 'Suite di Ingegneria' :
+             locale === 'pt' ? 'Suíte de Engenharia' :
+             'Engineering Suite'}
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-white">
             {t('title')}
@@ -67,8 +79,6 @@ export default async function ToolsIndexPage({ params }: { params: Promise<{ loc
               return (
                 <Link 
                   key={tool.id} 
-                  // 👇 CORRECCIÓN: Usamos ruta base sin locale.
-                  // Antes: href={`/${locale}/tools/${tool.slug}`}
                   href={`/tools/${tool.slug}`} 
                   className="group block h-full"
                 >

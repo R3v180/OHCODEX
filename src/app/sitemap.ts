@@ -1,12 +1,16 @@
+// =============== INICIO ARCHIVO: src/app/sitemap.ts =============== //
 import { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { Tool, Product, Post } from '@/payload-types'
+import { routing } from '@/i18n/routing'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config: configPromise })
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
-  const locales = ['es', 'en'] as const
+  
+  // Usamos la lista centralizada (es, en, fr, de, it, pt)
+  const locales = routing.locales 
 
   let sitemapEntries: MetadataRoute.Sitemap = []
 
@@ -18,7 +22,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       collection: 'products',
       depth: 0,
       limit: 1000,
-      locale: locale,
+      // Usamos 'as any' temporalmente porque los tipos internos de Payload 
+      // aún no se han regenerado para reconocer los nuevos idiomas.
+      locale: locale as any, 
     }) as unknown as { docs: Product[] }
 
     // 2. Consultar POSTS
@@ -26,17 +32,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       collection: 'posts',
       depth: 0,
       limit: 1000,
-      locale: locale,
+      locale: locale as any,
     }) as unknown as { docs: Post[] }
 
-    // 3. Consultar HERRAMIENTAS (¡NUEVO!)
-    // Ahora leemos las tools reales de la base de datos
+    // 3. Consultar HERRAMIENTAS
     const { docs: tools } = await payload.find({
       collection: 'tools',
       depth: 0,
       limit: 1000,
-      locale: locale,
+      locale: locale as any,
     }) as unknown as { docs: Tool[] }
+
+    // --- HELPER PARA ALTERNATES (HREFLANG) ---
+    // Genera automáticamente los enlaces a todos los idiomas disponibles
+    const generateAlternates = (path: string) => {
+      const languages: Record<string, string> = {}
+      locales.forEach((lang) => {
+        languages[lang] = `${baseUrl}/${lang}${path}`
+      })
+      return { languages }
+    }
 
     // --- GENERACIÓN DE RUTAS ---
 
@@ -44,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const staticRoutes = [
       '',              // Home
       '/blog',         // Blog Index
-      '/tools',        // Tools Hub (App Store)
+      '/tools',        // Tools Hub
       '/aviso-legal',
       '/privacidad',
       '/terminos',
@@ -53,26 +68,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: route === '' ? 1 : 0.8,
-      alternates: {
-        languages: {
-          es: `${baseUrl}/es${route}`,
-          en: `${baseUrl}/en${route}`,
-        },
-      },
+      alternates: generateAlternates(route),
     }))
 
-    // B. Rutas de Herramientas (Dinámicas desde CMS)
+    // B. Rutas de Herramientas
     const toolsRoutes = tools.map((tool) => ({
       url: `${baseUrl}/${locale}/tools/${tool.slug}`,
-      lastModified: new Date(tool.updatedAt), // Google sabrá cuándo actualizas el texto SEO
+      lastModified: new Date(tool.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
-      alternates: {
-        languages: {
-          es: `${baseUrl}/es/tools/${tool.slug}`,
-          en: `${baseUrl}/en/tools/${tool.slug}`,
-        },
-      },
+      alternates: generateAlternates(`/tools/${tool.slug}`),
     }))
 
     // C. Rutas de Productos
@@ -81,12 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(product.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,
-      alternates: {
-        languages: {
-          es: `${baseUrl}/es/products/${product.slug}`,
-          en: `${baseUrl}/en/products/${product.slug}`,
-        },
-      },
+      alternates: generateAlternates(`/products/${product.slug}`),
     }))
 
     // D. Rutas de Posts
@@ -95,12 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(post.updatedAt),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
-      alternates: {
-        languages: {
-          es: `${baseUrl}/es/blog/${post.slug}`,
-          en: `${baseUrl}/en/blog/${post.slug}`,
-        },
-      },
+      alternates: generateAlternates(`/blog/${post.slug}`),
     }))
 
     sitemapEntries.push(
@@ -113,3 +108,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return sitemapEntries
 }
+// =============== FIN ARCHIVO: src/app/sitemap.ts =============== //

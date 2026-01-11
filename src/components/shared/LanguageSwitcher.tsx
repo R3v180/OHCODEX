@@ -1,3 +1,4 @@
+// =============== INICIO ARCHIVO: src/components/shared/LanguageSwitcher.tsx =============== //
 'use client'
 
 import { useLocale } from 'next-intl'
@@ -14,9 +15,8 @@ export function LanguageSwitcher() {
 
   const onSelectChange = (nextLocale: string) => {
     startTransition(() => {
-      // 🛠️ FIX: Hacemos casting explícito para calmar a TypeScript
-      // Le aseguramos que el string que viene del Select es uno de nuestros idiomas válidos
-      router.replace(pathname, { locale: nextLocale as "es" | "en" })
+      // 🛠️ FIX: Actualizamos el casting para incluir los 6 idiomas
+      router.replace(pathname, { locale: nextLocale as "es" | "en" | "fr" | "de" | "it" | "pt" })
     })
   }
 
@@ -35,7 +35,20 @@ export function LanguageSwitcher() {
         <SelectItem value="en" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
           English
         </SelectItem>
+        <SelectItem value="fr" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
+          Français
+        </SelectItem>
+        <SelectItem value="de" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
+          Deutsch
+        </SelectItem>
+        <SelectItem value="it" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
+          Italiano
+        </SelectItem>
+        <SelectItem value="pt" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
+          Português
+        </SelectItem>
       </SelectContent>
     </Select>
   )
 }
+// =============== FIN ARCHIVO: src/components/shared/LanguageSwitcher.tsx =============== //

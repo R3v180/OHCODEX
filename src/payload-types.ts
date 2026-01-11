@@ -52,7 +52,7 @@ export interface Config {
     'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
     'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
   };
-  locale: 'es' | 'en';
+  locale: 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt';
   user: User & {
     collection: 'users';
   };

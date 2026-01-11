@@ -1,0 +1,336 @@
+{
+  "common": {
+    "tools": "Werkzeuge",
+    "home": "Startseite",
+    "visitStudio": "Studio besuchen",
+    "blog": "Blog",
+    "aboutUs": "Über uns",
+    "contact": "Kontakt",
+    "products": "Produkte",
+    "methodology": "Methodik",
+    "madeWith": "Gemacht mit ❤️ vom OHCodex Engineering Team",
+    "copyright": "Alle Rechte vorbehalten",
+    "legal": {
+      "legalNotice": "Impressum",
+      "privacy": "Datenschutz",
+      "terms": "AGB"
+    },
+    "buttons": {
+      "copy": "Kopieren",
+      "download": "Herunterladen",
+      "process": "Verarbeiten",
+      "clear": "Löschen",
+      "readArticle": "Artikel lesen",
+      "backToHome": "Zurück zur Startseite"
+    }
+  },
+  "hero": {
+    "badge": "Neu: Werkzeug-Bereich verfügbar",
+    "title": "Software-Architektur & Entwicklung",
+    "subtitle": "Engineering für die Zukunft digitaler Ökosysteme.",
+    "ctaProject": "Projekt starten",
+    "ctaPortfolio": "Portfolio ansehen"
+  },
+  "home": {
+    "hero": {
+      "badge": "Neu: Werkzeug-Bereich verfügbar",
+      "title": "Software-Architektur & Entwicklung",
+      "subtitle": "Engineering für die Zukunft digitaler Ökosysteme.",
+      "ctaProject": "Projekt starten",
+      "ctaPortfolio": "Portfolio ansehen"
+    },
+    "ourTools": {
+      "title": "Engineering Suite",
+      "subtitle": "Leistungsstarke, private und browserbasierte Tools für moderne Entwickler.",
+      "useTool": "Tool nutzen"
+    }
+  },
+  "contactSection": {
+    "title": "Starten Sie Ihre digitale Transformation",
+    "subtitle": "Bereit zur Skalierung? Erzählen Sie uns von Ihrer technischen Herausforderung. Wir analysieren Ihren Fall und entwerfen die Softwarearchitektur, die Ihr Unternehmen benötigt, um grenzenlos zu wachsen.",
+    "directContact": "Direkter Kontakt",
+    "response": "Antwort in < 24h (Werktage)",
+    "operations": "Betrieb",
+    "location": "Spanien (Remote First)",
+    "global": "Globaler Service",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Ihr vollständiger Name",
+      "email": "Firmen-E-Mail",
+      "emailPlaceholder": "name@firma.com",
+      "type": "Projekttyp",
+      "types": {
+        "pwa": "PWA Entwicklung / Web App",
+        "saas": "SaaS-Plattform",
+        "api": "Systemintegration / API",
+        "other": "Beratung / Sonstiges"
+      },
+      "details": "Projektdetails",
+      "detailsPlaceholder": "Beschreiben Sie kurz Ihre Ziele, geschätzten Zeitrahmen oder aktuelle Technologie...",
+      "privacy": "Ich habe die Datenschutzerklärung gelesen und akzeptiere sie. Ich verstehe, dass meine Daten zur Bearbeitung dieser Anfrage verarbeitet werden.",
+      "submit": "Anfrage senden",
+      "processing": "Verarbeitung...",
+      "sentTitle": "Anfrage gesendet!",
+      "sentDesc": "Wir haben Ihre Daten korrekt erhalten. Unser Engineering-Team wird Ihren Vorschlag prüfen und Sie in Kürze kontaktieren.",
+      "errors": {
+        "required": "Bitte füllen Sie alle erforderlichen Felder aus.",
+        "generic": "Es gab einen Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut."
+      },
+      "successMessage": "Nachricht erfolgreich gesendet! Wir werden Sie bald kontaktieren."
+    }
+  },
+  "blog": {
+    "title": "Ingenieurwesen & Gedanken",
+    "subtitle": "Artikel über Softwareentwicklung, Systemarchitektur und Technologiestrategie.",
+    "backToBlog": "Zurück zum Blog",
+    "publishedOn": "Veröffentlicht am",
+    "minRead": "Min. Lesezeit",
+    "interested": "Interessiert an diesem Ansatz?",
+    "helpText": "Wir wenden diese Philosophie bei jedem Projekt an, das wir entwickeln.",
+    "letsTalk": "Lassen Sie uns über Ihr Projekt sprechen",
+    "noArticles": "Noch keine Artikel veröffentlicht."
+  },
+  "products": {
+    "backToPortfolio": "Zurück zum Portfolio",
+    "aboutProject": "Über das Projekt",
+    "related": "Verwandte Projekte",
+    "technicalSheet": "Technisches Datenblatt",
+    "visitWebsite": "Website besuchen",
+    "inDevelopment": "In Entwicklung",
+    "techStack": "Tech Stack",
+    "noCover": "Kein Titelbild",
+    "status": {
+      "live": "Live",
+      "beta": "Public Beta",
+      "development": "In Entwicklung",
+      "concept": "Konzept"
+    }
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Seite nicht gefunden",
+    "description": "Entschuldigung, wir konnten die gesuchte Seite nicht finden. Möglicherweise wurde sie verschoben oder gelöscht."
+  },
+  "tools": {
+    "vault": {
+      "title": "Vault",
+      "description": "AES-256 Verschlüsselung für Text und Dateien. Zero-Knowledge, alles in Ihrem Browser.",
+      "seo": {
+        "title": "Text und Dateien online verschlüsseln - OHCodex Vault",
+        "description": "Kostenloses AES-256 Verschlüsselungstool im Browser. Schützen Sie Dokumente, Fotos und Videos vor dem Senden. Totale Privatsphäre, keine Server."
+      },
+      "header": "OHCodex Vault",
+      "subtitle": "AES-256 Verschlüsselung auf Militärniveau. Zero-Knowledge - Ihre Daten verlassen niemals Ihren Browser.",
+      "alert": "Die gesamte Verarbeitung erfolgt in Ihrem Browser über die Web Crypto API. Das Passwort wird niemals an einen Server gesendet.",
+      "textTab": "Text verschlüsseln",
+      "fileTab": "Dateien verschlüsseln",
+      "textToEncrypt": "Text zum Verschlüsseln",
+      "textDecrypted": "Entschlüsselter Text",
+      "encryptedText": "Verschlüsselter Text (Base64)",
+      "encrypted": "Verschlüsselter Text",
+      "password": "Passwort",
+      "enterPassword": "Geben Sie ein sicheres Passwort ein...",
+      "encrypt": "Verschlüsseln",
+      "decrypt": "Entschlüsseln",
+      "encryptedSuccess": "Text erfolgreich verschlüsselt",
+      "readyToDecrypt": "Text bereit zum Entschlüsseln",
+      "decryptedSuccess": "Text erfolgreich entschlüsselt",
+      "fileAlert": "Dateien werden mit derselben Sicherheit verschlüsselt. Das Ergebnis wird mit der Endung .ohc heruntergeladen.",
+      "encryptFile": "Datei verschlüsseln",
+      "decryptFile": ".ohc Datei entschlüsseln",
+      "encryptDesc": "Ziehen Sie eine Datei hierher oder klicken Sie zum Auswählen",
+      "decryptDesc": "Wählen Sie eine .ohc Datei zum Entschlüsseln",
+      "dragHere": "Ziehen Sie eine Datei hierher",
+      "clickToSelect": "oder klicken Sie zum Auswählen",
+      "size": "{size} MB",
+      "encryptionPassword": "Verschlüsselungspasswort",
+      "encryptAndDownload": "Verschlüsseln & Laden",
+      "decryptAndDownload": "Entschlüsseln & Laden",
+      "changeToDecrypt": "Zu Entschlüsseln wechseln",
+      "changeToEncrypt": "Zu Verschlüsseln wechseln",
+      "decryptFileButton": "Datei entschlüsseln",
+      "encryptFileButton": "Datei verschlüsseln",
+      "enterTextPassword": "Bitte geben Sie Text und Passwort ein",
+      "enterEncrypted": "Bitte geben Sie den verschlüsselten Text und das Passwort ein",
+      "selectFilePassword": "Bitte wählen Sie eine Datei und geben Sie das Passwort ein",
+      "selectOhcFile": "Bitte wählen Sie eine .ohc Datei und geben Sie das Passwort ein",
+      "copied": "In die Zwischenablage kopiert",
+      "copyError": "Fehler beim Kopieren",
+      "encryptionError": "Verschlüsselungsfehler",
+      "decryptionError": "Falsches Passwort oder beschädigte Daten"
+    },
+    "image-optimizer": {
+      "title": "Pixel Optimizer",
+      "description": "Komprimieren, skalieren und konvertieren von HEIC/JPG in WebP im Stapel.",
+      "seo": {
+        "title": "HEIC in JPG konvertieren und Bilder optimieren - OHCodex",
+        "description": "Fotogröße reduzieren, Wasserzeichen hinzufügen und iPhone HEIC kostenlos in JPG/WebP umwandeln. Private Verarbeitung im Browser."
+      },
+      "header": "Pixel Optimizer",
+      "subtitle": "Komprimieren, skalieren und konvertieren Sie Bilder (inkl. HEIC) im Stapel. 100% im Browser.",
+      "settings": "Einstellungen",
+      "outputFormat": "Ausgabeformat",
+      "webp": "WebP (Empfohlen)",
+      "jpeg": "JPEG",
+      "png": "PNG",
+      "quality": "Qualität",
+      "resize": "Skalieren",
+      "maxWidth": "Max. Breite",
+      "maxWidthValue": "{maxWidth}px",
+      "privacyAlert": "EXIF-Metadaten werden für mehr Privatsphäre automatisch entfernt",
+      "processAll": "Alles verarbeiten",
+      "processing": "Verarbeite...",
+      "dragImages": "Ziehen Sie Bilder hierher",
+      "clickToSelect": "oder klicken Sie zum Auswählen",
+      "imagesSelected": "{count} Bilder ausgewählt",
+      "results": "Ergebnisse",
+      "size": "{size}",
+      "download": "Herunterladen",
+      "processedSuccess": "{count} Bilder verarbeitet",
+      "processingError": "Fehler bei der Bildverarbeitung"
+    },
+    "pdf-studio": {
+      "title": "PDF Studio",
+      "description": "PDFs zusammenfügen, teilen, signieren und komprimieren in einer professionellen Oberfläche.",
+      "seo": {
+        "title": "Online PDF Editor: Zusammenfügen, Signieren & Komprimieren - OHCodex",
+        "description": "Kostenloses Tool zur PDF-Verwaltung. Seiten organisieren, Dokumente digital signieren und Dateigröße reduzieren. Ohne Registrierung und sicher."
+      },
+      "header": "PDF Studio",
+      "subtitle": "PDFs zusammenfügen, drehen und organisieren direkt in Ihrem Browser.",
+      "infoAlert": "Dies ist die Basisversion. Für erweiterte Funktionen wie Komprimierung und Signatur ist eine zusätzliche Implementierung erforderlich.",
+      "dragPdfs": "Ziehen Sie PDFs hierher",
+      "pdfsSelected": "{count} PDFs ausgewählt",
+      "mergeAll": "Alle PDFs zusammenfügen",
+      "merging": "Füge zusammen...",
+      "page": "Seite {page}",
+      "rotate": "Drehen",
+      "remove": "Entfernen",
+      "mergePdf": "PDF zusammenfügen",
+      "mergeSuccess": "PDFs erfolgreich zusammengefügt",
+      "mergeError": "Fehler beim Zusammenfügen der PDFs",
+      "rotateSuccess": "Seite gedreht",
+      "rotateError": "Fehler beim Drehen der Seite",
+      "downloadError": "Fehler beim Herunterladen",
+      "needTwoPdfs": "Wählen Sie mindestens 2 PDFs zum Zusammenfügen",
+      "signature": {
+        "title": "Digitale Signatur",
+        "drawSignature": "Unterschrift zeichnen",
+        "clear": "Löschen",
+        "save": "Speichern",
+        "canvasPlaceholder": "Zeichnen Sie hier Ihre Unterschrift",
+        "upload": "Bild hochladen"
+      },
+      "signatureSaved": "Unterschrift gespeichert"
+    },
+    "data-station": {
+      "title": "Data Station",
+      "description": "JSON formatieren, CSV/XML konvertieren, SQL validieren und Code-Diff vergleichen.",
+      "seo": {
+        "title": "JSON Formatter, CSV Konverter und SQL Online - OHCodex Data Station",
+        "description": "JSON validieren, CSV in JSON konvertieren, SQL formatieren und Code vergleichen. Kostenlose, private und serverlose Entwicklertools."
+      },
+      "header": "Data Station",
+      "subtitle": "Formatieren, validieren und konvertieren Sie Daten direkt in Ihrem Browser.",
+      "json": "JSON",
+      "converter": "Konverter",
+      "sql": "SQL",
+      "inputJson": "Eingabe JSON",
+      "spaces": "Leerzeichen",
+      "format": "Formatieren",
+      "minify": "Minimieren",
+      "validate": "Validieren",
+      "output": "Ausgabe",
+      "inputData": "Eingabedaten",
+      "jsonToCsv": "JSON → CSV",
+      "csvToJson": "CSV → JSON",
+      "inputSql": "Eingabe SQL",
+      "formatSql": "SQL formatieren",
+      "formattedSql": "Formatiertes SQL",
+      "jsonValid": "✓ Gültiges JSON",
+      "jsonInvalid": "✗ Fehler: {error}",
+      "convertedToCsv": "In CSV konvertiert",
+      "convertedToJson": "In JSON konvertiert",
+      "sqlFormatted": "SQL formatiert",
+      "jsonFormatted": "JSON formatiert",
+      "jsonMinified": "JSON minimiert",
+      "invalidJson": "Ungültiges JSON",
+      "conversionError": "Konvertierungsfehler",
+      "formatError": "Formatierungsfehler"
+    },
+    "qr-factory": {
+      "title": "QR Factory",
+      "description": "Generieren Sie benutzerdefinierte QRs mit Logo und EAN-13, UPC Barcodes.",
+      "seo": {
+        "title": "QR-Code und Barcode Generator mit Logo (SVG/PNG) - OHCodex",
+        "description": "Erstellen Sie benutzerdefinierte QRs für WiFi, VCard und WhatsApp. EAN-13 und Code-128 Barcode-Generator für Inventar. Kostenloser Vektor-Download."
+      },
+      "header": "QR Factory",
+      "subtitle": "Generieren Sie professionelle QR-Codes und Barcodes.",
+      "generator": "QR Generator",
+      "barcode": "Barcode",
+      "scanner": "Scanner",
+      "qrType": "QR Typ",
+      "design": "Design & Farben",
+      "foregroundColor": "Vordergrundfarbe",
+      "backgroundColor": "Hintergrundfarbe",
+      "logo": "Logo",
+      "uploadLogo": "Logo hochladen",
+      "barcodeType": "Code-Typ",
+      "showText": "Text anzeigen",
+      "height": "Höhe",
+      "uploadImage": "Bild hochladen",
+      "enterUrl": "URL eingeben...",
+      "ssid": "Netzwerkname (SSID)",
+      "wifiPassword": "WiFi Passwort",
+      "security": { "nopass": "Kein Passwort" },
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "phone": "Telefon",
+      "email": "E-Mail",
+      "whatsappNumber": "WhatsApp Nummer",
+      "message": "Nachricht (optional)",
+      "enterCode": "Code eingeben...",
+      "scanResult": "Scan-Ergebnis",
+      "noCodeFound": "Kein Code erkannt",
+      "scanError": "Scan-Fehler",
+      "qrGenerated": "QR erfolgreich generiert",
+      "barcodeGenerated": "Barcode erfolgreich generiert"
+    },
+    "ocr-vision": {
+      "title": "OCR Vision",
+      "description": "Text aus Bildern und gescannten Dokumenten extrahieren. Lokale KI-Technologie unterstützt mehrere Sprachen.",
+      "seo": {
+        "title": "Kostenloses Online-OCR mit KI - Text aus Bild extrahieren - OHCodex",
+        "description": "Kostenloses OCR-Tool zur Umwandlung von Bildern in bearbeitbaren Text. Funktioniert im Browser mit KI (Tesseract). Unterstützt Deutsch, Englisch, Spanisch, etc."
+      },
+      "header": "OCR Vision",
+      "subtitle": "Wandeln Sie Bilder sofort in bearbeitbaren Text um. Totale Privatsphäre: Ihr Ausweis oder Rechnungen verlassen nie Ihr Gerät.",
+      "sourceImage": "Quellbild",
+      "dragImage": "Bild hierher ziehen",
+      "extractText": "Text extrahieren",
+      "extracting": "Analysiere...",
+      "result": "Extrahierter Text",
+      "placeholder": "Der erkannte Text erscheint hier zur Bearbeitung...",
+      "success": "Text erfolgreich extrahiert",
+      "error": "Text konnte nicht erkannt werden"
+    }
+  },
+  "footer": {
+    "description": "Kostenlose Entwickler- und Produktivitätstools. Clientseitige Verarbeitung für maximale Privatsphäre.",
+    "tools": "Werkzeuge",
+    "navigation": "Navigation",
+    "contact": "Kontakt",
+    "support": "Technischer Support"
+  },
+  "crossSell": {
+    "title": "Benötigen Sie maßgeschneiderte Software?",
+    "description": "Das OHCodex-Team erstellt leistungsstarke Web- und Mobile-Apps. Next.js, TypeScript, KI und Cloud-Native-Architektur.",
+    "requestQuote": "Angebot anfordern",
+    "common": {
+      "ultraFast": "Ultraschnell",
+      "secure": "Sicher",
+      "scalable": "Skalierbar"
+    }
+  }
+}

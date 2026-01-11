@@ -1,0 +1,336 @@
+{
+  "common": {
+    "tools": "Strumenti",
+    "home": "Home",
+    "visitStudio": "Visita lo Studio",
+    "blog": "Blog",
+    "aboutUs": "Chi Siamo",
+    "contact": "Contatti",
+    "products": "Prodotti",
+    "methodology": "Metodologia",
+    "madeWith": "Fatto con ❤️ dal team di ingegneria OHCodex",
+    "copyright": "Tutti i diritti riservati",
+    "legal": {
+      "legalNotice": "Note Legali",
+      "privacy": "Privacy",
+      "terms": "Termini"
+    },
+    "buttons": {
+      "copy": "Copia",
+      "download": "Scarica",
+      "process": "Elabora",
+      "clear": "Pulisci",
+      "readArticle": "Leggi articolo",
+      "backToHome": "Torna alla Home"
+    }
+  },
+  "hero": {
+    "badge": "Nuovo: Sezione Strumenti Disponibile",
+    "title": "Architettura & Sviluppo Software",
+    "subtitle": "Ingegneria per il futuro degli ecosistemi digitali.",
+    "ctaProject": "Inizia Progetto",
+    "ctaPortfolio": "Vedi Portfolio"
+  },
+  "home": {
+    "hero": {
+      "badge": "Nuovo: Sezione Strumenti Disponibile",
+      "title": "Architettura & Sviluppo Software",
+      "subtitle": "Ingegneria per il futuro degli ecosistemi digitali.",
+      "ctaProject": "Inizia Progetto",
+      "ctaPortfolio": "Vedi Portfolio"
+    },
+    "ourTools": {
+      "title": "Suite di Ingegneria",
+      "subtitle": "Strumenti potenti, privati e basati su browser per sviluppatori moderni.",
+      "useTool": "Usa Strumento"
+    }
+  },
+  "contactSection": {
+    "title": "Inizia la tua Trasformazione Digitale",
+    "subtitle": "Pronto a scalare? Parlaci della tua sfida tecnica. Analizzeremo il tuo caso e progetteremo l'architettura software di cui la tua azienda ha bisogno per crescere senza limiti.",
+    "directContact": "Contatto Diretto",
+    "response": "Risposta in < 24h lavorative",
+    "operations": "Operazioni",
+    "location": "Spagna (Remote First)",
+    "global": "Servizio Globale",
+    "form": {
+      "name": "Nome",
+      "namePlaceholder": "Il tuo nome completo",
+      "email": "Email Aziendale",
+      "emailPlaceholder": "nome@azienda.com",
+      "type": "Tipo di Progetto",
+      "types": {
+        "pwa": "Sviluppo PWA / Web App",
+        "saas": "Piattaforma SaaS",
+        "api": "Integrazione Sistemi / API",
+        "other": "Consulenza / Altro"
+      },
+      "details": "Dettagli del Progetto",
+      "detailsPlaceholder": "Descrivi brevemente i tuoi obiettivi, le scadenze stimate o la tecnologia attuale...",
+      "privacy": "Ho letto e accetto la politica sulla privacy. Comprendo che i miei dati saranno trattati per gestire questa richiesta.",
+      "submit": "Invia Richiesta",
+      "processing": "Elaborazione...",
+      "sentTitle": "Richiesta Inviata!",
+      "sentDesc": "Abbiamo ricevuto correttamente i tuoi dati. Il nostro team di ingegneria esaminerà la tua proposta e ti contatterà a breve.",
+      "errors": {
+        "required": "Per favore compila tutti i campi obbligatori.",
+        "generic": "C'è stato un errore nell'invio del messaggio. Riprova per favore."
+      },
+      "successMessage": "Messaggio inviato con successo! Ti contatteremo presto."
+    }
+  },
+  "blog": {
+    "title": "Ingegneria & Pensiero",
+    "subtitle": "Articoli su sviluppo software, architettura di sistema e strategia tecnologica.",
+    "backToBlog": "Torna al Blog",
+    "publishedOn": "Pubblicato il",
+    "minRead": "min di lettura",
+    "interested": "Interessato a questo approccio?",
+    "helpText": "Applichiamo questa stessa filosofia a ogni progetto che sviluppiamo.",
+    "letsTalk": "Parliamo del tuo Progetto",
+    "noArticles": "Nessun articolo pubblicato al momento."
+  },
+  "products": {
+    "backToPortfolio": "Torna al Portfolio",
+    "aboutProject": "Sul Progetto",
+    "related": "Progetti Correlati",
+    "technicalSheet": "Scheda Tecnica",
+    "visitWebsite": "Visita il Sito",
+    "inDevelopment": "In Sviluppo",
+    "techStack": "Tech Stack",
+    "noCover": "Nessuna immagine di copertina",
+    "status": {
+      "live": "In Produzione",
+      "beta": "Beta Pubblica",
+      "development": "In Sviluppo",
+      "concept": "Concetto"
+    }
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Pagina Non Trovata",
+    "description": "Ci dispiace, non siamo riusciti a trovare la pagina che stai cercando. Potrebbe essere stata spostata o eliminata."
+  },
+  "tools": {
+    "vault": {
+      "title": "Vault",
+      "description": "Crittografia AES-256 per testo e file. Zero-Knowledge, tutto nel tuo browser.",
+      "seo": {
+        "title": "Crittografare Testo e File Online - OHCodex Vault",
+        "description": "Strumento gratuito di crittografia AES-256 nel browser. Proteggi documenti, foto e video prima di inviarli. Privacy totale, nessun server."
+      },
+      "header": "OHCodex Vault",
+      "subtitle": "Crittografia AES-256 di grado militare. Zero-Knowledge - I tuoi dati non lasciano mai il tuo browser.",
+      "alert": "Tutta l'elaborazione avviene nel tuo browser utilizzando l'API Web Crypto. La password non viene mai inviata a nessun server.",
+      "textTab": "Crittografa Testo",
+      "fileTab": "Crittografa File",
+      "textToEncrypt": "Testo da Crittografare",
+      "textDecrypted": "Testo Decrittografato",
+      "encryptedText": "Testo Crittografato (Base64)",
+      "encrypted": "Testo Crittografato",
+      "password": "Password",
+      "enterPassword": "Inserisci una password sicura...",
+      "encrypt": "Crittografa",
+      "decrypt": "Decrittografa",
+      "encryptedSuccess": "Testo crittografato con successo",
+      "readyToDecrypt": "Testo pronto per la decrittazione",
+      "decryptedSuccess": "Testo decrittografato con successo",
+      "fileAlert": "I file sono crittografati con la stessa sicurezza. Il risultato viene scaricato con estensione .ohc",
+      "encryptFile": "Crittografa File",
+      "decryptFile": "Decrittografa File .ohc",
+      "encryptDesc": "Trascina un file qui o clicca per selezionare",
+      "decryptDesc": "Seleziona un file .ohc da decrittografare",
+      "dragHere": "Trascina un file qui",
+      "clickToSelect": "o clicca per selezionare",
+      "size": "{size} MB",
+      "encryptionPassword": "Password di Crittografia",
+      "encryptAndDownload": "Crittografa e Scarica",
+      "decryptAndDownload": "Decrittografa e Scarica",
+      "changeToDecrypt": "Passa a Decrittazione",
+      "changeToEncrypt": "Passa a Crittografia",
+      "decryptFileButton": "Decrittografa File",
+      "encryptFileButton": "Crittografa File",
+      "enterTextPassword": "Per favore inserisci testo e password",
+      "enterEncrypted": "Per favore inserisci il testo crittografato e la password",
+      "selectFilePassword": "Per favore seleziona un file e inserisci la password",
+      "selectOhcFile": "Per favore seleziona un file .ohc e inserisci la password",
+      "copied": "Copiato negli appunti",
+      "copyError": "Errore durante la copia",
+      "encryptionError": "Errore di crittografia",
+      "decryptionError": "Password errata o dati corrotti"
+    },
+    "image-optimizer": {
+      "title": "Pixel Optimizer",
+      "description": "Comprimi, ridimensiona e converti HEIC/JPG in WebP in batch.",
+      "seo": {
+        "title": "Convertire HEIC in JPG e Ottimizzare Immagini - OHCodex",
+        "description": "Riduci il peso delle foto, aggiungi watermark e converti HEIC da iPhone a JPG/WebP gratuitamente. Elaborazione privata nel browser."
+      },
+      "header": "Pixel Optimizer",
+      "subtitle": "Comprimi, ridimensiona e converti immagini (incluso HEIC) in batch. 100% nel browser.",
+      "settings": "Impostazioni",
+      "outputFormat": "Formato di output",
+      "webp": "WebP (Consigliato)",
+      "jpeg": "JPEG",
+      "png": "PNG",
+      "quality": "Qualità",
+      "resize": "Ridimensiona",
+      "maxWidth": "Larghezza Max",
+      "maxWidthValue": "{maxWidth}px",
+      "privacyAlert": "Metadati EXIF rimossi automaticamente per maggiore privacy",
+      "processAll": "Elabora Tutto",
+      "processing": "Elaborazione...",
+      "dragImages": "Trascina le immagini qui",
+      "clickToSelect": "o clicca per selezionare",
+      "imagesSelected": "{count} immagini selezionate",
+      "results": "Risultati",
+      "size": "{size}",
+      "download": "Scarica",
+      "processedSuccess": "{count} immagini elaborate",
+      "processingError": "Errore durante l'elaborazione delle immagini"
+    },
+    "pdf-studio": {
+      "title": "PDF Studio",
+      "description": "Unisci, dividi, firma e comprimi PDF in un'interfaccia professionale.",
+      "seo": {
+        "title": "Editor PDF Online: Unisci, Firma e Comprimi - OHCodex PDF Studio",
+        "description": "Strumento gratuito per gestire i PDF. Organizza pagine, firma documenti digitalmente e riduci le dimensioni del file. Senza registrazione e sicuro."
+      },
+      "header": "PDF Studio",
+      "subtitle": "Unisci, ruota e organizza PDF direttamente nel tuo browser.",
+      "infoAlert": "Questa è la versione base. Per funzioni avanzate come compressione e firma, è richiesta un'implementazione aggiuntiva.",
+      "dragPdfs": "Trascina i PDF qui",
+      "pdfsSelected": "{count} PDF selezionati",
+      "mergeAll": "Unisci Tutti i PDF",
+      "merging": "Unione in corso...",
+      "page": "Pagina {page}",
+      "rotate": "Ruota",
+      "remove": "Rimuovi",
+      "mergePdf": "Unisci PDF",
+      "mergeSuccess": "PDF uniti con successo",
+      "mergeError": "Errore durante l'unione dei PDF",
+      "rotateSuccess": "Pagina ruotata",
+      "rotateError": "Errore durante la rotazione della pagina",
+      "downloadError": "Errore durante il download",
+      "needTwoPdfs": "Seleziona almeno 2 PDF da unire",
+      "signature": {
+        "title": "Firma Digitale",
+        "drawSignature": "Disegna Firma",
+        "clear": "Pulisci",
+        "save": "Salva Firma",
+        "canvasPlaceholder": "Disegna qui la tua firma",
+        "upload": "Carica Immagine"
+      },
+      "signatureSaved": "Firma salvata"
+    },
+    "data-station": {
+      "title": "Data Station",
+      "description": "Formatta JSON, converti CSV/XML, valida SQL e confronta codice diff.",
+      "seo": {
+        "title": "Formattatore JSON, Convertitore CSV e SQL Online - OHCodex Data Station",
+        "description": "Valida JSON, converti CSV in JSON, formatta SQL e confronta codice. Strumenti per sviluppatori gratuiti, privati e serverless."
+      },
+      "header": "Data Station",
+      "subtitle": "Formatta, valida e converti dati direttamente nel tuo browser.",
+      "json": "JSON",
+      "converter": "Convertitore",
+      "sql": "SQL",
+      "inputJson": "Input JSON",
+      "spaces": "spazi",
+      "format": "Formatta",
+      "minify": "Minifica",
+      "validate": "Valida",
+      "output": "Output",
+      "inputData": "Dati di Input",
+      "jsonToCsv": "JSON → CSV",
+      "csvToJson": "CSV → JSON",
+      "inputSql": "Input SQL",
+      "formatSql": "Formatta SQL",
+      "formattedSql": "SQL Formattato",
+      "jsonValid": "✓ JSON Valido",
+      "jsonInvalid": "✗ Errore: {error}",
+      "convertedToCsv": "Convertito in CSV",
+      "convertedToJson": "Convertito in JSON",
+      "sqlFormatted": "SQL formattato",
+      "jsonFormatted": "JSON formattato",
+      "jsonMinified": "JSON minificato",
+      "invalidJson": "JSON non valido",
+      "conversionError": "Errore di conversione",
+      "formatError": "Errore di formattazione"
+    },
+    "qr-factory": {
+      "title": "QR Factory",
+      "description": "Genera QR personalizzati con logo e codici a barre EAN-13, UPC.",
+      "seo": {
+        "title": "Generatore di Codici QR e Barre con Logo (SVG/PNG) - OHCodex",
+        "description": "Crea QR personalizzati per WiFi, VCard e WhatsApp. Generatore di codici a barre EAN-13 e Code-128 per inventario. Download vettoriale gratuito."
+      },
+      "header": "QR Factory",
+      "subtitle": "Genera codici QR personalizzati e codici a barre professionalmente.",
+      "generator": "Generatore QR",
+      "barcode": "Codice a Barre",
+      "scanner": "Scanner",
+      "qrType": "Tipo di QR",
+      "design": "Design & Colori",
+      "foregroundColor": "Colore Principale",
+      "backgroundColor": "Colore di Sfondo",
+      "logo": "Logo",
+      "uploadLogo": "Carica Logo",
+      "barcodeType": "Tipo di Codice",
+      "showText": "Mostra Testo",
+      "height": "Altezza",
+      "uploadImage": "Carica Immagine",
+      "enterUrl": "Inserisci URL...",
+      "ssid": "Nome Rete (SSID)",
+      "wifiPassword": "Password WiFi",
+      "security": { "nopass": "Nessuna password" },
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "phone": "Telefono",
+      "email": "Email",
+      "whatsappNumber": "Numero WhatsApp",
+      "message": "Messaggio (opzionale)",
+      "enterCode": "Inserisci il codice...",
+      "scanResult": "Risultato Scansione",
+      "noCodeFound": "Nessun codice rilevato",
+      "scanError": "Errore di scansione",
+      "qrGenerated": "QR generato con successo",
+      "barcodeGenerated": "Codice a barre generato con successo"
+    },
+    "ocr-vision": {
+      "title": "OCR Vision",
+      "description": "Estrai testo da immagini e documenti scansionati. Tecnologia IA locale che supporta più lingue.",
+      "seo": {
+        "title": "OCR Online Gratuito con IA - Estrai Testo da Immagine - OHCodex",
+        "description": "Strumento OCR gratuito per convertire immagini in testo modificabile. Funziona nel tuo browser con IA (Tesseract). Supporta Italiano, Inglese, Spagnolo, ecc."
+      },
+      "header": "OCR Vision",
+      "subtitle": "Trasforma istantaneamente le immagini in testo modificabile. Privacy totale: la tua carta d'identità o fatture non lasciano mai il tuo dispositivo.",
+      "sourceImage": "Immagine Sorgente",
+      "dragImage": "Trascina un'immagine",
+      "extractText": "Estrai Testo",
+      "extracting": "Analisi...",
+      "result": "Testo Estratto",
+      "placeholder": "Il testo riconosciuto apparirà qui per la modifica...",
+      "success": "Testo estratto con successo",
+      "error": "Impossibile riconoscere il testo"
+    }
+  },
+  "footer": {
+    "description": "Strumenti gratuiti per sviluppatori e produttività. Elaborazione client-side per la massima privacy.",
+    "tools": "Strumenti",
+    "navigation": "Navigazione",
+    "contact": "Contatti",
+    "support": "Supporto Tecnico"
+  },
+  "crossSell": {
+    "title": "Hai bisogno di Software su Misura?",
+    "description": "Il team OHCodex crea applicazioni web e mobili ad alte prestazioni. Next.js, TypeScript, IA e architettura cloud-native.",
+    "requestQuote": "Richiedi Preventivo",
+    "common": {
+      "ultraFast": "Ultra Veloce",
+      "secure": "Sicuro",
+      "scalable": "Scalabile"
+    }
+  }
+}

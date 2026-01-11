@@ -1,8 +1,12 @@
+// =============== INICIO ARCHIVO: src/app/[locale]/page.tsx =============== //
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { getTranslations } from 'next-intl/server'
 import type { LandingPage, CompanyInfo, Tool } from '@/payload-types'
+
+// 👇 CAMBIO IMPORTANTE: Usamos el Link inteligente
+import { Link } from '@/i18n/routing'
 
 // Componentes Corporativos
 import { Hero } from '@/components/sections/Hero'
@@ -14,7 +18,6 @@ import { FAQ } from '@/components/sections/FAQ'
 import { ContactSection } from '@/components/sections/Contact'
 
 // Componentes de UI
-import Link from 'next/link'
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { 
@@ -51,7 +54,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 }
 
-// Mapa de Iconos (Conecta el string de la BD con el componente React)
+// Mapa de Iconos
 const ICON_MAP: Record<string, LucideIcon> = {
   'lock': Lock,
   'image': ImageIcon,
@@ -62,8 +65,6 @@ const ICON_MAP: Record<string, LucideIcon> = {
   'box': Box
 }
 
-// Estilos de Badge por defecto según el slug (para mantener la estética visual bonita)
-// Si añades una herramienta nueva que no está aquí, usará el estilo "default"
 const BADGE_STYLES: Record<string, string> = {
   'vault': 'bg-cyan-900/50 text-cyan-400 border-cyan-800',
   'image-optimizer': 'bg-green-900/50 text-green-400 border-green-800',
@@ -78,7 +79,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   const payload = await getPayload({ config: configPromise })
   
-  // Cargar Textos Estáticos (Títulos de sección, botones)
   const tHome = await getTranslations({ locale, namespace: 'home' })
 
   // 1. Cargar Datos Globales
@@ -92,11 +92,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     locale: locale as any,
   })) as unknown as CompanyInfo
 
-  // 2. Cargar HERRAMIENTAS directamente de la BD (Dinámico)
-  // Limitamos a 6 para mantener el grid perfecto de 3x2 en la home
+  // 2. Cargar HERRAMIENTAS
   const { docs: tools } = await payload.find({
     collection: 'tools',
-    sort: 'createdAt', // Orden de creación (o puedes añadir un campo 'order' al CMS si prefieres)
+    sort: 'createdAt', 
     limit: 6, 
     locale: locale as any
   }) as unknown as { docs: Tool[] }
@@ -119,7 +118,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* 3. Sección de Productos (Portfolio) */}
       <ProductsSection locale={locale} />
 
-      {/* 4. SECCIÓN: Tools Suite (DINÁMICA) */}
+      {/* 4. SECCIÓN: Tools Suite */}
       <section id="tools" className="py-24 bg-zinc-900/30 border-y border-white/5">
         <div className="container px-4 mx-auto max-w-6xl">
           <div className="text-center mb-16">
@@ -137,22 +136,24 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {tools.map((tool) => {
-              // Icono dinámico desde la BD
               const iconKey = (tool.icon as string) || 'box'
               const Icon = ICON_MAP[iconKey] || Box
-              
-              // Estilo del Badge basado en el slug (o default)
               const badgeStyle = BADGE_STYLES[tool.slug] || BADGE_STYLES['default']
               
               return (
-                <Link key={tool.id} href={`/${locale}/tools/${tool.slug}`} className="group block h-full">
+                <Link 
+                  key={tool.id} 
+                  // 👇 CORRECCIÓN: Usamos ruta base sin locale. El componente lo traduce.
+                  // Antes: href={`/${locale}/tools/${tool.slug}`}
+                  href={`/tools/${tool.slug}`} 
+                  className="group block h-full"
+                >
                   <Card className="h-full border-zinc-800 bg-black/40 transition-all duration-300 hover:border-cyan-500/50 hover:bg-zinc-900/80 hover:-translate-y-1">
                     <CardHeader>
                       <div className="flex items-start justify-between mb-4">
                         <div className="p-3 rounded-lg bg-zinc-800 text-zinc-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/30 transition-colors">
                           <Icon className="w-6 h-6" />
                         </div>
-                        {/* El texto del badge viene de la BD */}
                         {tool.badge && (
                           <Badge className={`${badgeStyle} border`}>
                             {tool.badge}
@@ -199,3 +200,4 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     </>
   )
 }
+// =============== FIN ARCHIVO: src/app/[locale]/page.tsx =============== //

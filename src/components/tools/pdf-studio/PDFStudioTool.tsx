@@ -26,7 +26,8 @@ export function PDFStudioTool() {
     if (!selectedFiles) return
     const pdfFiles = Array.from(selectedFiles).filter(f => f.type === 'application/pdf')
     setFiles(prev => [...prev, ...pdfFiles])
-    toast.success(`${pdfFiles.length} archivos añadidos`)
+    // TRADUCCIÓN: filesAdded
+    toast.success(t('filesAdded', { count: pdfFiles.length }))
   }
 
   const handleRotate = async (index: number, angle: number) => {
@@ -180,8 +181,9 @@ export function PDFStudioTool() {
             <Upload className="h-8 w-8" />
           </div>
           <h3 className="text-xl font-semibold text-white mb-2">{t('dragPdfs')}</h3>
+          {/* TRADUCCIÓN: dropzoneSubtitle */}
           <p className="text-zinc-500 max-w-sm">
-            O haz clic para seleccionar archivos. Procesamiento local 100% privado.
+            {t('dropzoneSubtitle')}
           </p>
         </CardContent>
       </Card>
@@ -189,8 +191,9 @@ export function PDFStudioTool() {
       {/* 2. ALERTA DE PRIVACIDAD */}
       <Alert className="bg-purple-950/10 border-purple-900/30 text-purple-300">
         <Info className="h-4 w-4 text-purple-400" />
+        {/* TRADUCCIÓN: privacyAlert */}
         <AlertDescription>
-          Tus documentos nunca se suben a ningún servidor. La fusión y firma ocurre en tu navegador.
+          {t('privacyAlert')}
         </AlertDescription>
       </Alert>
 
@@ -198,9 +201,10 @@ export function PDFStudioTool() {
       {files.length > 0 && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
           <div className="flex items-center justify-between">
+            {/* TRADUCCIÓN: documents */}
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
               <FileText className="h-5 w-5 text-purple-500" />
-              Documentos ({files.length})
+              {t('documents')} ({files.length})
             </h3>
             {files.length > 1 && (
               <Button onClick={handleMerge} disabled={processing} className="bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-900/20">
@@ -222,8 +226,9 @@ export function PDFStudioTool() {
                     <FileText className="h-6 w-6" />
                   </div>
                   {signatures[index] && (
+                    /* TRADUCCIÓN: signed */
                     <Badge className="bg-green-500/10 text-green-400 border-green-500/20">
-                      Firmado
+                      {t('signed')}
                     </Badge>
                   )}
                 </CardHeader>
@@ -253,7 +258,8 @@ export function PDFStudioTool() {
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => handleOpenSignature(index)} className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800">
                       <PenLine className="w-3.5 h-3.5 mr-2" />
-                      Firmar
+                      {/* TRADUCCIÓN: sign */}
+                      {t('sign')}
                     </Button>
                   </div>
 
@@ -270,13 +276,14 @@ export function PDFStudioTool() {
               </Card>
             ))}
             
-            {/* BOTÓN AÑADIR MÁS (TARJETA VACÍA) */}
+            {/* BOTÓN AÑADIR MÁS */}
             <div 
               onClick={() => fileInputRef.current?.click()}
               className="border border-dashed border-zinc-800 bg-transparent rounded-xl flex flex-col items-center justify-center p-6 cursor-pointer hover:border-purple-500/50 hover:bg-purple-950/5 transition-all min-h-[240px]"
             >
               <Plus className="h-8 w-8 text-zinc-600 mb-2" />
-              <span className="text-sm text-zinc-500">Añadir otro PDF</span>
+              {/* TRADUCCIÓN: addMore */}
+              <span className="text-sm text-zinc-500">{t('addMore')}</span>
             </div>
           </div>
         </div>

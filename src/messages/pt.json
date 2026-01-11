@@ -200,7 +200,11 @@
       "subtitle": "Mesclar, girar e organizar PDFs diretamente no seu navegador.",
       "infoAlert": "Esta é a versão básica. Para recursos avançados como compressão e assinatura, é necessária implementação adicional.",
       "dragPdfs": "Arraste os PDFs aqui",
+      "dropzoneSubtitle": "Ou clique para selecionar. Processamento local 100% privado.",
+      "privacyAlert": "Seus documentos nunca são enviados para nenhum servidor. A fusão e assinatura acontecem no seu navegador.",
+      "documents": "Documentos",
       "pdfsSelected": "{count} PDFs selecionados",
+      "filesAdded": "{count} arquivos adicionados",
       "mergeAll": "Mesclar Todos os PDFs",
       "merging": "Mesclando...",
       "page": "Página {page}",
@@ -213,6 +217,9 @@
       "rotateError": "Erro ao girar página",
       "downloadError": "Erro ao baixar",
       "needTwoPdfs": "Selecione pelo menos 2 PDFs para mesclar",
+      "signed": "Assinado",
+      "sign": "Assinar",
+      "addMore": "Adicionar outro PDF",
       "signature": {
         "title": "Assinatura Digital",
         "drawSignature": "Desenhar Assinatura",
@@ -314,6 +321,10 @@
       "placeholder": "O texto reconhecido aparecerá aqui para edição...",
       "success": "Texto extraído com sucesso",
       "error": "Não foi possível reconhecer o texto"
+    },
+    "ui": {
+      "ctaButton": "Vamos falar sobre seu Projeto",
+      "faqTitle": "Perguntas Frequentes"
     }
   },
   "footer": {

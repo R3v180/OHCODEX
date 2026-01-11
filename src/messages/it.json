@@ -200,7 +200,11 @@
       "subtitle": "Unisci, ruota e organizza PDF direttamente nel tuo browser.",
       "infoAlert": "Questa è la versione base. Per funzioni avanzate come compressione e firma, è richiesta un'implementazione aggiuntiva.",
       "dragPdfs": "Trascina i PDF qui",
+      "dropzoneSubtitle": "O clicca per selezionare. Elaborazione locale privata al 100%.",
+      "privacyAlert": "I tuoi documenti non vengono mai caricati su nessun server. L'unione e la firma avvengono nel tuo browser.",
+      "documents": "Documenti",
       "pdfsSelected": "{count} PDF selezionati",
+      "filesAdded": "{count} file aggiunti",
       "mergeAll": "Unisci Tutti i PDF",
       "merging": "Unione in corso...",
       "page": "Pagina {page}",
@@ -213,6 +217,9 @@
       "rotateError": "Errore durante la rotazione della pagina",
       "downloadError": "Errore durante il download",
       "needTwoPdfs": "Seleziona almeno 2 PDF da unire",
+      "signed": "Firmato",
+      "sign": "Firma",
+      "addMore": "Aggiungi altro PDF",
       "signature": {
         "title": "Firma Digitale",
         "drawSignature": "Disegna Firma",
@@ -314,6 +321,10 @@
       "placeholder": "Il testo riconosciuto apparirà qui per la modifica...",
       "success": "Testo estratto con successo",
       "error": "Impossibile riconoscere il testo"
+    },
+    "ui": {
+      "ctaButton": "Parliamo del tuo Progetto",
+      "faqTitle": "Domande Frequenti"
     }
   },
   "footer": {

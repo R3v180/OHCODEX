@@ -200,7 +200,11 @@
       "subtitle": "Fusionner, faire pivoter et organiser des PDF directement dans votre navigateur.",
       "infoAlert": "Ceci est la version de base. Pour des fonctions avancées comme la compression et la signature, une implémentation supplémentaire est requise.",
       "dragPdfs": "Glissez les PDF ici",
+      "dropzoneSubtitle": "Ou cliquez pour sélectionner. Traitement local 100% privé.",
+      "privacyAlert": "Vos documents ne sont jamais envoyés sur un serveur. La fusion et la signature se font dans votre navigateur.",
+      "documents": "Documents",
       "pdfsSelected": "{count} PDF sélectionnés",
+      "filesAdded": "{count} fichiers ajoutés",
       "mergeAll": "Fusionner Tous les PDF",
       "merging": "Fusion en cours...",
       "page": "Page {page}",
@@ -213,6 +217,9 @@
       "rotateError": "Erreur lors de la rotation de la page",
       "downloadError": "Erreur lors du téléchargement",
       "needTwoPdfs": "Sélectionnez au moins 2 PDF à fusionner",
+      "signed": "Signé",
+      "sign": "Signer",
+      "addMore": "Ajouter un autre PDF",
       "signature": {
         "title": "Signature Numérique",
         "drawSignature": "Dessiner Signature",
@@ -314,6 +321,10 @@
       "placeholder": "Le texte reconnu apparaîtra ici pour édition...",
       "success": "Texte extrait avec succès",
       "error": "Impossible de reconnaître le texte"
+    },
+    "ui": {
+      "ctaButton": "Parlons de votre Projet",
+      "faqTitle": "Questions Fréquentes"
     }
   },
   "footer": {

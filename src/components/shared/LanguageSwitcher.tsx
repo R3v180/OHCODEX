@@ -2,29 +2,65 @@
 'use client'
 
 import { useLocale } from 'next-intl'
-import { usePathname, useRouter } from '@/i18n/routing'
+import { usePathname, useRouter } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Globe } from 'lucide-react'
-import { useTransition } from 'react'
+import { Globe, Loader2 } from 'lucide-react'
+import { useState, useTransition } from 'react'
+import { getTranslatedSlug } from '@/app/actions/get-translated-slug'
 
 export function LanguageSwitcher() {
   const locale = useLocale()
   const router = useRouter()
   const pathname = usePathname()
   const [isPending, startTransition] = useTransition()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const onSelectChange = (nextLocale: string) => {
+  const onSelectChange = async (nextLocale: string) => {
+    setIsLoading(true)
+    
+    // 1. Analizar la ruta actual
+    // Ej: /es/products/mi-producto -> ['', 'es', 'products', 'mi-producto']
+    const segments = pathname.split('/')
+    const collectionSegment = segments[2] // 'products', 'blog', 'tools'
+    const slugSegment = segments[3]
+
+    let nextPath = pathname.replace(`/${locale}`, `/${nextLocale}`)
+
+    // 2. Si estamos en una ruta dinámica, buscar el slug traducido
+    if (slugSegment && ['products', 'blog', 'tools'].includes(collectionSegment)) {
+      const collectionMap: Record<string, 'products' | 'posts' | 'tools'> = {
+        'products': 'products',
+        'blog': 'posts',
+        'tools': 'tools'
+      }
+
+      const collection = collectionMap[collectionSegment]
+      
+      if (collection) {
+        try {
+          const translatedSlug = await getTranslatedSlug(collection, slugSegment, nextLocale)
+          if (translatedSlug) {
+            // Reemplazamos el slug antiguo por el nuevo en la ruta
+            nextPath = `/${nextLocale}/${collectionSegment}/${translatedSlug}`
+          }
+        } catch (e) {
+          console.error('Error traduciendo slug, usando fallback', e)
+        }
+      }
+    }
+
+    // 3. Navegar
     startTransition(() => {
-      // 🛠️ FIX: Actualizamos el casting para incluir los 6 idiomas
-      router.replace(pathname, { locale: nextLocale as "es" | "en" | "fr" | "de" | "it" | "pt" })
+      router.push(nextPath)
+      setIsLoading(false)
     })
   }
 
   return (
-    <Select defaultValue={locale} onValueChange={onSelectChange} disabled={isPending}>
+    <Select defaultValue={locale} onValueChange={onSelectChange} disabled={isPending || isLoading}>
       <SelectTrigger className="w-[140px] bg-transparent border-zinc-800 text-zinc-400 hover:text-white focus:ring-0 focus:ring-offset-0">
         <div className="flex items-center gap-2">
-          <Globe className="h-4 w-4" />
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />}
           <SelectValue placeholder="Idioma" />
         </div>
       </SelectTrigger>

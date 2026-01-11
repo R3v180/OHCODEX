@@ -6,7 +6,8 @@ import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ArrowRight, ExternalLink, Layers, Rocket, CheckCircle2, Timer, FlaskConical } from 'lucide-react'
-import Link from 'next/link'
+// 👇 CAMBIO: Usamos Link inteligente
+import { Link } from '@/i18n/routing'
 import Image from 'next/image'
 import { Metadata } from 'next'
 import type { Product } from '@/payload-types'
@@ -14,7 +15,6 @@ import { getTranslations } from 'next-intl/server'
 
 export const revalidate = 600
 
-// Configuración visual estática (Iconos y Colores no cambian por idioma)
 const STATUS_VISUALS = {
   live: { color: 'bg-green-500/10 text-green-400 border-green-500/20', icon: CheckCircle2 },
   beta: { color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: Rocket },
@@ -22,7 +22,6 @@ const STATUS_VISUALS = {
   concept: { color: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20', icon: FlaskConical }
 }
 
-// --- Helper para renderizar texto enriquecido ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
 
@@ -111,15 +110,13 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
 export default async function ProductPage({ params }: Args) {
   const { slug, locale } = await params
   const payload = await getPayload({ config: configPromise })
-
-  // 1. Cargar traducciones
   const t = await getTranslations('products')
 
   const { docs } = await payload.find({
     collection: 'products',
     where: { slug: { equals: slug } },
     depth: 2,
-    locale: locale as any, // 👈 Contenido localizado
+    locale: locale as any,
   })
 
   const product = docs[0] as Product
@@ -129,15 +126,11 @@ export default async function ProductPage({ params }: Args) {
   const heroUrl = typeof product.heroImage === 'object' && product.heroImage?.url ? product.heroImage.url : null
   const logoUrl = typeof product.logo === 'object' && product.logo?.url ? product.logo.url : null
   
-  // Configuración de estado
   const statusKey = product.status as keyof typeof STATUS_VISUALS
   const visuals = STATUS_VISUALS[statusKey] || STATUS_VISUALS.concept
   const StatusIcon = visuals.icon
-  
-  // Traducción del estado usando el JSON
   const statusLabel = t(`status.${product.status}`)
 
-  // JSON-LD
   const softwareJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -161,16 +154,15 @@ export default async function ProductPage({ params }: Args) {
 
       <div className="container px-4 mx-auto">
         <div className="mb-8">
-          <Link href={`/${locale}/#productos`} className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors">
+          {/* 👇 CORRECCIÓN: Link inteligente sin locale manual */}
+          <Link href="/#productos" className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors">
             <ArrowLeft className="mr-2 h-4 w-4" /> 
-            {/* 👇 Texto traducido */}
             {t('backToPortfolio')}
           </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           
-          {/* COLUMNA PRINCIPAL */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-4 mb-6">
               {logoUrl && (
@@ -205,7 +197,6 @@ export default async function ProductPage({ params }: Args) {
             ) : (
               <div className="w-full h-64 rounded-2xl bg-zinc-900/50 border border-zinc-800 flex items-center justify-center mb-10">
                 <p className="text-zinc-600">
-                  {/* 👇 Texto traducido */}
                   {t('noCover')}
                 </p>
               </div>
@@ -213,7 +204,6 @@ export default async function ProductPage({ params }: Args) {
 
             <div className="prose prose-invert max-w-none prose-p:text-zinc-400 prose-headings:text-white prose-a:text-cyan-400">
               <h2 className="text-2xl font-bold text-white mb-4">
-                {/* 👇 Texto traducido */}
                 {t('aboutProject')}
               </h2>
               {product.description && 'root' in product.description && (
@@ -221,11 +211,9 @@ export default async function ProductPage({ params }: Args) {
               )}
             </div>
 
-            {/* PRODUCTOS RELACIONADOS */}
             {product.relatedProducts && product.relatedProducts.length > 0 && (
               <div className="mt-20 pt-10 border-t border-white/10">
                 <h3 className="text-2xl font-bold text-white mb-6">
-                  {/* 👇 Texto traducido */}
                   {t('related')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -238,7 +226,8 @@ export default async function ProductPage({ params }: Args) {
                     return (
                       <Link 
                         key={related.id} 
-                        href={`/${locale}/products/${related.slug}`}
+                        // 👇 CORRECCIÓN: Link inteligente para relacionados
+                        href={`/products/${related.slug}`}
                         className="group flex items-start gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900 hover:border-cyan-500/30 transition-all"
                       >
                         <div className="h-12 w-12 shrink-0 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden p-2">
@@ -266,25 +255,21 @@ export default async function ProductPage({ params }: Args) {
 
           </div>
 
-          {/* COLUMNA SIDEBAR */}
           <div className="lg:col-span-1 space-y-8">
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 backdrop-blur-sm sticky top-24">
               <h3 className="text-white font-semibold mb-4">
-                {/* 👇 Texto traducido */}
                 {t('technicalSheet')}
               </h3>
               
               {product.projectUrl ? (
                 <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white mb-6 shadow-lg shadow-cyan-900/20" asChild>
                   <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
-                    {/* 👇 Texto traducido */}
                     {t('visitWebsite')} 
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
               ) : (
                 <Button disabled className="w-full bg-zinc-800 text-zinc-500 border border-zinc-700 mb-6">
-                  {/* 👇 Texto traducido */}
                   {t('inDevelopment')}
                 </Button>
               )}
@@ -293,7 +278,6 @@ export default async function ProductPage({ params }: Args) {
                 <div>
                   <div className="flex items-center gap-2 text-white font-medium mb-3">
                     <Layers className="h-4 w-4 text-cyan-500" /> 
-                    {/* 👇 Texto traducido */}
                     {t('techStack')}
                   </div>
                   <div className="flex flex-wrap gap-2">

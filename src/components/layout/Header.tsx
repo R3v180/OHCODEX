@@ -1,8 +1,10 @@
+// =============== INICIO ARCHIVO: src/components/layout/Header.tsx =============== //
 'use client'
 
 import React, { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import Link from 'next/link'
+// 👇 CAMBIO: Usamos Link de nuestra configuración
+import { Link } from '@/i18n/routing'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -14,8 +16,8 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
-  // Extraer el locale actual de la URL (ej: /es/blog -> 'es')
-  const locale = pathname.split('/')[1] || 'es'
+  // Nota: Ya no necesitamos extraer 'locale' manualmente para los href,
+  // el componente Link lo maneja internamente.
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,22 +30,22 @@ export function Header() {
   const navItems = [
     { 
       name: t('home'), 
-      href: `/${locale}`,
+      href: '/', // Ruta base
       external: false 
     },
     { 
       name: t('tools'), 
-      href: `/${locale}/tools`, // <--- CAMBIO: Ahora lleva a la página dedicada
+      href: '/tools', // Se traducirá a /herramientas, /outils, etc.
       external: false 
     },
     { 
       name: t('blog'), 
-      href: `/${locale}/blog`, 
+      href: '/blog', 
       external: false 
     },
     { 
       name: t('buttons.readArticle').replace('Leer artículo', 'Portfolio'), 
-      href: `/${locale}/#productos`, 
+      href: '/#productos', 
       external: false 
     }
   ]
@@ -58,7 +60,7 @@ export function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href={`/${locale}`} className="flex items-center space-x-2 group">
+            <Link href="/" className="flex items-center space-x-2 group">
               <span className="text-2xl font-bold tracking-tighter text-white group-hover:text-cyan-500 transition-colors">
                 OH<span className="text-cyan-500 group-hover:text-white transition-colors">CODEX</span>
               </span>
@@ -86,7 +88,7 @@ export function Header() {
             <LanguageSwitcher />
 
             <Button className="bg-white text-black hover:bg-zinc-200 font-semibold ml-2" asChild>
-              <Link href={`/${locale}/#contacto`}>
+              <Link href="/#contacto">
                 {t('contact')}
               </Link>
             </Button>
@@ -121,7 +123,7 @@ export function Header() {
             ))}
             <div className="pt-4">
               <Button className="w-full bg-white text-black hover:bg-zinc-200" asChild>
-                <Link href={`/${locale}/#contacto`} onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/#contacto" onClick={() => setMobileMenuOpen(false)}>
                   {t('contact')}
                 </Link>
               </Button>
@@ -132,3 +134,4 @@ export function Header() {
     </header>
   )
 }
+// =============== FIN ARCHIVO: src/components/layout/Header.tsx =============== //

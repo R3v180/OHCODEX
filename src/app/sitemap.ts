@@ -9,12 +9,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config: configPromise })
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
   
-  // Usamos la lista centralizada (es, en, fr, de, it, pt)
+  // Usamos la lista centralizada de idiomas
   const locales = routing.locales 
 
   let sitemapEntries: MetadataRoute.Sitemap = []
 
-  // Iteramos por cada idioma
+  // --- HELPER: Traducir rutas estáticas y bases dinámicas ---
+  // Transforma '/aviso-legal' en '/mentions-legales' si el locale es 'fr'
+  const getPathForLocale = (pathKey: string, locale: string) => {
+    // @ts-ignore - Acceso dinámico al objeto de configuración de rutas
+    const pathConfig = routing.pathnames[pathKey]
+    
+    if (!pathConfig) return pathKey // Fallback si no está en routing.ts
+    if (typeof pathConfig === 'string') return pathConfig
+    
+    // @ts-ignore
+    return pathConfig[locale] || pathKey
+  }
+
+  // --- HELPER: Resolver base dinámica (ej: /tools/[slug] -> /outils) ---
+  const getDynamicBasePath = (pathKey: string, locale: string) => {
+    const fullPath = getPathForLocale(pathKey, locale)
+    // Quitamos la parte '/[slug]' para quedarnos con la base
+    return fullPath.replace('/[slug]', '')
+  }
+
+  // Iteramos por cada idioma para generar sus entradas
   for (const locale of locales) {
     
     // 1. Consultar PRODUCTOS
@@ -22,8 +42,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       collection: 'products',
       depth: 0,
       limit: 1000,
-      // Usamos 'as any' temporalmente porque los tipos internos de Payload 
-      // aún no se han regenerado para reconocer los nuevos idiomas.
       locale: locale as any, 
     }) as unknown as { docs: Product[] }
 
@@ -43,59 +61,70 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       locale: locale as any,
     }) as unknown as { docs: Tool[] }
 
-    // --- HELPER PARA ALTERNATES (HREFLANG) ---
-    // Genera automáticamente los enlaces a todos los idiomas disponibles
-    const generateAlternates = (path: string) => {
-      const languages: Record<string, string> = {}
-      locales.forEach((lang) => {
-        languages[lang] = `${baseUrl}/${lang}${path}`
-      })
-      return { languages }
-    }
-
-    // --- GENERACIÓN DE RUTAS ---
-
-    // A. Rutas Estáticas
-    const staticRoutes = [
-      '',              // Home
-      '/blog',         // Blog Index
-      '/tools',        // Tools Hub
+    // --- A. Rutas Estáticas ---
+    // Usamos las claves definidas en routing.ts
+    const staticKeys = [
+      '/',              
+      '/blog',          
+      '/tools',        
       '/aviso-legal',
       '/privacidad',
       '/terminos',
-    ].map(route => ({
-      url: `${baseUrl}/${locale}${route}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: route === '' ? 1 : 0.8,
-      alternates: generateAlternates(route),
-    }))
+    ]
 
-    // B. Rutas de Herramientas
+    const staticRoutes = staticKeys.map(key => {
+      // Obtenemos la ruta traducida real (ej: /fr/mentions-legales)
+      const translatedPath = getPathForLocale(key, locale)
+      const url = `${baseUrl}/${locale}${translatedPath === '/' ? '' : translatedPath}`
+
+      return {
+        url,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: key === '/' ? 1 : 0.8,
+        // Generamos los alternates correctos para cada idioma
+        alternates: {
+          languages: locales.reduce((acc, l) => {
+            const p = getPathForLocale(key, l)
+            acc[l] = `${baseUrl}/${l}${p === '/' ? '' : p}`
+            return acc
+          }, {} as Record<string, string>)
+        }
+      }
+    })
+
+    // --- B. Rutas de Herramientas ---
+    const toolsBase = getDynamicBasePath('/tools/[slug]', locale)
+    
     const toolsRoutes = tools.map((tool) => ({
-      url: `${baseUrl}/${locale}/tools/${tool.slug}`,
+      // Construimos: /fr + /outils + /slug-de-la-herramienta
+      url: `${baseUrl}/${locale}${toolsBase}/${tool.slug}`,
       lastModified: new Date(tool.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
-      alternates: generateAlternates(`/tools/${tool.slug}`),
+      // NOTA: Para alternates perfectos en dinámicas necesitaríamos consultar
+      // todos los slugs de todos los idiomas. Por rendimiento, aquí enlazamos 
+      // a la raíz del idioma o omitimos si no tenemos el slug traducido a mano.
     }))
 
-    // C. Rutas de Productos
+    // --- C. Rutas de Productos ---
+    const productsBase = getDynamicBasePath('/products/[slug]', locale)
+    
     const productUrls = products.map((product) => ({
-      url: `${baseUrl}/${locale}/products/${product.slug}`,
+      url: `${baseUrl}/${locale}${productsBase}/${product.slug}`,
       lastModified: new Date(product.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,
-      alternates: generateAlternates(`/products/${product.slug}`),
     }))
 
-    // D. Rutas de Posts
+    // --- D. Rutas de Posts ---
+    const blogBase = getDynamicBasePath('/blog/[slug]', locale)
+
     const postUrls = posts.map((post) => ({
-      url: `${baseUrl}/${locale}/blog/${post.slug}`,
+      url: `${baseUrl}/${locale}${blogBase}/${post.slug}`,
       lastModified: new Date(post.updatedAt),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
-      alternates: generateAlternates(`/blog/${post.slug}`),
     }))
 
     sitemapEntries.push(

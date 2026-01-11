@@ -200,7 +200,11 @@
       "subtitle": "Merge, rotate and organize PDFs directly in your browser.",
       "infoAlert": "This is the basic version. For advanced features like compression and signing, additional implementation is required.",
       "dragPdfs": "Drag PDFs here",
+      "dropzoneSubtitle": "Or click to select files. 100% private local processing.",
+      "privacyAlert": "Your documents are never uploaded to any server. Merging and signing happens in your browser.",
+      "documents": "Documents",
       "pdfsSelected": "{count} PDFs selected",
+      "filesAdded": "{count} files added",
       "mergeAll": "Merge All PDFs",
       "merging": "Merging...",
       "page": "Page {page}",
@@ -213,6 +217,9 @@
       "rotateError": "Error rotating page",
       "downloadError": "Error downloading",
       "needTwoPdfs": "Select at least 2 PDFs to merge",
+      "signed": "Signed",
+      "sign": "Sign",
+      "addMore": "Add another PDF",
       "signature": {
         "title": "Digital Signature",
         "drawSignature": "Draw Signature",
@@ -314,6 +321,10 @@
       "placeholder": "Recognized text will appear here for editing...",
       "success": "Text extracted successfully",
       "error": "Could not recognize text"
+    },
+    "ui": {
+      "ctaButton": "Let's Talk About Your Project",
+      "faqTitle": "Frequently Asked Questions"
     }
   },
   "footer": {

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Code, Copy, FileJson, FileText, Database, Eraser, Play, Wand2, ArrowRight } from 'lucide-react'
@@ -20,10 +20,6 @@ const SAMPLE_JSON = JSON.stringify([
 
 const SAMPLE_SQL = `SELECT id, email, created_at FROM users WHERE active = 1 AND role = 'admin' ORDER BY created_at DESC;`
 
-const SAMPLE_CSV = `id,name,role
-1,OHCodex,Admin
-2,Guest,Viewer`
-
 export function DataStationTool() {
   const t = useTranslations('tools.data-station')
   const tCommon = useTranslations('common.buttons')
@@ -37,13 +33,13 @@ export function DataStationTool() {
   const loadSample = () => {
     if (activeTab === 'json') {
       setInput(SAMPLE_JSON)
-      toast.success("Ejemplo JSON cargado")
+      toast.success(t('jsonValid')) // Reutilizamos un mensaje genérico o creamos uno nuevo
     } else if (activeTab === 'sql') {
       setInput(SAMPLE_SQL)
-      toast.success("Ejemplo SQL cargado")
+      toast.success(t('sqlFormatted')) // Reutilizamos mensaje
     } else {
       setInput(SAMPLE_JSON) // Para convertir usamos JSON como base
-      toast.success("Datos de ejemplo cargados")
+      toast.success(t('jsonValid'))
     }
   }
 
@@ -163,11 +159,12 @@ export function DataStationTool() {
               <div className="flex items-center justify-between">
                 <Label className="text-zinc-400 font-medium flex items-center gap-2">
                   <Play className="w-3 h-3 text-cyan-500" />
-                  {activeTab === 'sql' ? t('inputSql') : 'Entrada de Datos'}
+                  {/* TRADUCCIÓN: Input Data */}
+                  {activeTab === 'sql' ? t('inputSql') : t('inputData')}
                 </Label>
                 
                 <div className="flex gap-2">
-                  {/* BOTÓN MÁGICO: CARGAR EJEMPLO */}
+                  {/* BOTÓN MÁGICO: CARGAR EJEMPLO (TRADUCIDO MANUALMENTE COMO PROVISIONAL O PODEMOS AÑADIR CLAVE) */}
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -175,7 +172,7 @@ export function DataStationTool() {
                     className="h-7 text-xs text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950/30"
                   >
                     <Wand2 className="w-3 h-3 mr-1.5" />
-                    Cargar Ejemplo
+                    Sample
                   </Button>
 
                   {activeTab === 'json' && (
@@ -208,9 +205,10 @@ export function DataStationTool() {
                   }}
                 />
                 {!input && (
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-4 text-center">
                     <p className="text-zinc-600 text-sm">
-                      Pega tu código aquí o usa el botón &quot;Cargar Ejemplo&quot;
+                      {/* TRADUCCIÓN: Usamos una clave existente o texto genérico */}
+                      {t('inputJson').replace('JSON', 'Code')}...
                     </p>
                   </div>
                 )}
@@ -258,7 +256,8 @@ export function DataStationTool() {
               <div className="flex items-center justify-between">
                 <Label className="text-zinc-400 font-medium flex items-center gap-2">
                   <Code className="w-3 h-3 text-green-500" />
-                  Resultado
+                  {/* TRADUCCIÓN: Output */}
+                  {t('output')}
                 </Label>
                 <Button 
                   size="sm" 
@@ -289,7 +288,7 @@ export function DataStationTool() {
                 {!output && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <p className="text-zinc-700 text-sm italic">
-                      El resultado aparecerá aquí...
+                      ...
                     </p>
                   </div>
                 )}

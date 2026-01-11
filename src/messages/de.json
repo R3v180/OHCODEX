@@ -200,7 +200,11 @@
       "subtitle": "PDFs zusammenfügen, drehen und organisieren direkt in Ihrem Browser.",
       "infoAlert": "Dies ist die Basisversion. Für erweiterte Funktionen wie Komprimierung und Signatur ist eine zusätzliche Implementierung erforderlich.",
       "dragPdfs": "Ziehen Sie PDFs hierher",
+      "dropzoneSubtitle": "Oder klicken Sie zum Auswählen. 100% private lokale Verarbeitung.",
+      "privacyAlert": "Ihre Dokumente werden niemals auf einen Server hochgeladen. Das Zusammenfügen und Signieren erfolgt in Ihrem Browser.",
+      "documents": "Dokumente",
       "pdfsSelected": "{count} PDFs ausgewählt",
+      "filesAdded": "{count} Dateien hinzugefügt",
       "mergeAll": "Alle PDFs zusammenfügen",
       "merging": "Füge zusammen...",
       "page": "Seite {page}",
@@ -213,6 +217,9 @@
       "rotateError": "Fehler beim Drehen der Seite",
       "downloadError": "Fehler beim Herunterladen",
       "needTwoPdfs": "Wählen Sie mindestens 2 PDFs zum Zusammenfügen",
+      "signed": "Signiert",
+      "sign": "Signieren",
+      "addMore": "Weiteres PDF hinzufügen",
       "signature": {
         "title": "Digitale Signatur",
         "drawSignature": "Unterschrift zeichnen",
@@ -314,6 +321,10 @@
       "placeholder": "Der erkannte Text erscheint hier zur Bearbeitung...",
       "success": "Text erfolgreich extrahiert",
       "error": "Text konnte nicht erkannt werden"
+    },
+    "ui": {
+      "ctaButton": "Lassen Sie uns über Ihr Projekt sprechen",
+      "faqTitle": "Häufig gestellte Fragen"
     }
   },
   "footer": {

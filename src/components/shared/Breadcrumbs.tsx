@@ -1,10 +1,12 @@
-"use client" // 👈 ESTA ES LA LÍNEA QUE FALTA
+// =============== INICIO ARCHIVO: src/components/shared/Breadcrumbs.tsx =============== //
+"use client"
 
 import React from 'react'
-import Link from 'next/link'
+// 👇 CAMBIO: Usamos el Link inteligente
+import { Link } from '@/i18n/routing'
 import { ChevronRight, Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { usePathname } from 'next/navigation'
+// Ya no necesitamos usePathname para extraer el locale manualmente
 
 interface BreadcrumbItem {
   label: string
@@ -17,17 +19,13 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
-  const pathname = usePathname()
-  // Extraer el idioma de la URL (ej: /es/tools -> 'es')
-  const locale = pathname.split('/')[1] || 'es'
-
   return (
     <nav
       className={cn('flex items-center space-x-2 text-sm text-muted-foreground py-4', className)}
       aria-label="Breadcrumb"
     >
       <Link
-        href={`/${locale}`}
+        href="/"
         className="hover:text-foreground transition-colors flex items-center"
         aria-label="Home"
       >
@@ -39,7 +37,9 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
           <ChevronRight className="w-4 h-4 flex-shrink-0" />
           {item.href ? (
             <Link
-              href={`/${locale}${item.href}`}
+              // 👇 CAMBIO CRÍTICO: Pasamos la ruta base (ej: '/tools') directamente.
+              // El componente Link se encarga de añadir el idioma y traducir la ruta (ej: '/fr/outils').
+              href={item.href}
               className={cn(
                 'hover:text-foreground transition-colors',
                 index === items.length - 1 && 'text-foreground font-medium'
@@ -57,3 +57,4 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
     </nav>
   )
 }
+// =============== FIN ARCHIVO: src/components/shared/Breadcrumbs.tsx =============== //

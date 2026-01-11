@@ -1,3 +1,4 @@
+// =============== INICIO ARCHIVO: src/components/sections/Features.tsx =============== //
 import React from 'react'
 import { Smartphone, Zap, Database, ShieldCheck, LucideIcon, Code2, Users, Rocket } from 'lucide-react'
 import { getPayload } from 'payload'
@@ -27,7 +28,7 @@ export async function FeaturesSection({ locale }: { locale: string }) {
   // 2. Configuración Visual
   const align = landing.featuresAlign || 'left'
   
-  // Textos con Fallback
+  // Textos con Fallback (por si la BD estuviera vacía momentáneamente)
   const title = landing?.featuresTitle || 'Más allá del código: Ingeniería de Producto'
   const description = landing?.featuresDescription || 'En OHCodex no somos una factoría de software al peso. Actuamos como tu socio tecnológico.'
   
@@ -39,10 +40,28 @@ export async function FeaturesSection({ locale }: { locale: string }) {
   const titleMain = titleWords.slice(0, -1).join(' ')
   const titleLast = titleWords.slice(-1)
 
-  // 3. Traducción de los "Bubbles" (Beneficios rápidos que están fijos en el código)
-  const advantages = locale === 'en' 
-    ? ['Real Agile Methodology', 'Custom Code (No templates)', 'Direct Support from Engineers']
-    : ['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros']
+  // 3. Traducción de los "Bubbles" (Beneficios rápidos fijos en código)
+  let advantages: string[] = []
+
+  switch (locale) {
+    case 'en':
+      advantages = ['Real Agile Methodology', 'Custom Code (No templates)', 'Direct Support from Engineers']
+      break;
+    case 'fr':
+      advantages = ['Méthodologie Agile', 'Code Personnalisé (Pas de templates)', 'Support Direct Ingénieurs']
+      break;
+    case 'de':
+      advantages = ['Agile Methodik', 'Eigener Code (Keine Vorlagen)', 'Direkter Ingenieur-Support']
+      break;
+    case 'it':
+      advantages = ['Metodologia Agile', 'Codice Personalizzato (No template)', 'Supporto Diretto Ingegneri']
+      break;
+    case 'pt':
+      advantages = ['Metodologia Ágil', 'Código Próprio (Sem modelos)', 'Suporte Direto de Engenheiros']
+      break;
+    default: // Fallback a Español ('es')
+      advantages = ['Metodología Ágil Real', 'Código Propio (Sin plantillas)', 'Soporte Directo de Ingenieros']
+  }
 
   return (
     <section id="metodologia" className="bg-black py-24 relative overflow-hidden border-b border-white/5">
@@ -111,3 +130,4 @@ export async function FeaturesSection({ locale }: { locale: string }) {
     </section>
   )
 }
+// =============== FIN ARCHIVO: src/components/sections/Features.tsx =============== //

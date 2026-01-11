@@ -1,5 +1,7 @@
+// =============== INICIO ARCHIVO: src/components/layout/Footer.tsx =============== //
 import React from 'react'
-import Link from 'next/link'
+// 👇 CAMBIO IMPORTANTE: Usamos el Link de nuestra configuración i18n
+import { Link } from '@/i18n/routing'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { Github, Linkedin, Twitter, ExternalLink } from 'lucide-react'
@@ -31,13 +33,13 @@ export async function Footer({ locale }: FooterProps) {
   const schedule = company?.schedule || 'L-V: 09:00 - 18:00' 
   const description = company?.description || tFooter('description')
 
-  // Lista de herramientas con enlaces localizados
+  // Lista de herramientas (Rutas base sin locale, el componente Link lo añade)
   const toolsLinks = [
-    { name: tTools('vault.title'), href: `/${locale}/tools/vault` },
-    { name: tTools('image-optimizer.title'), href: `/${locale}/tools/image-optimizer` },
-    { name: tTools('pdf-studio.title'), href: `/${locale}/tools/pdf-studio` },
-    { name: tTools('data-station.title'), href: `/${locale}/tools/data-station` },
-    { name: tTools('qr-factory.title'), href: `/${locale}/tools/qr-factory` },
+    { name: tTools('vault.title'), href: '/tools/vault' },
+    { name: tTools('image-optimizer.title'), href: '/tools/image-optimizer' },
+    { name: tTools('pdf-studio.title'), href: '/tools/pdf-studio' },
+    { name: tTools('data-station.title'), href: '/tools/data-station' },
+    { name: tTools('qr-factory.title'), href: '/tools/qr-factory' },
   ]
 
   return (
@@ -47,7 +49,7 @@ export async function Footer({ locale }: FooterProps) {
           
           {/* 1. BRANDING & SOCIAL */}
           <div className="md:col-span-1 lg:col-span-1">
-            <Link href={`/${locale}`} className="inline-block mb-6">
+            <Link href="/" className="inline-block mb-6">
               <span className="text-2xl font-bold tracking-tighter text-white">
                 OH<span className="text-cyan-500">CODEX</span>
               </span>
@@ -94,12 +96,12 @@ export async function Footer({ locale }: FooterProps) {
             <h3 className="text-white font-semibold mb-6">{tFooter('navigation')}</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href={`/${locale}/#productos`} className="text-zinc-400 hover:text-cyan-400 transition-colors">
+                <Link href="/#productos" className="text-zinc-400 hover:text-cyan-400 transition-colors">
                   {t('products')}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/#metodologia`} className="text-zinc-400 hover:text-cyan-400 transition-colors">
+                <Link href="/#metodologia" className="text-zinc-400 hover:text-cyan-400 transition-colors">
                   {t('methodology')}
                 </Link>
               </li>
@@ -139,14 +141,17 @@ export async function Footer({ locale }: FooterProps) {
             &copy; {currentYear} OHCodex. {t('copyright')}.
           </p>
           <div className="flex flex-wrap justify-center gap-6 text-sm text-zinc-500">
-            {/* 👇 ENLACES LEGALES CORREGIDOS */}
-            <Link href={`/${locale}/aviso-legal`} className="hover:text-zinc-300 transition-colors">
+            {/* 
+               👇 MAGIA AQUÍ: Usamos las claves definidas en routing.ts 
+               Next-intl traducirá '/aviso-legal' a '/fr/mentions-legales' automáticamente.
+            */}
+            <Link href="/aviso-legal" className="hover:text-zinc-300 transition-colors">
               {t('legal.legalNotice')}
             </Link>
-            <Link href={`/${locale}/privacidad`} className="hover:text-zinc-300 transition-colors">
+            <Link href="/privacidad" className="hover:text-zinc-300 transition-colors">
               {t('legal.privacy')}
             </Link>
-            <Link href={`/${locale}/terminos`} className="hover:text-zinc-300 transition-colors">
+            <Link href="/terminos" className="hover:text-zinc-300 transition-colors">
               {t('legal.terms')}
             </Link>
           </div>
@@ -155,3 +160,4 @@ export async function Footer({ locale }: FooterProps) {
     </footer>
   )
 }
+// =============== FIN ARCHIVO: src/components/layout/Footer.tsx =============== //

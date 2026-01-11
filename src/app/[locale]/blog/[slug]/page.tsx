@@ -1,9 +1,11 @@
+// =============== INICIO ARCHIVO: src/app/[locale]/blog/[slug]/page.tsx =============== //
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
+// 👇 CAMBIO: Usamos Link inteligente
+import { Link } from '@/i18n/routing'
 import { ArrowLeft, CalendarDays, User, Clock } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Metadata } from 'next'
@@ -12,7 +14,6 @@ import { getTranslations } from 'next-intl/server'
 
 export const revalidate = 600
 
-// --- Serializador Lexical (Convierte el JSON de la BD en HTML/JSX) ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
   return (
@@ -63,7 +64,6 @@ interface Args {
   params: Promise<{ slug: string; locale: string }>
 }
 
-// --- METADATOS DINÁMICOS ---
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug, locale } = await params
   const payload = await getPayload({ config: configPromise })
@@ -89,13 +89,11 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   }
 }
 
-// --- COMPONENTE PRINCIPAL ---
 export default async function BlogPostPage({ params }: Args) {
   const { slug, locale } = await params
   const payload = await getPayload({ config: configPromise })
   const t = await getTranslations('blog')
 
-  // Buscamos el post y la info de empresa (para el logo del JSON-LD)
   const [postResult, companyResult] = await Promise.all([
     payload.find({
       collection: 'posts',
@@ -120,7 +118,6 @@ export default async function BlogPostPage({ params }: Args) {
     return new Date(dateString).toLocaleDateString(locale === 'en' ? 'en-US' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
   }
 
-  // --- SCHEMA.ORG (JSON-LD) para SEO ---
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -137,8 +134,9 @@ export default async function BlogPostPage({ params }: Args) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="container px-4 mx-auto max-w-4xl">
-        {/* Enlace de vuelta */}
-        <Link href={`/${locale}/blog`} className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors mb-8">
+        
+        {/* 👇 CORRECCIÓN: Enlace de vuelta sin locale */}
+        <Link href="/blog" className="inline-flex items-center text-sm text-zinc-500 hover:text-cyan-400 transition-colors mb-8">
           <ArrowLeft className="mr-2 h-4 w-4" /> {t('backToBlog')}
         </Link>
 
@@ -168,7 +166,6 @@ export default async function BlogPostPage({ params }: Args) {
         </div>
       </div>
 
-      {/* Imagen de Portada */}
       {coverUrl && (
         <div className="container px-4 mx-auto max-w-5xl mb-12">
           <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
@@ -177,7 +174,6 @@ export default async function BlogPostPage({ params }: Args) {
         </div>
       )}
 
-      {/* Cuerpo del Artículo */}
       <div className="container px-4 mx-auto max-w-3xl">
         <div className="prose prose-invert prose-lg max-w-none">
           {post.content && (post.content as any).root && (
@@ -185,11 +181,11 @@ export default async function BlogPostPage({ params }: Args) {
           )}
         </div>
 
-        {/* Caja de contacto final */}
         <div className="mt-16 p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800 text-center">
           <h3 className="text-xl font-bold text-white mb-2">{t('interested')}</h3>
           <p className="text-zinc-400 mb-6">{t('helpText')}</p>
-          <Link href={`/${locale}/#contacto`} className="inline-flex h-10 items-center justify-center rounded-md bg-white px-8 text-sm font-medium text-black transition-colors hover:bg-zinc-200">
+          {/* 👇 CORRECCIÓN: Enlace de contacto sin locale */}
+          <Link href="/#contacto" className="inline-flex h-10 items-center justify-center rounded-md bg-white px-8 text-sm font-medium text-black transition-colors hover:bg-zinc-200">
             {t('letsTalk')}
           </Link>
         </div>
@@ -197,3 +193,4 @@ export default async function BlogPostPage({ params }: Args) {
     </article>
   )
 }
+// =============== FIN ARCHIVO: src/app/[locale]/blog/[slug]/page.tsx =============== //

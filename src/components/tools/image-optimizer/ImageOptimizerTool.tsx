@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 
 export function ImageOptimizerTool() {
   const t = useTranslations('tools.image-optimizer')
+  const tCommon = useTranslations('common.buttons')
   
   const [files, setFiles] = useState<File[]>([])
   const [results, setResults] = useState<Array<{ original: File; processed: any }>>([])
@@ -31,7 +32,6 @@ export function ImageOptimizerTool() {
 
   const handleFiles = useCallback((selectedFiles: FileList | null) => {
     if (!selectedFiles) return
-    // Aceptamos imágenes y específicamente HEIC
     const imageFiles = Array.from(selectedFiles).filter(f => 
       f.type.startsWith('image/') || 
       f.name.toLowerCase().endsWith('.heic') || 
@@ -43,15 +43,14 @@ export function ImageOptimizerTool() {
       return
     }
 
-    // Limpiamos resultados anteriores si suben nuevos archivos
     if (results.length > 0) {
         setResults([])
         setFiles(imageFiles)
     } else {
         setFiles(prev => [...prev, ...imageFiles])
     }
-    toast.success(`${imageFiles.length} imágenes añadidas`)
-  }, [results.length])
+    toast.success(t('imagesSelected', { count: imageFiles.length }))
+  }, [results.length, t])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -123,7 +122,7 @@ export function ImageOptimizerTool() {
       a.download = 'optimized_images_ohcodex.zip'
       a.click()
       URL.revokeObjectURL(url)
-      toast.success('ZIP generado correctamente')
+      toast.success('ZIP generado')
     } catch (error) {
       console.error(error)
       toast.error('Error al crear ZIP')
@@ -158,9 +157,10 @@ export function ImageOptimizerTool() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
-                  <SelectItem value="image/webp">WebP (Ultraligero)</SelectItem>
-                  <SelectItem value="image/jpeg">JPEG (Universal)</SelectItem>
-                  <SelectItem value="image/png">PNG (Sin pérdida)</SelectItem>
+                  {/* TRADUCCIONES */}
+                  <SelectItem value="image/webp">WebP (Recomendado)</SelectItem>
+                  <SelectItem value="image/jpeg">JPEG</SelectItem>
+                  <SelectItem value="image/png">PNG</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -172,7 +172,8 @@ export function ImageOptimizerTool() {
                 <Badge variant="outline" className="bg-zinc-950 text-cyan-400 border-cyan-900">{quality[0]}%</Badge>
               </div>
               <Slider value={quality} onValueChange={setQuality} min={10} max={100} step={5} className="py-2 cursor-pointer" />
-              <p className="text-xs text-zinc-500">Menor calidad = Menor peso de archivo.</p>
+              {/* TRADUCCIÓN: texto explicativo */}
+              <p className="text-xs text-zinc-500">Menor calidad = Menor peso</p>
             </div>
 
             {/* Redimensionar */}
@@ -184,7 +185,8 @@ export function ImageOptimizerTool() {
               {resizeEnabled && (
                 <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
                   <div className="flex justify-between text-xs text-zinc-400 mb-1">
-                    <span>Ancho Máximo</span>
+                    {/* TRADUCCIÓN */}
+                    <span>{t('maxWidth')}</span>
                     <span>{maxWidth}px</span>
                   </div>
                   <Slider value={[maxWidth]} onValueChange={([v]) => setMaxWidth(v)} min={500} max={3840} step={100} />
@@ -243,7 +245,6 @@ export function ImageOptimizerTool() {
                 onDrop={handleDrop}
                 onClick={() => document.getElementById('file-input')?.click()}
             >
-                {/* 👇 MODIFICADO: Accept explicito para HEIC/HEIF */}
                 <input
                     id="file-input"
                     type="file"
@@ -259,8 +260,8 @@ export function ImageOptimizerTool() {
                             <Upload className="w-10 h-10 text-zinc-400 group-hover:text-white" />
                         </div>
                         <div>
+                            {/* TRADUCCIÓN: dragImages */}
                             <p className="text-xl font-medium text-white mb-2">{t('dragImages')}</p>
-                            {/* 👇 MODIFICADO: Texto explicito para el usuario */}
                             <p className="text-zinc-500 text-sm">JPG, PNG, WebP, HEIC (iPhone)</p>
                         </div>
                     </div>
@@ -271,7 +272,7 @@ export function ImageOptimizerTool() {
                         </div>
                         <div>
                             <p className="text-xl font-medium text-white mb-1">{t('imagesSelected', { count: files.length })}</p>
-                            <p className="text-zinc-400 text-sm">Listas para optimizar</p>
+                            <p className="text-zinc-400 text-sm">...</p>
                         </div>
                     </div>
                 )}
@@ -282,7 +283,7 @@ export function ImageOptimizerTool() {
         {processing && (
           <div className="space-y-2 bg-zinc-900 p-4 rounded-lg border border-zinc-800 animate-in fade-in">
             <div className="flex justify-between text-sm">
-              <span className="text-cyan-400 font-medium">Optimizando...</span>
+              <span className="text-cyan-400 font-medium">{t('processing')}</span>
               <span className="text-zinc-400">{Math.round(progress)}%</span>
             </div>
             <Progress value={progress} className="h-2 bg-zinc-800" />
@@ -293,14 +294,14 @@ export function ImageOptimizerTool() {
         {results.length > 0 && (
           <div className="space-y-4 animate-in slide-in-from-bottom-4">
             <div className="flex items-center justify-between mb-2">
-                <h3 className="text-xl font-bold text-white">Resultados</h3>
+                <h3 className="text-xl font-bold text-white">{t('results')}</h3>
                 <div className="flex gap-2">
                     <Button variant="ghost" size="sm" onClick={clearAll} className="text-zinc-400 hover:text-white">
-                        <Trash2 className="w-4 h-4 mr-2" /> Limpiar
+                        <Trash2 className="w-4 h-4 mr-2" /> {tCommon('clear')}
                     </Button>
                     <Button onClick={handleDownloadAll} className="bg-white text-black hover:bg-zinc-200 font-semibold">
                         <FileArchive className="w-4 h-4 mr-2" />
-                        Descargar ZIP
+                        ZIP
                     </Button>
                 </div>
             </div>
@@ -342,7 +343,7 @@ export function ImageOptimizerTool() {
                         
                         <Button size="sm" onClick={() => downloadImage(result)} variant="outline" className="border-zinc-700 bg-transparent text-white hover:bg-zinc-800">
                             <Download className="w-4 h-4 mr-2" />
-                            Guardar
+                            {t('download')}
                         </Button>
                     </div>
                   </div>

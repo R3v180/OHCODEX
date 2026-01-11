@@ -1,9 +1,12 @@
+// =============== INICIO ARCHIVO: src/app/[locale]/tools/[slug]/page.tsx =============== //
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+// 👇 CAMBIO: Importamos Link inteligente
+import { Link } from '@/i18n/routing'
 
 // Importamos los componentes funcionales de las herramientas
 import { VaultTool } from '@/components/tools/vault/VaultTool'
@@ -11,7 +14,7 @@ import { ImageOptimizerTool } from '@/components/tools/image-optimizer/ImageOpti
 import { PDFStudioTool } from '@/components/tools/pdf-studio/PDFStudioTool'
 import { DataStationTool } from '@/components/tools/data-station/DataStationTool'
 import { QRFactoryTool } from '@/components/tools/qr-factory/QRFactoryTool'
-import { OCRTool } from '@/components/tools/ocr/OCRTool' // <--- NUEVA IMPORTACIÓN
+import { OCRTool } from '@/components/tools/ocr/OCRTool'
 
 // Componentes de UI
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -34,18 +37,15 @@ import {
 // Tipos generados
 import type { Tool } from '@/payload-types'
 
-// --- MAPA DE HERRAMIENTAS ---
-// Conecta el "codeKey" del CMS con el Componente React real
 const TOOL_COMPONENTS: Record<string, React.ComponentType<any>> = {
   'vault': VaultTool,
   'image-optimizer': ImageOptimizerTool,
   'pdf-studio': PDFStudioTool,
   'data-station': DataStationTool,
   'qr-factory': QRFactoryTool,
-  'ocr-vision': OCRTool, // <--- NUEVA ENTRADA
+  'ocr-vision': OCRTool,
 }
 
-// --- MAPA DE ICONOS PARA LOS PASOS ---
 const STEP_ICONS: Record<string, LucideIcon> = {
   upload: Upload,
   settings: Settings,
@@ -56,7 +56,6 @@ const STEP_ICONS: Record<string, LucideIcon> = {
   scan: ScanLine
 }
 
-// --- SERIALIZADOR LEXICAL ---
 const SerializeLexical = ({ nodes }: { nodes: any[] }) => {
   if (!nodes || !Array.isArray(nodes)) return null
   return (
@@ -96,7 +95,6 @@ type Props = {
   params: Promise<{ slug: string; locale: string }>
 }
 
-// 1. GENERACIÓN DE METADATOS SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, locale } = await params
   const payload = await getPayload({ config: configPromise })
@@ -119,11 +117,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-// 2. PÁGINA PRINCIPAL
 export default async function ToolPage({ params }: Props) {
   const { slug, locale } = await params
   const payload = await getPayload({ config: configPromise })
   const t = await getTranslations('common')
+  const tToolUI = await getTranslations('tools.ui') 
 
   const { docs } = await payload.find({
     collection: 'tools',
@@ -137,7 +135,6 @@ export default async function ToolPage({ params }: Props) {
 
   const ToolComponent = TOOL_COMPONENTS[tool.codeKey] || null
 
-  // Schema.org
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -172,7 +169,7 @@ export default async function ToolPage({ params }: Props) {
 
       <div className="container px-4 mx-auto max-w-6xl">
         
-        {/* NAVEGACIÓN */}
+        {/* 👇 CORRECCIÓN: Breadcrumbs con rutas base limpias */}
         <Breadcrumbs
           items={[
             { label: t('tools'), href: '/tools' },
@@ -181,7 +178,6 @@ export default async function ToolPage({ params }: Props) {
           className="mb-8"
         />
 
-        {/* HERO HEADER */}
         <div className="text-center mb-12">
           {tool.badge && (
             <span className="inline-block py-1 px-3 rounded-full bg-cyan-950/50 border border-cyan-900 text-cyan-400 text-xs font-medium mb-6">
@@ -196,10 +192,8 @@ export default async function ToolPage({ params }: Props) {
           </p>
         </div>
 
-        {/* --- GUÍA DE 3 PASOS --- */}
         {tool.steps && tool.steps.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 relative">
-            {/* Línea conectora decorativa (solo desktop) */}
             <div className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-zinc-800 to-transparent -z-10" />
             
             {tool.steps.map((step, index) => {
@@ -219,12 +213,10 @@ export default async function ToolPage({ params }: Props) {
           </div>
         )}
 
-        {/* ANUNCIO SUPERIOR */}
         <div className="mb-8 flex justify-center">
           <AdSlot position="top" />
         </div>
 
-        {/* --- LA HERRAMIENTA REAL --- */}
         <div className="mb-20 scroll-mt-24" id="app">
           {ToolComponent ? (
             <ToolComponent />
@@ -235,7 +227,6 @@ export default async function ToolPage({ params }: Props) {
           )}
         </div>
 
-        {/* CTA DE VENTA (CROSS-SELLING) */}
         {tool.ctaTitle && (
           <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-950/20 to-black p-8 md:p-12 text-center mb-20 group">
             <div className="absolute top-0 right-0 -mr-20 -mt-20 h-80 w-80 rounded-full bg-cyan-500/10 blur-[100px] transition-all duration-500 group-hover:bg-cyan-500/20" />
@@ -247,15 +238,16 @@ export default async function ToolPage({ params }: Props) {
             <p className="text-zinc-300 max-w-2xl mx-auto mb-8 text-lg leading-relaxed">
               {tool.ctaDescription}
             </p>
+            {/* 👇 CORRECCIÓN: Botón usando Link inteligente para la redirección de contacto */}
             <Button size="lg" asChild className="h-12 px-8 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-base shadow-[0_0_20px_-5px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.6)] transition-all">
-              <a href={tool.ctaLink || "/#contacto"}>
-                Hablemos de tu Proyecto <ArrowRight className="ml-2 h-5 w-5" />
-              </a>
+              <Link href={tool.ctaLink || "/#contacto"}>
+                {tToolUI('ctaButton') || "Hablemos de tu Proyecto"} 
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
           </div>
         )}
 
-        {/* CONTENIDO SEO (Rich Text) */}
         {tool.content && (
           <div className="prose prose-invert prose-lg max-w-4xl mx-auto mb-20">
              {/* @ts-ignore */}
@@ -263,10 +255,9 @@ export default async function ToolPage({ params }: Props) {
           </div>
         )}
 
-        {/* FAQ SECTION */}
         {tool.faqs && tool.faqs.length > 0 && (
           <div className="max-w-3xl mx-auto mb-16">
-            <h3 className="text-2xl font-bold text-white mb-8 text-center">Preguntas Frecuentes</h3>
+            <h3 className="text-2xl font-bold text-white mb-8 text-center">{tToolUI('faqTitle')}</h3>
             <Accordion type="single" collapsible className="w-full space-y-4">
               {tool.faqs.map((faq, i) => (
                 <AccordionItem key={i} value={`item-${i}`} className="border border-zinc-800 bg-zinc-900/20 rounded-xl px-4">
@@ -282,7 +273,6 @@ export default async function ToolPage({ params }: Props) {
           </div>
         )}
 
-        {/* ANUNCIO INFERIOR */}
         <div className="flex justify-center">
           <AdSlot position="bottom" />
         </div>
@@ -291,3 +281,4 @@ export default async function ToolPage({ params }: Props) {
     </div>
   )
 }
+// =============== FIN ARCHIVO: src/app/[locale]/tools/[slug]/page.tsx =============== //

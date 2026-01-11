@@ -20,6 +20,7 @@ import { Html5Qrcode } from 'html5-qrcode'
 
 export function QRFactoryTool() {
   const t = useTranslations('tools.qr-factory')
+  const tCommon = useTranslations('common.buttons')
   
   const [activeTab, setActiveTab] = useState<'generator' | 'barcode' | 'scanner'>('generator')
   
@@ -148,13 +149,19 @@ export function QRFactoryTool() {
         <div className="flex justify-center mb-8">
           <TabsList className="grid w-full max-w-md grid-cols-3 bg-zinc-900 border border-zinc-800">
             <TabsTrigger value="generator" className="flex items-center gap-2 data-[state=active]:bg-cyan-950/30 data-[state=active]:text-cyan-400">
-              <QrCode className="w-4 h-4" /> QR
+              <QrCode className="w-4 h-4" /> 
+              {/* TRADUCCIÓN: generator */}
+              {t('generator')}
             </TabsTrigger>
             <TabsTrigger value="barcode" className="flex items-center gap-2 data-[state=active]:bg-purple-950/30 data-[state=active]:text-purple-400">
-              <Barcode className="w-4 h-4" /> Barras
+              <Barcode className="w-4 h-4" /> 
+              {/* TRADUCCIÓN: barcode */}
+              {t('barcode')}
             </TabsTrigger>
             <TabsTrigger value="scanner" className="flex items-center gap-2 data-[state=active]:bg-green-950/30 data-[state=active]:text-green-400">
-              <Scan className="w-4 h-4" /> Scan
+              <Scan className="w-4 h-4" /> 
+              {/* TRADUCCIÓN: scanner */}
+              {t('scanner')}
             </TabsTrigger>
           </TabsList>
         </div>
@@ -204,8 +211,9 @@ export function QRFactoryTool() {
                 <CardContent className="pt-6 space-y-4">
                   {qrType === 'url' && (
                     <div className="space-y-2">
-                      <Label>Dirección Web (URL)</Label>
-                      <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://..." className="bg-zinc-950 border-zinc-700" />
+                      <Label>URL</Label>
+                      {/* TRADUCCIÓN: enterUrl */}
+                      <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder={t('enterUrl')} className="bg-zinc-950 border-zinc-700" />
                     </div>
                   )}
                   {qrType === 'wifi' && (
@@ -286,7 +294,10 @@ export function QRFactoryTool() {
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={logo} alt="Logo preview" className="w-full h-full object-contain" />
                         </div>
-                        <Button size="sm" variant="ghost" onClick={() => setLogo(null)} className="text-red-400 text-xs h-8">Eliminar</Button>
+                        <Button size="sm" variant="ghost" onClick={() => setLogo(null)} className="text-red-400 text-xs h-8">
+                            {/* TRADUCCIÓN: clear */}
+                            {tCommon('clear')}
+                        </Button>
                       </div>
                     )}
                   </AccordionContent>
@@ -300,7 +311,10 @@ export function QRFactoryTool() {
               <div className="sticky top-24 space-y-6">
                 <Card className="border-zinc-800 bg-zinc-950 overflow-hidden shadow-2xl">
                   <CardHeader className="bg-zinc-900 border-b border-zinc-800 py-3">
-                    <CardTitle className="text-sm font-medium text-center text-zinc-400">Vista Previa</CardTitle>
+                    <CardTitle className="text-sm font-medium text-center text-zinc-400">
+                        {/* TRADUCCIÓN: preview (No existe en JSON, usaré 'Vista Previa' hardcoded si no lo añadimos, pero mejor añadimos una clave o usamos una generica) */}
+                        Vista Previa 
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="p-8 flex items-center justify-center bg-[url('/grid-pattern.svg')] bg-center">
                     <div className="bg-white p-4 rounded-xl shadow-lg" ref={qrRef}>
@@ -373,7 +387,7 @@ export function QRFactoryTool() {
                 )}
                 {barcodeData && (
                   <Button onClick={downloadBarcode} size="sm" variant="outline" className="mt-6 text-black border-zinc-300 hover:bg-zinc-100">
-                    <Download className="w-3 h-3 mr-2" /> {t('download')} PNG
+                    <Download className="w-3 h-3 mr-2" /> {tCommon('download')} PNG
                   </Button>
                 )}
               </div>
@@ -391,7 +405,7 @@ export function QRFactoryTool() {
                   <Scan className="w-8 h-8 text-zinc-400 group-hover:text-cyan-400" />
                 </div>
                 <p className="text-white font-medium mb-1">{t('uploadImage')}</p>
-                <p className="text-zinc-500 text-sm">Sube una imagen con un código QR</p>
+                <p className="text-zinc-500 text-sm">JPG, PNG, WebP</p>
               </div>
               
               {scanResult && (

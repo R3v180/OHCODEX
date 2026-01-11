@@ -189,7 +189,7 @@
       "processedSuccess": "{count} imágenes procesadas",
       "processingError": "Error al procesar imágenes"
     },
-    "pdf-studio": {
+"pdf-studio": {
       "title": "PDF Studio",
       "description": "Unir, dividir, firmar y comprimir PDFs en una interfaz profesional.",
       "seo": {
@@ -200,7 +200,11 @@
       "subtitle": "Unir, rotar y organizar PDFs directamente en tu navegador.",
       "infoAlert": "Esta es la versión básica. Para funciones avanzadas como compresión y firma, se requiere implementación adicional.",
       "dragPdfs": "Arrastra PDFs aquí",
+      "dropzoneSubtitle": "O haz clic para seleccionar archivos. Procesamiento local 100% privado.",
+      "privacyAlert": "Tus documentos nunca se suben a ningún servidor. La fusión y firma ocurre en tu navegador.",
+      "documents": "Documentos",
       "pdfsSelected": "{count} PDFs seleccionados",
+      "filesAdded": "{count} archivos añadidos",
       "mergeAll": "Unir Todos los PDFs",
       "merging": "Uniendo...",
       "page": "Página {page}",
@@ -213,6 +217,9 @@
       "rotateError": "Error al rotar página",
       "downloadError": "Error al descargar",
       "needTwoPdfs": "Selecciona al menos 2 PDFs para unir",
+      "signed": "Firmado",
+      "sign": "Firmar",
+      "addMore": "Añadir otro PDF",
       "signature": {
         "title": "Firma Digital",
         "drawSignature": "Dibujar Firma",
@@ -314,6 +321,10 @@
       "placeholder": "El texto reconocido aparecerá aquí para que puedas editarlo...",
       "success": "Texto extraído correctamente",
       "error": "No se pudo reconocer el texto"
+    },
+    "ui": {
+      "ctaButton": "Hablemos de tu Proyecto",
+      "faqTitle": "Preguntas Frecuentes"
     }
   },
   "footer": {

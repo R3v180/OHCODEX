@@ -1,10 +1,10 @@
-// =============== INICIO ARCHIVO: src/lib/engines/image-engine.ts =============== //
 /**
  * Image Engine - Image processing and optimization using Canvas API
  * Client-side only, no server dependencies
  */
 
-import heic2any from 'heic2any'
+// ELIMINAMOS LA IMPORTACIÓN ESTÁTICA
+// import heic2any from 'heic2any' 
 
 export interface ImageProcessingOptions {
   maxWidth?: number
@@ -52,6 +52,9 @@ export async function processImage(
   
   if (lowerName.endsWith('.heic') || lowerName.endsWith('.heif')) {
     try {
+      // IMPORTACIÓN DINÁMICA AQUÍ (Solo en cliente)
+      const heic2any = (await import('heic2any')).default
+      
       const convertedBlob = await heic2any({
         blob: file,
         toType: 'image/jpeg',
@@ -355,4 +358,3 @@ export function calculateReduction(original: number, compressed: number): number
   if (original === 0) return 0
   return Math.round(((original - compressed) / original) * 100)
 }
-// =============== FIN ARCHIVO: src/lib/engines/image-engine.ts =============== //

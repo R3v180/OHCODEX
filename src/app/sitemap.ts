@@ -9,8 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
   const locales = routing.locales
 
-  // 1. Carga masiva de datos en todos los idiomas (Optimizado)
-  // Usamos locale: 'all' para recibir los slugs como objetos { es: '...', en: '...' }
+  // 1. Carga masiva de datos
   const [productsResult, postsResult, toolsResult] = await Promise.all([
     payload.find({
       collection: 'products',
@@ -34,8 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let sitemapEntries: MetadataRoute.Sitemap = []
 
-  // --- HELPER: Obtener el patrón de ruta traducido ---
-  // Ejemplo: Input('/products/[slug]', 'fr') -> Output('/produits/[slug]')
+  // --- HELPER: Obtener patrón de ruta (ej: /produits/[slug]) ---
   const getPathPattern = (pathKey: string, locale: string) => {
     // @ts-ignore
     const pathConfig = routing.pathnames[pathKey]
@@ -47,8 +45,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // --- A. RUTAS ESTÁTICAS ---
   const staticKeys = [
     '/',
-    '/blog',       // Índice del blog
-    '/tools',      // Índice de herramientas
+    '/blog',
+    '/tools',
     '/aviso-legal',
     '/privacidad',
     '/terminos',
@@ -75,28 +73,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // --- B. RUTAS DINÁMICAS ---
-  
+  // --- B. RUTAS DINÁMICAS (HÍBRIDA) ---
   const generateDynamicEntries = (
     docs: any[], 
-    routingKey: string, // Ej: '/products/[slug]'
+    routingKey: string, // Ej: '/tools/[slug]'
     priority: number,
     changeFreq: 'weekly' | 'monthly'
   ) => {
     docs.forEach((doc) => {
-      const slugs = doc.slug || {}
+      // DETECCIÓN INTELIGENTE:
+      // Si doc.slug es string, es una herramienta (slug global: "vault").
+      // Si doc.slug es objeto, es un post/producto (slug traducido: {es:..., en:...}).
+      const isGlobalSlug = typeof doc.slug === 'string'
+      const slugData = doc.slug
 
       for (const locale of locales) {
-        // 1. Obtenemos el slug para el idioma actual
-        const currentSlug = slugs[locale]
+        // 1. Determinar el slug para este idioma
+        let currentSlug = ''
+        
+        if (isGlobalSlug) {
+          currentSlug = slugData // "vault" sirve para todos
+        } else if (slugData && slugData[locale]) {
+          currentSlug = slugData[locale] // "seguridad-saas" (ES) vs "saas-security" (EN)
+        }
+
         if (!currentSlug) continue
 
-        // 2. Obtenemos el patrón (ej: /produits/[slug])
+        // 2. Construir URL
         const pattern = getPathPattern(routingKey, locale)
-        
-        // 3. Reemplazamos [slug] por el valor real
         const path = pattern.replace('[slug]', currentSlug)
-        
         const url = `${baseUrl}/${locale}${path}`
 
         sitemapEntries.push({
@@ -104,10 +109,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           lastModified: new Date(doc.updatedAt),
           changeFrequency: changeFreq,
           priority: priority,
-          // 4. Generamos los alternates cruzando idiomas
+          // 3. Generar Alternates (Hreflang)
           alternates: {
             languages: locales.reduce((acc, l) => {
-              const altSlug = slugs[l]
+              let altSlug = ''
+              if (isGlobalSlug) {
+                altSlug = slugData
+              } else if (slugData && slugData[l]) {
+                altSlug = slugData[l]
+              }
+
               if (altSlug) {
                 const altPattern = getPathPattern(routingKey, l)
                 const altPath = altPattern.replace('[slug]', altSlug)
@@ -121,8 +132,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
-  // Generamos las entradas usando las claves exactas de routing.ts
-  generateDynamicEntries(toolsResult.docs, '/tools/[slug]', 0.9, 'weekly')
+  // Generamos las entradas
+  generateDynamicEntries(toolsResult.docs, '/tools/[slug]', 0.9, 'weekly') // Ahora funcionará ✅
   generateDynamicEntries(postsResult.docs, '/blog/[slug]', 0.7, 'monthly')
   generateDynamicEntries(productsResult.docs, '/products/[slug]', 0.8, 'weekly')
 

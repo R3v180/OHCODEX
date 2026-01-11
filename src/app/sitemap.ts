@@ -1,4 +1,4 @@
-// =============== INICIO ARCHIVO: src/app/sitemap.ts =============== //
+// src/app/sitemap.ts
 import { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -9,8 +9,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
   const locales = routing.locales
 
-  // 1. Carga masiva de datos
-  const [productsResult, postsResult, toolsResult] = await Promise.all([
+  // 1. Carga masiva de datos (Añadimos categories)
+  const [productsResult, postsResult, toolsResult, categoriesResult] = await Promise.all([
     payload.find({
       collection: 'products',
       depth: 0,
@@ -25,6 +25,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
     payload.find({
       collection: 'tools',
+      depth: 0,
+      limit: 1000,
+      locale: 'all' as any,
+    }),
+    payload.find({
+      collection: 'categories',
       depth: 0,
       limit: 1000,
       locale: 'all' as any,
@@ -73,33 +79,80 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // --- B. RUTAS DINÁMICAS (HÍBRIDA) ---
+  // --- B. RUTAS DE CATEGORÍAS (NUEVO) ---
+  categoriesResult.docs.forEach((category: any) => {
+    // Las categorías en tu BD tienen slug tipo string (global)
+    const categorySlug = category.slug
+
+    for (const locale of locales) {
+      const pattern = getPathPattern('/blog/category/[category]', locale)
+      const path = pattern.replace('[category]', categorySlug)
+      const url = `${baseUrl}/${locale}${path}`
+
+      sitemapEntries.push({
+        url,
+        lastModified: new Date(category.updatedAt || new Date()),
+        changeFrequency: 'weekly',
+        priority: 0.7,
+        alternates: {
+          languages: locales.reduce((acc, l) => {
+            const p = getPathPattern('/blog/category/[category]', l)
+            acc[l] = `${baseUrl}/${l}${p.replace('[category]', categorySlug)}`
+            return acc
+          }, {} as Record<string, string>)
+        }
+      })
+    }
+  })
+
+  // --- C. RUTAS DE PAGINACIÓN GENERAL (NUEVO) ---
+  const postsPerPage = 6
+  const totalPages = Math.ceil(postsResult.totalDocs / postsPerPage)
+  
+  // Empezamos desde la página 2 porque la 1 es /blog
+  for (let i = 2; i <= totalPages; i++) {
+    for (const locale of locales) {
+      const pattern = getPathPattern('/blog/page/[pageNumber]', locale)
+      const path = pattern.replace('[pageNumber]', i.toString())
+      const url = `${baseUrl}/${locale}${path}`
+
+      sitemapEntries.push({
+        url,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.5,
+        alternates: {
+          languages: locales.reduce((acc, l) => {
+            const p = getPathPattern('/blog/page/[pageNumber]', l)
+            acc[l] = `${baseUrl}/${l}${p.replace('[pageNumber]', i.toString())}`
+            return acc
+          }, {} as Record<string, string>)
+        }
+      })
+    }
+  }
+
+  // --- D. RUTAS DINÁMICAS (HÍBRIDA - Tu lógica original intacta) ---
   const generateDynamicEntries = (
     docs: any[], 
-    routingKey: string, // Ej: '/tools/[slug]'
+    routingKey: string, 
     priority: number,
     changeFreq: 'weekly' | 'monthly'
   ) => {
     docs.forEach((doc) => {
-      // DETECCIÓN INTELIGENTE:
-      // Si doc.slug es string, es una herramienta (slug global: "vault").
-      // Si doc.slug es objeto, es un post/producto (slug traducido: {es:..., en:...}).
       const isGlobalSlug = typeof doc.slug === 'string'
       const slugData = doc.slug
 
       for (const locale of locales) {
-        // 1. Determinar el slug para este idioma
         let currentSlug = ''
-        
         if (isGlobalSlug) {
-          currentSlug = slugData // "vault" sirve para todos
+          currentSlug = slugData
         } else if (slugData && slugData[locale]) {
-          currentSlug = slugData[locale] // "seguridad-saas" (ES) vs "saas-security" (EN)
+          currentSlug = slugData[locale]
         }
 
         if (!currentSlug) continue
 
-        // 2. Construir URL
         const pattern = getPathPattern(routingKey, locale)
         const path = pattern.replace('[slug]', currentSlug)
         const url = `${baseUrl}/${locale}${path}`
@@ -109,7 +162,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           lastModified: new Date(doc.updatedAt),
           changeFrequency: changeFreq,
           priority: priority,
-          // 3. Generar Alternates (Hreflang)
           alternates: {
             languages: locales.reduce((acc, l) => {
               let altSlug = ''
@@ -132,11 +184,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
-  // Generamos las entradas
-  generateDynamicEntries(toolsResult.docs, '/tools/[slug]', 0.9, 'weekly') // Ahora funcionará ✅
-  generateDynamicEntries(postsResult.docs, '/blog/[slug]', 0.7, 'monthly')
+  generateDynamicEntries(toolsResult.docs, '/tools/[slug]', 0.9, 'weekly')
+  generateDynamicEntries(postsResult.docs, '/blog/[slug]', 0.8, 'monthly')
   generateDynamicEntries(productsResult.docs, '/products/[slug]', 0.8, 'weekly')
 
   return sitemapEntries
 }
-// =============== FIN ARCHIVO: src/app/sitemap.ts =============== //

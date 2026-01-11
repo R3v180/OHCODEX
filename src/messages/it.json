@@ -88,7 +88,13 @@
     "interested": "Interessato a questo approccio?",
     "helpText": "Applichiamo questa stessa filosofia a ogni progetto che sviluppiamo.",
     "letsTalk": "Parliamo del tuo Progetto",
-    "noArticles": "Nessun articolo pubblicato al momento."
+    "noArticles": "Nessun articolo pubblicato al momento.",
+    "pagination": {
+      "previous": "Precedente",
+      "next": "Successivo",
+      "page": "Pagina"
+    },
+    "categoryArticles": "Articoli su {category}"
   },
   "products": {
     "backToPortfolio": "Torna al Portfolio",

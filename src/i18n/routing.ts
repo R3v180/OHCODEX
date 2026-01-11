@@ -1,4 +1,4 @@
-// =============== INICIO ARCHIVO: src/i18n/routing.ts =============== //
+// src/i18n/routing.ts
 import { defineRouting } from 'next-intl/routing';
 import { createSharedPathnamesNavigation } from 'next-intl/navigation';
 
@@ -9,15 +9,15 @@ export const routing = defineRouting({
   // Idioma por defecto si no se detecta otro
   defaultLocale: 'es',
   
-  // Siempre mostrar el prefijo del idioma en la URL (ej: /es/blog) para consistencia SEO
+  // Siempre mostrar el prefijo del idioma en la URL para consistencia SEO
   localePrefix: 'always',
 
-  // 👇 MAPA DE RUTAS TRADUCIDAS (Pathnames)
-  // Define cómo se ve la URL en el navegador para cada idioma
+  // MAPA DE RUTAS TRADUCIDAS (Pathnames)
   pathnames: {
     '/': '/',
     
     // --- BLOG ---
+    // 1. Índice principal
     '/blog': {
       es: '/blog',
       en: '/blog',
@@ -26,6 +26,38 @@ export const routing = defineRouting({
       it: '/blog',
       pt: '/blog'
     },
+    
+    // 2. Paginación del índice general (SEO: permite que Google rastree todo el histórico)
+    '/blog/page/[pageNumber]': {
+      es: '/blog/pagina/[pageNumber]',
+      en: '/blog/page/[pageNumber]',
+      fr: '/blog/page/[pageNumber]',
+      de: '/blog/seite/[pageNumber]',
+      it: '/blog/pagina/[pageNumber]',
+      pt: '/blog/pagina/[pageNumber]'
+    },
+
+    // 3. Listado por Categoría (SEO Semántico: Silos de contenido)
+    '/blog/category/[category]': {
+      es: '/blog/categoria/[category]',
+      en: '/blog/category/[category]',
+      fr: '/blog/categorie/[category]',
+      de: '/blog/kategorie/[category]',
+      it: '/blog/categoria/[category]',
+      pt: '/blog/categoria/[category]'
+    },
+
+    // 4. Paginación dentro de una categoría
+    '/blog/category/[category]/[pageNumber]': {
+      es: '/blog/categoria/[category]/[pageNumber]',
+      en: '/blog/category/[category]/[pageNumber]',
+      fr: '/blog/categorie/[category]/[pageNumber]',
+      de: '/blog/kategorie/[category]/[pageNumber]',
+      it: '/blog/categoria/[category]/[pageNumber]',
+      pt: '/blog/categoria/[category]/[pageNumber]'
+    },
+
+    // 5. Detalle del artículo (Ya usa el slug del título)
     '/blog/[slug]': {
       es: '/blog/[slug]',
       en: '/blog/[slug]',
@@ -36,7 +68,6 @@ export const routing = defineRouting({
     },
 
     // --- HERRAMIENTAS (TOOLS) ---
-    // Índice de herramientas
     '/tools': {
       es: '/herramientas',
       en: '/tools',
@@ -45,7 +76,6 @@ export const routing = defineRouting({
       it: '/strumenti',
       pt: '/ferramentas'
     },
-    // Detalle de herramienta
     '/tools/[slug]': {
       es: '/herramientas/[slug]',
       en: '/tools/[slug]',
@@ -56,7 +86,6 @@ export const routing = defineRouting({
     },
 
     // --- PRODUCTOS ---
-    // Nota: No tienes un índice de productos (/products), solo detalles.
     '/products/[slug]': {
       es: '/productos/[slug]',
       en: '/products/[slug]',
@@ -75,7 +104,6 @@ export const routing = defineRouting({
       it: '/note-legali',
       pt: '/aviso-legal'
     },
-    
     '/privacidad': {
       es: '/privacidad',
       en: '/privacy',
@@ -84,7 +112,6 @@ export const routing = defineRouting({
       it: '/privacy',
       pt: '/privacidade'
     },
-    
     '/terminos': {
       es: '/terminos',
       en: '/terms',
@@ -96,10 +123,6 @@ export const routing = defineRouting({
   }
 });
 
-// Exportamos los componentes de navegación que usan esta configuración
 export const { Link, redirect, usePathname, useRouter } = createSharedPathnamesNavigation(routing);
-
-// Exportamos constantes para compatibilidad con otros archivos
 export const locales = routing.locales;
 export const defaultLocale = routing.defaultLocale;
-// =============== FIN ARCHIVO: src/i18n/routing.ts =============== //

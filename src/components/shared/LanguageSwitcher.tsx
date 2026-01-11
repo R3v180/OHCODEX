@@ -1,4 +1,4 @@
-// =============== INICIO ARCHIVO: src/components/shared/LanguageSwitcher.tsx =============== //
+// src/components/shared/LanguageSwitcher.tsx
 'use client'
 
 import { useLocale } from 'next-intl'
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Globe, Loader2 } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { getTranslatedSlug } from '@/app/actions/get-translated-slug'
+import { routing } from '@/i18n/routing'
 
 export function LanguageSwitcher() {
   const locale = useLocale()
@@ -19,37 +20,69 @@ export function LanguageSwitcher() {
     setIsLoading(true)
     
     // 1. Analizar la ruta actual
-    // Ej: /es/products/mi-producto -> ['', 'es', 'products', 'mi-producto']
+    // Segmentos: ['', 'es', 'blog', 'categoria', 'ingenieria-software']
     const segments = pathname.split('/')
     const collectionSegment = segments[2] // 'products', 'blog', 'tools'
-    const slugSegment = segments[3]
+    const subSegment = segments[3]       // 'categoria', 'pagina', o el [slug] del post
+    const lastSegment = segments[4]      // el [slug] si hay subsegmento
 
     let nextPath = pathname.replace(`/${locale}`, `/${nextLocale}`)
 
-    // 2. Si estamos en una ruta dinámica, buscar el slug traducido
-    if (slugSegment && ['products', 'blog', 'tools'].includes(collectionSegment)) {
-      const collectionMap: Record<string, 'products' | 'posts' | 'tools'> = {
-        'products': 'products',
-        'blog': 'posts',
-        'tools': 'tools'
-      }
+    try {
+      // 2. LÓGICA PARA BLOG (NUEVA)
+      if (collectionSegment === 'blog') {
+        
+        // Caso A: Paginación general (/blog/pagina/2 -> /blog/page/2)
+        if (subSegment === 'pagina' || subSegment === 'page' || subSegment === 'seite') {
+          const pageNum = lastSegment
+          // @ts-ignore
+          const translatedPageSegment = routing.pathnames['/blog/page/[pageNumber]'][nextLocale]
+            .replace('/blog/', '')
+            .replace('/[pageNumber]', '')
+          
+          nextPath = `/${nextLocale}/blog/${translatedPageSegment}/${pageNum}`
+        }
 
-      const collection = collectionMap[collectionSegment]
-      
-      if (collection) {
-        try {
-          const translatedSlug = await getTranslatedSlug(collection, slugSegment, nextLocale)
+        // Caso B: Categorías (/blog/categoria/slug -> /blog/category/slug)
+        else if (subSegment === 'categoria' || subSegment === 'category' || subSegment === 'categorie' || subSegment === 'kategorie') {
+          const catSlug = lastSegment || segments[3] // Maneja /categoria/slug y /categoria/slug/2
+          const pageNum = segments[5]
+          
+          // @ts-ignore
+          const translatedCatSegment = routing.pathnames['/blog/category/[category]'][nextLocale]
+            .replace('/blog/', '')
+            .replace('/[category]', '')
+          
+          nextPath = `/${nextLocale}/blog/${translatedCatSegment}/${catSlug}`
+          if (pageNum) nextPath += `/${pageNum}`
+        }
+
+        // Caso C: Post Individual (/blog/mi-post -> /blog/my-post)
+        else if (subSegment && !lastSegment) {
+          const translatedSlug = await getTranslatedSlug('posts', subSegment, nextLocale)
           if (translatedSlug) {
-            // Reemplazamos el slug antiguo por el nuevo en la ruta
-            nextPath = `/${nextLocale}/${collectionSegment}/${translatedSlug}`
+            nextPath = `/${nextLocale}/blog/${translatedSlug}`
           }
-        } catch (e) {
-          console.error('Error traduciendo slug, usando fallback', e)
+        }
+      } 
+      
+      // 3. LÓGICA PARA PRODUCTOS Y HERRAMIENTAS (Existente)
+      else if (subSegment && ['products', 'tools'].includes(collectionSegment)) {
+        const collectionMap: Record<string, 'products' | 'tools'> = {
+          'products': 'products',
+          'tools': 'tools'
+        }
+        const collection = collectionMap[collectionSegment]
+        const translatedSlug = await getTranslatedSlug(collection, subSegment, nextLocale)
+        if (translatedSlug) {
+          nextPath = `/${nextLocale}/${collectionSegment}/${translatedSlug}`
         }
       }
+    } catch (e) {
+      console.error('Error traduciendo ruta, usando fallback por defecto', e)
     }
 
-    // 3. Navegar
+    // 4. Navegar
     startTransition(() => {
       router.push(nextPath)
       setIsLoading(false)
@@ -65,26 +98,13 @@ export function LanguageSwitcher() {
         </div>
       </SelectTrigger>
       <SelectContent className="bg-black border-zinc-800 text-zinc-400">
-        <SelectItem value="es" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
-          Español
-        </SelectItem>
-        <SelectItem value="en" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
-          English
-        </SelectItem>
-        <SelectItem value="fr" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
-          Français
-        </SelectItem>
-        <SelectItem value="de" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
-          Deutsch
-        </SelectItem>
-        <SelectItem value="it" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
-          Italiano
-        </SelectItem>
-        <SelectItem value="pt" className="focus:bg-zinc-900 focus:text-white cursor-pointer">
-          Português
-        </SelectItem>
+        <SelectItem value="es" className="focus:bg-zinc-900 focus:text-white cursor-pointer">Español</SelectItem>
+        <SelectItem value="en" className="focus:bg-zinc-900 focus:text-white cursor-pointer">English</SelectItem>
+        <SelectItem value="fr" className="focus:bg-zinc-900 focus:text-white cursor-pointer">Français</SelectItem>
+        <SelectItem value="de" className="focus:bg-zinc-900 focus:text-white cursor-pointer">Deutsch</SelectItem>
+        <SelectItem value="it" className="focus:bg-zinc-900 focus:text-white cursor-pointer">Italiano</SelectItem>
+        <SelectItem value="pt" className="focus:bg-zinc-900 focus:text-white cursor-pointer">Português</SelectItem>
       </SelectContent>
     </Select>
   )
 }
-// =============== FIN ARCHIVO: src/components/shared/LanguageSwitcher.tsx =============== //

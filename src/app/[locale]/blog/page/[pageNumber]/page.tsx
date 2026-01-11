@@ -1,4 +1,4 @@
-// src/app/[locale]/blog/page.tsx
+// src/app/[locale]/blog/page/[pageNumber]/page.tsx
 import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -6,36 +6,59 @@ import { getTranslations } from 'next-intl/server'
 import { Metadata } from 'next'
 import { BlogList } from '@/components/sections/BlogList'
 import { CategoryFilter } from '@/components/sections/CategoryFilter'
-
-export const revalidate = 600
+import { routing } from '@/i18n/routing'
+import { notFound } from 'next/navigation'
 
 type Props = {
-  params: Promise<{ locale: string }>
-  searchParams: Promise<{ cats?: string }> // Soportamos el parámetro de múltiples categorías
+  params: Promise<{ locale: string; pageNumber: string }>
+  searchParams: Promise<{ cats?: string }>
 }
 
-// 1. Metadatos Dinámicos
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
-  const { locale } = await params
+// 1. Generación de Metadatos Dinámicos para SEO
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; pageNumber: string }> }): Promise<Metadata> {
+  const { locale, pageNumber } = await params
   const t = await getTranslations({ locale, namespace: 'blog' })
 
   return {
-    title: `${t('title')} | OHCodex`,
+    title: `${t('title')} - ${t('pagination.page')} ${pageNumber} | OHCodex`,
     description: t('subtitle'),
-    alternates: {
-      canonical: `https://ohcodex.com/${locale}/blog`,
+    robots: {
+      index: true,
+      follow: true,
     },
   }
 }
 
-export default async function BlogPage({ params, searchParams }: Props) {
-  const { locale } = await params
-  const { cats } = await searchParams // En Next.js 15 searchParams es una Promesa
+// 2. Generación de rutas estáticas iniciales
+export async function generateStaticParams() {
+  const locales = routing.locales
+  const pages = ['2', '3', '4', '5'] 
+  
+  const params = []
+  for (const locale of locales) {
+    for (const pageNumber of pages) {
+      params.push({ locale, pageNumber })
+    }
+  }
+  return params
+}
+
+export default async function BlogPaginationPage({ params, searchParams }: Props) {
+  // En Next.js 15, tanto params como searchParams son Promesas
+  const { locale, pageNumber } = await params
+  const { cats } = await searchParams
   
   const payload = await getPayload({ config: configPromise })
   const t = await getTranslations('blog')
+  
+  const pageNum = parseInt(pageNumber)
 
-  // 2. Cargar todas las categorías para el filtro
+  // Validación de seguridad
+  if (isNaN(pageNum) || pageNum < 1) {
+    notFound()
+  }
+
+  // 3. Cargar categorías para el filtro
   const categoriesRes = await payload.find({
     collection: 'categories',
     locale: locale as any,
@@ -49,10 +72,9 @@ export default async function BlogPage({ params, searchParams }: Props) {
     slug: cat.slug || '',
   }))
 
-  // 3. Procesar las categorías seleccionadas desde la URL (?cats=slug1,slug2)
   const selectedSlugs = cats ? cats.split(',') : []
 
-  // Lógica para el estilo del título (Última palabra en cian)
+  // Estilo visual del título
   const titleText = t('title')
   const titleWords = titleText.split(' ')
   const titleMain = titleWords.slice(0, -1).join(' ')
@@ -61,7 +83,6 @@ export default async function BlogPage({ params, searchParams }: Props) {
   return (
     <div className="bg-black min-h-screen pt-24 pb-20">
       
-      {/* Fondo sutil */}
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black opacity-50" />
 
       <div className="container px-4 mx-auto">
@@ -72,21 +93,20 @@ export default async function BlogPage({ params, searchParams }: Props) {
             {titleMain} <span className="text-cyan-500">{titleLast}</span>
           </h1>
           <p className="text-lg text-zinc-400 leading-relaxed mb-8">
-            {t('subtitle')}
+            {t('subtitle')} — {t('pagination.page')} {pageNumber}
           </p>
         </div>
 
-        {/* FILTRO DE CATEGORÍAS (Componente de Cliente) */}
+        {/* FILTRO DE CATEGORÍAS */}
         <CategoryFilter 
           categories={allCategories} 
           locale={locale} 
         />
 
-        {/* LISTADO DE POSTS */}
-        {/* Pasamos los slugs seleccionados al componente de servidor */}
+        {/* LISTADO DE POSTS CON SOPORTE PARA FILTROS */}
         <BlogList 
           locale={locale} 
-          page={1} 
+          page={pageNum} 
           categorySlugs={selectedSlugs} 
         />
 

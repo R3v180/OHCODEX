@@ -1,3 +1,4 @@
+// =============== INICIO ARCHIVO: src/app/sitemap.ts =============== //
 import { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -8,16 +9,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
   const locales = routing.locales
 
-  // 1. OPTIMIZACIÓN DE RENDIMIENTO:
-  // Consultamos "locale: 'all'" UNA sola vez para traer los slugs en todos los idiomas.
-  // Esto evita hacer 6 consultas por colección (18 en total) y baja a solo 3.
-  
+  // 1. Carga masiva de datos en todos los idiomas (Optimizado)
+  // Usamos locale: 'all' para recibir los slugs como objetos { es: '...', en: '...' }
   const [productsResult, postsResult, toolsResult] = await Promise.all([
     payload.find({
       collection: 'products',
       depth: 0,
       limit: 1000,
-      locale: 'all' as any, // Trae { es: 'slug-es', en: 'slug-en' }
+      locale: 'all' as any,
     }),
     payload.find({
       collection: 'posts',
@@ -35,15 +34,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let sitemapEntries: MetadataRoute.Sitemap = []
 
-  // --- HELPER: Obtener ruta base traducida desde routing.ts ---
-  const getBaseUrlForLocale = (pathKey: string, locale: string) => {
-    // @ts-ignore - Accedemos a la config de rutas
+  // --- HELPER: Obtener el patrón de ruta traducido ---
+  // Ejemplo: Input('/products/[slug]', 'fr') -> Output('/produits/[slug]')
+  const getPathPattern = (pathKey: string, locale: string) => {
+    // @ts-ignore
     const pathConfig = routing.pathnames[pathKey]
-    
-    // Si es un string (ej: '/'), es igual para todos
     if (typeof pathConfig === 'string') return pathConfig
-    
-    // Si es un objeto, buscamos el idioma, o fallback a la key
     // @ts-ignore
     return pathConfig?.[locale] || pathKey
   }
@@ -51,28 +47,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // --- A. RUTAS ESTÁTICAS ---
   const staticKeys = [
     '/',
-    '/blog',
-    '/tools',
+    '/blog',       // Índice del blog
+    '/tools',      // Índice de herramientas
     '/aviso-legal',
     '/privacidad',
     '/terminos',
   ]
 
-  // Generamos entradas estáticas
   for (const key of staticKeys) {
     for (const locale of locales) {
-      const localizedPath = getBaseUrlForLocale(key, locale)
-      const url = `${baseUrl}/${locale}${localizedPath === '/' ? '' : localizedPath}`
+      const path = getPathPattern(key, locale)
+      const url = `${baseUrl}/${locale}${path === '/' ? '' : path}`
 
       sitemapEntries.push({
         url,
         lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: key === '/' ? 1 : 0.8,
-        // Alternates para SEO Internacional (Google ama esto)
         alternates: {
           languages: locales.reduce((acc, l) => {
-            const p = getBaseUrlForLocale(key, l)
+            const p = getPathPattern(key, l)
             acc[l] = `${baseUrl}/${l}${p === '/' ? '' : p}`
             return acc
           }, {} as Record<string, string>)
@@ -81,41 +75,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // --- B. RUTAS DINÁMICAS (Con Alternates correctos) ---
+  // --- B. RUTAS DINÁMICAS ---
   
-  // Función generadora para evitar repetir lógica
   const generateDynamicEntries = (
     docs: any[], 
-    basePathKey: string, // Ej: '/tools'
+    routingKey: string, // Ej: '/products/[slug]'
     priority: number,
     changeFreq: 'weekly' | 'monthly'
   ) => {
     docs.forEach((doc) => {
-      // El slug viene como objeto: { es: 'mi-slug', en: 'my-slug' ... }
       const slugs = doc.slug || {}
 
       for (const locale of locales) {
-        // Obtenemos el slug para este idioma específico
+        // 1. Obtenemos el slug para el idioma actual
         const currentSlug = slugs[locale]
-        if (!currentSlug) continue // Si no hay traducción, saltamos
+        if (!currentSlug) continue
 
-        // Obtenemos la base traducida (Ej: '/herramientas' para 'es', '/tools' para 'en')
-        const translatedBase = getBaseUrlForLocale(basePathKey, locale)
+        // 2. Obtenemos el patrón (ej: /produits/[slug])
+        const pattern = getPathPattern(routingKey, locale)
         
-        const url = `${baseUrl}/${locale}${translatedBase}/${currentSlug}`
+        // 3. Reemplazamos [slug] por el valor real
+        const path = pattern.replace('[slug]', currentSlug)
+        
+        const url = `${baseUrl}/${locale}${path}`
 
         sitemapEntries.push({
           url,
           lastModified: new Date(doc.updatedAt),
           changeFrequency: changeFreq,
           priority: priority,
-          // Generamos los alternates cruzando los slugs que ya tenemos en memoria
+          // 4. Generamos los alternates cruzando idiomas
           alternates: {
             languages: locales.reduce((acc, l) => {
               const altSlug = slugs[l]
               if (altSlug) {
-                const altBase = getBaseUrlForLocale(basePathKey, l)
-                acc[l] = `${baseUrl}/${l}${altBase}/${altSlug}`
+                const altPattern = getPathPattern(routingKey, l)
+                const altPath = altPattern.replace('[slug]', altSlug)
+                acc[l] = `${baseUrl}/${l}${altPath}`
               }
               return acc
             }, {} as Record<string, string>)
@@ -125,17 +121,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
-  // 1. Generar Herramientas (Base: '/tools' -> '/herramientas', '/outils'...)
-  generateDynamicEntries(toolsResult.docs, '/tools', 0.9, 'weekly')
-
-  // 2. Generar Blog (Base: '/blog' -> '/blog' en todos según routing.ts actual, pero preparado para futuro)
-  generateDynamicEntries(postsResult.docs, '/blog', 0.7, 'monthly')
-
-  // 3. Generar Productos (Base: '/products' implícito)
-  // OJO: En tu routing.ts NO tienes definido '/products', así que Next-Intl usará '/products' por defecto.
-  // Si quieres que sea /productos en español, añádelo a routing.ts primero.
-  // Aquí asumo que la base es '/products' y si no está en routing, usa el fallback.
-  generateDynamicEntries(productsResult.docs, '/products', 0.8, 'weekly')
+  // Generamos las entradas usando las claves exactas de routing.ts
+  generateDynamicEntries(toolsResult.docs, '/tools/[slug]', 0.9, 'weekly')
+  generateDynamicEntries(postsResult.docs, '/blog/[slug]', 0.7, 'monthly')
+  generateDynamicEntries(productsResult.docs, '/products/[slug]', 0.8, 'weekly')
 
   return sitemapEntries
 }
+// =============== FIN ARCHIVO: src/app/sitemap.ts =============== //

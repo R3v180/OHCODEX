@@ -24,6 +24,8 @@ import { Posts } from './collections/Posts'
 import { Categories } from './collections/Categories'
 import { Analytics } from './collections/Analytics'
 import { Tools } from './collections/Tools'
+import { ToolReports } from './collections/ToolReports'
+import { ToolUsageLogs } from './collections/ToolUsageLogs'
 
 // 2. Globales
 import { Company } from './globals/Company'
@@ -64,7 +66,9 @@ export default buildConfig({
     Posts,      
     Categories,
     Analytics,
-    Tools, 
+    Tools,
+    ToolReports,
+    ToolUsageLogs,
   ],
   globals: [
     Company, 

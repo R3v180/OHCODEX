@@ -19,6 +19,7 @@ export interface Config {
     categories: Category;
     analytics: Analytics;
     tools: Tool;
+    'tool-reports': ToolReport;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -33,6 +34,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     analytics: AnalyticsSelect<false> | AnalyticsSelect<true>;
     tools: ToolsSelect<false> | ToolsSelect<true>;
+    'tool-reports': ToolReportsSelect<false> | ToolReportsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -286,6 +288,21 @@ export interface Tool {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tool-reports".
+ */
+export interface ToolReport {
+  id: number;
+  toolSlug: string;
+  reporterEmail: string;
+  reporterName?: string | null;
+  description: string;
+  status: 'pending' | 'in_progress' | 'fixed' | 'dismissed';
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -322,6 +339,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tools';
         value: number | Tool;
+      } | null)
+    | ({
+        relationTo: 'tool-reports';
+        value: number | ToolReport;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -518,6 +539,20 @@ export interface ToolsSelect<T extends boolean = true> {
   ctaLink?: T;
   metaTitle?: T;
   metaDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tool-reports_select".
+ */
+export interface ToolReportsSelect<T extends boolean = true> {
+  toolSlug?: T;
+  reporterEmail?: T;
+  reporterName?: T;
+  description?: T;
+  status?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

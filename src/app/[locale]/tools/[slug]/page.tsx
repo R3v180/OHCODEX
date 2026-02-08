@@ -25,6 +25,7 @@ import { ColorPaletteTool } from '@/components/tools/color-palette/ColorPaletteT
 // Componentes de UI
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { AdSlot } from '@/components/shared/AdSlot'
+import { ToolPageFooter } from '@/components/tool-ui'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { 
@@ -288,6 +289,9 @@ export default async function ToolPage({ params }: Props) {
         <div className="flex justify-center">
           <AdSlot position="bottom" />
         </div>
+
+        {/* Footer con estadísticas y reporte de bugs */}
+        <ToolPageFooter toolSlug={slug} toolName={tool.title} />
 
       </div>
     </div>

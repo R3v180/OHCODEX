@@ -5,7 +5,7 @@ import configPromise from '@payload-config'
 import { Link } from '@/i18n/routing'
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Lock, Image as ImageIcon, FileText, Database, QrCode, ArrowRight, Shield, Box, LucideIcon, ScanLine } from 'lucide-react'
+import { Lock, Image as ImageIcon, FileText, Database, QrCode, ArrowRight, Shield, Box, LucideIcon, ScanLine, Code, Palette, Key, KeyRound } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { Metadata } from 'next'
 import type { Tool } from '@/payload-types'
@@ -30,17 +30,29 @@ const ICON_MAP: Record<string, LucideIcon> = {
   'database': Database,
   'qr-code': QrCode,
   'scan': ScanLine,
+  'code': Code,
+  'palette': Palette,
+  'key': Key,
+  'key-round': KeyRound,
   'box': Box
 }
 
 // Estilos de Badges (Copiados de la Landing Page para consistencia)
 const BADGE_STYLES: Record<string, string> = {
+  // Herramientas originales
   'vault': 'bg-cyan-900/50 text-cyan-400 border-cyan-800',
   'image-optimizer': 'bg-green-900/50 text-green-400 border-green-800',
   'pdf-studio': 'bg-purple-900/50 text-purple-400 border-purple-800',
   'data-station': 'bg-blue-900/50 text-blue-400 border-blue-800',
   'qr-factory': 'bg-pink-900/50 text-pink-400 border-pink-800',
   'ocr-vision': 'bg-amber-900/50 text-amber-400 border-amber-800',
+  // Nuevas herramientas
+  'password-gen': 'bg-rose-900/50 text-rose-400 border-rose-800',       // Rojo - Seguridad
+  'base64': 'bg-orange-900/50 text-orange-400 border-orange-800',              // Naranja - Codificación
+  'jwt-decoder': 'bg-indigo-900/50 text-indigo-400 border-indigo-800',         // Índigo - Web/Token
+  'css-minifier': 'bg-emerald-900/50 text-emerald-400 border-emerald-800',     // Esmeralda - CSS
+  'regex-tester': 'bg-fuchsia-900/50 text-fuchsia-400 border-fuchsia-800',     // Fucsia - Regex
+  'color-palette': 'bg-violet-900/50 text-violet-400 border-violet-800',       // Violeta - Colores
   'default': 'bg-zinc-800 text-zinc-400 border-zinc-700'
 }
 

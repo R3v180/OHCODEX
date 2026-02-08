@@ -135,6 +135,11 @@ export const Company: GlobalConfig = {
           label: 'Redes Sociales',
           fields: [
             {
+              name: 'facebook',
+              type: 'text',
+              label: 'URL Facebook',
+            },
+            {
               name: 'linkedin',
               type: 'text',
               label: 'URL LinkedIn',

@@ -244,9 +244,9 @@ export interface Tool {
   id: number;
   title: string;
   slug: string;
-  codeKey: 'vault' | 'image-optimizer' | 'pdf-studio' | 'data-station' | 'qr-factory' | 'ocr-vision';
+  codeKey: string;
   badge?: string | null;
-  icon?: ('lock' | 'image' | 'file-text' | 'database' | 'qr-code' | 'scan' | 'box') | null;
+  icon?: string | null;
   shortDescription: string;
   steps: {
     stepTitle: string;
@@ -576,6 +576,7 @@ export interface CompanyInfo {
   phoneNumber?: string | null;
   address?: string | null;
   schedule?: string | null;
+  facebook?: string | null;
   linkedin?: string | null;
   github?: string | null;
   twitter?: string | null;
@@ -724,6 +725,7 @@ export interface CompanyInfoSelect<T extends boolean = true> {
   phoneNumber?: T;
   address?: T;
   schedule?: T;
+  facebook?: T;
   linkedin?: T;
   github?: T;
   twitter?: T;

@@ -48,9 +48,67 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     locale: locale as any,
   })) as unknown as CompanyInfo
 
+  const title = landing?.heroTitle || company?.defaultTitle || 'OHCodex - Software Architecture & Development'
+  const description = landing?.heroSubtitle || company?.defaultDescription || 'Ingeniería para el futuro de los ecosistemas digitales. Desarrollo de PWA, SaaS y arquitectura cloud-native.'
+  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ohcodex.com'
+  const ogImage = `${siteUrl}/og-image.jpg`
+
   return {
-    title: landing?.heroTitle || company?.defaultTitle,
-    description: landing?.heroSubtitle || company?.defaultDescription,
+    title,
+    description,
+    keywords: ['desarrollo software', 'PWA', 'SaaS', 'Next.js', 'TypeScript', 'arquitectura cloud', 'ingeniería software'],
+    authors: [{ name: 'OHCodex' }],
+    creator: 'OHCodex',
+    publisher: 'OHCodex',
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    openGraph: {
+      type: 'website',
+      locale: locale === 'es' ? 'es_ES' : locale === 'en' ? 'en_US' : `${locale}_${locale.toUpperCase()}`,
+      url: `${siteUrl}/${locale}`,
+      siteName: 'OHCodex',
+      title,
+      description,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage],
+      creator: '@ohcodex',
+      site: '@ohcodex',
+    },
+    alternates: {
+      canonical: `${siteUrl}/${locale}`,
+      languages: {
+        'es-ES': `${siteUrl}/es`,
+        'en-US': `${siteUrl}/en`,
+        'fr-FR': `${siteUrl}/fr`,
+        'de-DE': `${siteUrl}/de`,
+        'it-IT': `${siteUrl}/it`,
+        'pt-PT': `${siteUrl}/pt`,
+      },
+    },
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    },
   }
 }
 
@@ -66,12 +124,20 @@ const ICON_MAP: Record<string, LucideIcon> = {
 }
 
 const BADGE_STYLES: Record<string, string> = {
+  // Herramientas originales
   'vault': 'bg-cyan-900/50 text-cyan-400 border-cyan-800',
   'image-optimizer': 'bg-green-900/50 text-green-400 border-green-800',
   'pdf-studio': 'bg-purple-900/50 text-purple-400 border-purple-800',
   'data-station': 'bg-blue-900/50 text-blue-400 border-blue-800',
   'qr-factory': 'bg-pink-900/50 text-pink-400 border-pink-800',
   'ocr-vision': 'bg-amber-900/50 text-amber-400 border-amber-800',
+  // Nuevas herramientas
+  'password-gen': 'bg-rose-900/50 text-rose-400 border-rose-800',       // Rojo - Seguridad
+  'base64': 'bg-orange-900/50 text-orange-400 border-orange-800',              // Naranja - Codificación
+  'jwt-decoder': 'bg-indigo-900/50 text-indigo-400 border-indigo-800',         // Índigo - Web/Token
+  'css-minifier': 'bg-emerald-900/50 text-emerald-400 border-emerald-800',     // Esmeralda - CSS
+  'regex-tester': 'bg-fuchsia-900/50 text-fuchsia-400 border-fuchsia-800',     // Fucsia - Regex
+  'color-palette': 'bg-violet-900/50 text-violet-400 border-violet-800',       // Violeta - Colores
   'default': 'bg-zinc-800 text-zinc-400 border-zinc-700'
 }
 
@@ -143,8 +209,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               return (
                 <Link 
                   key={tool.id} 
-                  // 👇 CORRECCIÓN: Usamos ruta base sin locale. El componente lo traduce.
-                  // Antes: href={`/${locale}/tools/${tool.slug}`}
                   href={`/tools/${tool.slug}`} 
                   className="group block h-full"
                 >
@@ -175,6 +239,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               )
             })}
           </div>
+
+          {/* Botón Ver Más */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/tools"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-800/50 hover:bg-cyan-950/30 border border-zinc-700 hover:border-cyan-500/50 rounded-lg text-zinc-300 hover:text-cyan-400 transition-all duration-300 group"
+            >
+              <span className="font-medium">{tHome('ourTools.viewAll') || 'Ver todas las herramientas'}</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -188,15 +263,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         subtitle={landing?.testimonialsSubtitle || undefined}
       />
 
-      {/* 7. FAQ */}
+      {/* 7. Contacto */}
+      <ContactSection email={company?.contactEmail || 'info@ohcodex.com'} />
+
+      {/* 8. FAQ */}
       <FAQ 
         faqs={landing?.faqs}
         title={landing?.faqTitle || undefined}
         subtitle={landing?.faqSubtitle || undefined}
       />
-
-      {/* 8. Contacto */}
-      <ContactSection email={company?.contactEmail || 'info@ohcodex.com'} />
     </>
   )
 }

@@ -15,6 +15,12 @@ import { PDFStudioTool } from '@/components/tools/pdf-studio/PDFStudioTool'
 import { DataStationTool } from '@/components/tools/data-station/DataStationTool'
 import { QRFactoryTool } from '@/components/tools/qr-factory/QRFactoryTool'
 import { OCRTool } from '@/components/tools/ocr/OCRTool'
+import { Base64Tool } from '@/components/tools/base64/Base64Tool'
+import { CSSMinifierTool } from '@/components/tools/css-minifier/CSSMinifierTool'
+import { PasswordGeneratorTool } from '@/components/tools/password-gen/PasswordGeneratorTool'
+import { JWTDecoderTool } from '@/components/tools/jwt-decoder/JWTDecoderTool'
+import { RegexTesterTool } from '@/components/tools/regex-tester/RegexTesterTool'
+import { ColorPaletteTool } from '@/components/tools/color-palette/ColorPaletteTool'
 
 // Componentes de UI
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -44,6 +50,12 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType<any>> = {
   'data-station': DataStationTool,
   'qr-factory': QRFactoryTool,
   'ocr-vision': OCRTool,
+  'base64': Base64Tool,
+  'css-minifier': CSSMinifierTool,
+  'password-gen': PasswordGeneratorTool,
+  'jwt-decoder': JWTDecoderTool,
+  'regex-tester': RegexTesterTool,
+  'color-palette': ColorPaletteTool,
 }
 
 const STEP_ICONS: Record<string, LucideIcon> = {

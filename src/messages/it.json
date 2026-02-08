@@ -42,7 +42,8 @@
     "ourTools": {
       "title": "Suite di Ingegneria",
       "subtitle": "Strumenti potenti, privati e basati su browser per sviluppatori moderni.",
-      "useTool": "Usa Strumento"
+      "useTool": "Usa Strumento",
+      "viewAll": "Vedi tutti gli strumenti"
     }
   },
   "contactSection": {
@@ -296,7 +297,9 @@
       "enterUrl": "Inserisci URL...",
       "ssid": "Nome Rete (SSID)",
       "wifiPassword": "Password WiFi",
-      "security": { "nopass": "Nessuna password" },
+      "security": {
+        "nopass": "Nessuna password"
+      },
       "firstName": "Nome",
       "lastName": "Cognome",
       "phone": "Telefono",
@@ -327,6 +330,154 @@
       "placeholder": "Il testo riconosciuto apparirà qui per la modifica...",
       "success": "Testo estratto con successo",
       "error": "Impossibile riconoscere il testo"
+    },
+    "password-gen": {
+      "title": "Generatore di Password",
+      "description": "Genera password sicure e passphrase memorabili con opzioni personalizzabili.",
+      "seo": {
+        "title": "Generatore di Password Sicure - Password Forti e Casuali - OHCodex",
+        "description": "Strumento gratuito di generazione password. Crea password sicure e passphrase memorabili. Generazione lato client per massima sicurezza."
+      },
+      "header": "Generatore di Password",
+      "subtitle": "Genera password sicure e passphrase memorabili. Tutta l'elaborazione avviene nel tuo browser.",
+      "passwordTab": "Password",
+      "passphraseTab": "Passphrase",
+      "generate": "Genera",
+      "copy": "Copia",
+      "copied": "Copiato negli appunti",
+      "copyError": "Copia fallita",
+      "options": "Opzioni",
+      "length": "Lunghezza",
+      "wordCount": "Numero di Parole",
+      "includeUppercase": "Maiuscole (A-Z)",
+      "includeLowercase": "Minuscole (a-z)",
+      "includeNumbers": "Numeri (0-9)",
+      "includeSymbols": "Simboli (!@#$%)",
+      "excludeAmbiguous": "Escludi ambigui (0, O, l, 1, I)",
+      "separator": "Separatore di Parole",
+      "noSeparator": "Nessuno",
+      "space": "Spazio",
+      "capitalize": "Maiuscole Iniziali",
+      "includeNumber": "Aggiungi Numero Casuale",
+      "strength": {
+        "title": "Robustezza Password",
+        "weak": "Debole",
+        "fair": "Media",
+        "good": "Buona",
+        "strong": "Forte",
+        "entropy": "Entropia"
+      },
+      "history": {
+        "title": "Cronologia Recente",
+        "empty": "Nessuna password generata",
+        "cleared": "Cronologia cancellata"
+      },
+      "security": {
+        "title": "100% Privato e Sicuro",
+        "description": "Tutte le password vengono generate localmente nel tuo browser usando l'API Web Crypto. Nulla viene inviato a un server."
+      }
+    },
+    "jwt-decoder": {
+      "title": "Decoder JWT",
+      "description": "Decodifica e ispeziona i JSON Web Token. Visualizza header, payload e valida la scadenza.",
+      "seo": {
+        "title": "Decoder JWT - Ispeziona Token Online - OHCodex",
+        "description": "Strumento gratuito per decodificare JWT. Decodifica i JSON Web Token per visualizzare header, claims del payload e verificare la firma. Controlla la scadenza istantaneamente."
+      },
+      "header": "Decoder JWT",
+      "subtitle": "Decodifica e ispeziona i JSON Web Token. Visualizza header, claims del payload e verifica la validità del token.",
+      "inputToken": "Token JWT",
+      "inputDescription": "Incolla il tuo token JWT qui per decodificarlo",
+      "tokenPlaceholder": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "loadSample": "Carica Esempio",
+      "invalidToken": "Formato JWT non valido. Il token deve avere 3 parti separate da punti.",
+      "copied": "Copiato negli appunti",
+      "copyError": "Errore di copia",
+      "sampleLoaded": "Token di esempio caricato",
+      "tokenTimeline": "Cronologia Token",
+      "issuedAt": "Emesso Il (iat)",
+      "expiresAt": "Scade Il (exp)",
+      "notBefore": "Non Prima (nbf)",
+      "expired": "scaduto",
+      "tokenValid": "Il token è valido",
+      "tokenInvalid": "Il token non è valido",
+      "decodedOutput": "Output Decodificato",
+      "headerTab": "Header",
+      "payloadTab": "Payload",
+      "signatureTab": "Firma",
+      "algorithm": "Algoritmo",
+      "type": "Tipo",
+      "customClaims": "Claims Personalizzati",
+      "signatureInfo": "Informazioni Firma",
+      "signatureDescription": "La firma viene utilizzata per verificare l'integrità e l'autenticità del token.",
+      "signatureValue": "Firma",
+      "signatureNote": "Nota: Questo strumento decodifica i token lato client. La verifica della firma richiede la chiave segreta, che non dovrebbe mai essere esposta nel codice lato client.",
+      "noToken": "Nessun token da decodificare",
+      "enterTokenHint": "Inserisci un token JWT a sinistra per vedere l'output decodificato"
+    },
+    "regex-tester": {
+      "title": "Tester Regex",
+      "description": "Testa, debugga e valida espressioni regolari con evidenziazione in tempo reale.",
+      "seo": {
+        "title": "Tester Regex - Espressioni Regolari Online - OHCodex",
+        "description": "Testa e debugga espressioni regolari online. Evidenziazione in tempo reale, preset e guida di riferimento. Strumento gratuito."
+      },
+      "header": "Tester Regex",
+      "subtitle": "Testa, debugga e valida espressioni regolari con evidenziazione in tempo reale.",
+      "pattern": "Espressione Regolare",
+      "patternPlaceholder": "Inserisci il tuo pattern regex...",
+      "testString": "Stringa di Test",
+      "testStringPlaceholder": "Inserisci il testo da provare...",
+      "matches": "Corrispondenze",
+      "matchResults": "Risultati",
+      "match": "Corrispondenza",
+      "matches_plural": "Corrispondenze",
+      "position": "Posizione",
+      "groups": "Gruppi Catturati",
+      "characters": "caratteri",
+      "copied": "Copiato negli appunti",
+      "copyError": "Errore di copia",
+      "copyRegex": "Copia Regex",
+      "presetLoaded": "Preset {name} caricato",
+      "presetsTab": "Preset",
+      "cheatSheetTab": "Riferimento",
+      "commonPresets": "Preset Comuni",
+      "presetsDescription": "Clicca per caricare pattern regex comuni",
+      "cheatSheet": "Riferimento Rapido",
+      "flags": {
+        "g": "Globale - Tutte le corrispondenze",
+        "i": "Ignora maiuscole/minuscole",
+        "m": "Modalità multilinea",
+        "s": "Il punto include newline",
+        "u": "Supporto Unicode",
+        "y": "Ricerca sticky"
+      },
+      "categories": {
+        "anchors": "Ancore",
+        "characterClasses": "Classi di Caratteri",
+        "quantifiers": "Quantificatori",
+        "groups": "Gruppi e Lookaround",
+        "brackets": "Parentesi",
+        "flags": "Flag"
+      },
+      "presets": {
+        "email": "Indirizzo Email",
+        "url": "URL",
+        "phone": "Telefono",
+        "ip": "Indirizzo IP",
+        "hexColor": "Colore Hex",
+        "date": "Data (YYYY-MM-DD)",
+        "creditCard": "Carta di Credito",
+        "uuid": "UUID/GUID",
+        "password": "Password Forte",
+        "hashtag": "Hashtag",
+        "mention": "Menzione",
+        "htmlTag": "Tag HTML"
+      },
+      "tip": {
+        "title": "Suggerimento Pro",
+        "description": "Usa i gruppi di cattura () per estrarre parti specifiche. Appaiono nel pannello risultati."
+      }
     },
     "ui": {
       "ctaButton": "Parliamo del tuo Progetto",

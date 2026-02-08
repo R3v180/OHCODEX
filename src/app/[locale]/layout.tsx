@@ -6,6 +6,32 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/toaster';
 
+// Schema.org Organization JSON-LD para SEO
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'OHCodex',
+  alternateName: 'OHCodex Software Studio',
+  url: 'https://ohcodex.com',
+  logo: 'https://ohcodex.com/logo.png',
+  sameAs: [
+    'https://github.com/ohcodex',
+    'https://linkedin.com/company/ohcodex',
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'info@ohcodex.com',
+    contactType: 'customer service',
+    areaServed: 'ES',
+    availableLanguage: ['Spanish', 'English'],
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'ES',
+  },
+  description: 'Software Architecture & Development. Especialistas en PWA, SaaS y arquitectura cloud-native.',
+};
+
 export default async function LocaleLayout({
   children,
   params
@@ -40,6 +66,12 @@ export default async function LocaleLayout({
       
       {/* Toast para notificaciones (ej: "Copiado al portapapeles") */}
       <Toaster />
+      
+      {/* Schema.org Organization - Datos estructurados para Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
     </NextIntlClientProvider>
   );
 }

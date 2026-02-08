@@ -42,7 +42,8 @@
     "ourTools": {
       "title": "Engineering Suite",
       "subtitle": "Leistungsstarke, private und browserbasierte Tools für moderne Entwickler.",
-      "useTool": "Tool nutzen"
+      "useTool": "Tool nutzen",
+      "viewAll": "Alle Tools anzeigen"
     }
   },
   "contactSection": {
@@ -296,7 +297,9 @@
       "enterUrl": "URL eingeben...",
       "ssid": "Netzwerkname (SSID)",
       "wifiPassword": "WiFi Passwort",
-      "security": { "nopass": "Kein Passwort" },
+      "security": {
+        "nopass": "Kein Passwort"
+      },
       "firstName": "Vorname",
       "lastName": "Nachname",
       "phone": "Telefon",
@@ -327,6 +330,154 @@
       "placeholder": "Der erkannte Text erscheint hier zur Bearbeitung...",
       "success": "Text erfolgreich extrahiert",
       "error": "Text konnte nicht erkannt werden"
+    },
+    "password-gen": {
+      "title": "Passwort-Generator",
+      "description": "Generieren Sie sichere Passwörter und einprägsame Passphrasen mit anpassbaren Optionen.",
+      "seo": {
+        "title": "Sicherer Passwort-Generator - Starke Zufallspasswörter - OHCodex",
+        "description": "Kostenloses Passwort-Generator-Tool. Erstellen Sie starke, sichere Passwörter und einprägsame Passphrasen. Client-seitige Generierung für maximale Sicherheit."
+      },
+      "header": "Passwort-Generator",
+      "subtitle": "Generieren Sie sichere Passwörter und einprägsame Passphrasen. Die gesamte Verarbeitung erfolgt in Ihrem Browser.",
+      "passwordTab": "Passwort",
+      "passphraseTab": "Passphrase",
+      "generate": "Generieren",
+      "copy": "Kopieren",
+      "copied": "In die Zwischenablage kopiert",
+      "copyError": "Kopieren fehlgeschlagen",
+      "options": "Optionen",
+      "length": "Länge",
+      "wordCount": "Wortanzahl",
+      "includeUppercase": "Großbuchstaben (A-Z)",
+      "includeLowercase": "Kleinbuchstaben (a-z)",
+      "includeNumbers": "Zahlen (0-9)",
+      "includeSymbols": "Symbole (!@#$%)",
+      "excludeAmbiguous": "Mehrdeutige ausschließen (0, O, l, 1, I)",
+      "separator": "Worttrennzeichen",
+      "noSeparator": "Keines",
+      "space": "Leerzeichen",
+      "capitalize": "Wörter großschreiben",
+      "includeNumber": "Zufallszahl hinzufügen",
+      "strength": {
+        "title": "Passwortstärke",
+        "weak": "Schwach",
+        "fair": "Mittel",
+        "good": "Gut",
+        "strong": "Stark",
+        "entropy": "Entropie"
+      },
+      "history": {
+        "title": "Verlauf",
+        "empty": "Noch keine Passwörter generiert",
+        "cleared": "Verlauf gelöscht"
+      },
+      "security": {
+        "title": "100% Privat & Sicher",
+        "description": "Alle Passwörter werden lokal in Ihrem Browser mit der Web Crypto API generiert. Nichts wird an einen Server gesendet."
+      }
+    },
+    "jwt-decoder": {
+      "title": "JWT Decoder",
+      "description": "Dekodieren und inspizieren Sie JSON Web Tokens. Header, Payload und Ablaufdatum validieren.",
+      "seo": {
+        "title": "JWT Decoder - JSON Web Tokens Online inspizieren - OHCodex",
+        "description": "Kostenloses JWT Decoder-Tool. Dekodieren Sie JSON Web Tokens, um Header, Payload-Claims und Signatur zu überprüfen. Prüfen Sie sofort das Ablaufdatum."
+      },
+      "header": "JWT Decoder",
+      "subtitle": "Dekodieren und inspizieren Sie JSON Web Tokens. Header, Payload-Claims und Token-Gültigkeit überprüfen.",
+      "inputToken": "JWT Token",
+      "inputDescription": "Fügen Sie Ihren JWT-Token hier ein",
+      "tokenPlaceholder": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "loadSample": "Beispiel laden",
+      "invalidToken": "Ungültiges JWT-Format. Token muss 3 Teile haben, durch Punkte getrennt.",
+      "copied": "In Zwischenablage kopiert",
+      "copyError": "Fehler beim Kopieren",
+      "sampleLoaded": "Beispiel-Token geladen",
+      "tokenTimeline": "Token-Zeitlinie",
+      "issuedAt": "Ausgestellt am (iat)",
+      "expiresAt": "Läuft ab am (exp)",
+      "notBefore": "Nicht vor (nbf)",
+      "expired": "abgelaufen",
+      "tokenValid": "Token ist gültig",
+      "tokenInvalid": "Token ist ungültig",
+      "decodedOutput": "Dekodierte Ausgabe",
+      "headerTab": "Header",
+      "payloadTab": "Payload",
+      "signatureTab": "Signatur",
+      "algorithm": "Algorithmus",
+      "type": "Typ",
+      "customClaims": "Benutzerdefinierte Claims",
+      "signatureInfo": "Signatur-Information",
+      "signatureDescription": "Die Signatur wird verwendet, um die Integrität und Authentizität des Tokens zu überprüfen.",
+      "signatureValue": "Signatur",
+      "signatureNote": "Hinweis: Dieses Tool dekodiert Tokens client-seitig. Signaturüberprüfung erfordert den geheimen Schlüssel, der niemals im Client-Code offengelegt werden sollte.",
+      "noToken": "Kein Token zum Dekodieren",
+      "enterTokenHint": "Geben Sie einen JWT-Token links ein, um die dekodierte Ausgabe zu sehen"
+    },
+    "regex-tester": {
+      "title": "Regex Tester",
+      "description": "Testen, debuggen und validieren Sie reguläre Ausdrücke mit Echtzeit-Hervorhebung.",
+      "seo": {
+        "title": "Regex Tester - Reguläre Ausdrücke Online - OHCodex",
+        "description": "Testen und debuggen Sie reguläre Ausdrücke online. Echtzeit-Hervorhebung, Vorlagen und Referenz. Kostenloses Tool."
+      },
+      "header": "Regex Tester",
+      "subtitle": "Testen, debuggen und validieren Sie reguläre Ausdrücke mit Echtzeit-Hervorhebung.",
+      "pattern": "Regulärer Ausdruck",
+      "patternPlaceholder": "Geben Sie Ihr Regex-Muster ein...",
+      "testString": "Test-String",
+      "testStringPlaceholder": "Text zum Testen eingeben...",
+      "matches": "Übereinstimmungen",
+      "matchResults": "Ergebnisse",
+      "match": "Übereinstimmung",
+      "matches_plural": "Übereinstimmungen",
+      "position": "Position",
+      "groups": "Erfasste Gruppen",
+      "characters": "Zeichen",
+      "copied": "In Zwischenablage kopiert",
+      "copyError": "Kopierfehler",
+      "copyRegex": "Regex Kopieren",
+      "presetLoaded": "Vorlage {name} geladen",
+      "presetsTab": "Vorlagen",
+      "cheatSheetTab": "Referenz",
+      "commonPresets": "Häufige Vorlagen",
+      "presetsDescription": "Klicken zum Laden häufiger Regex-Muster",
+      "cheatSheet": "Schnellreferenz",
+      "flags": {
+        "g": "Global - Alle Treffer",
+        "i": "Groß-/Kleinschreibung ignorieren",
+        "m": "Mehrzeilen-Modus",
+        "s": "Punkt matcht Zeilenumbrüche",
+        "u": "Unicode-Unterstützung",
+        "y": "Sticky-Suche"
+      },
+      "categories": {
+        "anchors": "Anker",
+        "characterClasses": "Zeichenklassen",
+        "quantifiers": "Quantoren",
+        "groups": "Gruppen & Lookaround",
+        "brackets": "Klammern",
+        "flags": "Flags"
+      },
+      "presets": {
+        "email": "E-Mail-Adresse",
+        "url": "URL",
+        "phone": "Telefonnummer",
+        "ip": "IP-Adresse",
+        "hexColor": "Hex-Farbe",
+        "date": "Datum (JJJJ-MM-TT)",
+        "creditCard": "Kreditkarte",
+        "uuid": "UUID/GUID",
+        "password": "Starkes Passwort",
+        "hashtag": "Hashtag",
+        "mention": "Erwähnung",
+        "htmlTag": "HTML-Tag"
+      },
+      "tip": {
+        "title": "Pro-Tipp",
+        "description": "Verwenden Sie Erfassungsgruppen (), um bestimmte Teile zu extrahieren. Sie erscheinen im Ergebnisbereich."
+      }
     },
     "ui": {
       "ctaButton": "Lassen Sie uns über Ihr Projekt sprechen",

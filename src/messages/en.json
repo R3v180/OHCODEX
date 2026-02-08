@@ -42,7 +42,8 @@
     "ourTools": {
       "title": "Engineering Suite",
       "subtitle": "Powerful, private, and browser-based tools for modern developers.",
-      "useTool": "Use Tool"
+      "useTool": "Use Tool",
+      "viewAll": "View all tools"
     }
   },
   "contactSection": {
@@ -296,7 +297,9 @@
       "enterUrl": "Enter URL...",
       "ssid": "Network Name (SSID)",
       "wifiPassword": "WiFi Password",
-      "security": { "nopass": "No password" },
+      "security": {
+        "nopass": "No password"
+      },
       "firstName": "First Name",
       "lastName": "Last Name",
       "phone": "Phone",
@@ -327,6 +330,154 @@
       "placeholder": "Recognized text will appear here for editing...",
       "success": "Text extracted successfully",
       "error": "Could not recognize text"
+    },
+    "password-gen": {
+      "title": "Password Generator",
+      "description": "Generate secure passwords and memorable passphrases with customizable options.",
+      "seo": {
+        "title": "Secure Password Generator - Strong Random Passwords - OHCodex",
+        "description": "Free password generator tool. Create strong, secure passwords and memorable passphrases. Client-side generation for maximum security."
+      },
+      "header": "Password Generator",
+      "subtitle": "Generate secure passwords and memorable passphrases. All processing happens in your browser.",
+      "passwordTab": "Password",
+      "passphraseTab": "Passphrase",
+      "generate": "Generate",
+      "copy": "Copy",
+      "copied": "Copied to clipboard",
+      "copyError": "Failed to copy",
+      "options": "Options",
+      "length": "Length",
+      "wordCount": "Number of Words",
+      "includeUppercase": "Uppercase (A-Z)",
+      "includeLowercase": "Lowercase (a-z)",
+      "includeNumbers": "Numbers (0-9)",
+      "includeSymbols": "Symbols (!@#$%)",
+      "excludeAmbiguous": "Exclude ambiguous (0, O, l, 1, I)",
+      "separator": "Word Separator",
+      "noSeparator": "None",
+      "space": "Space",
+      "capitalize": "Capitalize Words",
+      "includeNumber": "Add Random Number",
+      "strength": {
+        "title": "Password Strength",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong",
+        "entropy": "Entropy"
+      },
+      "history": {
+        "title": "Recent History",
+        "empty": "No passwords generated yet",
+        "cleared": "History cleared"
+      },
+      "security": {
+        "title": "100% Private & Secure",
+        "description": "All passwords are generated locally in your browser using the Web Crypto API. Nothing is sent to any server."
+      }
+    },
+    "jwt-decoder": {
+      "title": "JWT Decoder",
+      "description": "Decode and inspect JSON Web Tokens. View header, payload, and signature with expiration validation.",
+      "seo": {
+        "title": "JWT Decoder - Inspect JSON Web Tokens Online - OHCodex",
+        "description": "Free JWT decoder tool. Decode JSON Web Tokens to view header, payload claims, and verify signature. Check token expiration instantly."
+      },
+      "header": "JWT Decoder",
+      "subtitle": "Decode and inspect JSON Web Tokens. View header, payload claims, and verify token validity.",
+      "inputToken": "JWT Token",
+      "inputDescription": "Paste your JWT token here to decode",
+      "tokenPlaceholder": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "loadSample": "Load Sample",
+      "invalidToken": "Invalid JWT format. Token must have 3 parts separated by dots.",
+      "copied": "Copied to clipboard",
+      "copyError": "Failed to copy",
+      "sampleLoaded": "Sample token loaded",
+      "tokenTimeline": "Token Timeline",
+      "issuedAt": "Issued At (iat)",
+      "expiresAt": "Expires At (exp)",
+      "notBefore": "Not Before (nbf)",
+      "expired": "expired",
+      "tokenValid": "Token is valid",
+      "tokenInvalid": "Token is invalid",
+      "decodedOutput": "Decoded Output",
+      "headerTab": "Header",
+      "payloadTab": "Payload",
+      "signatureTab": "Signature",
+      "algorithm": "Algorithm",
+      "type": "Type",
+      "customClaims": "Custom Claims",
+      "signatureInfo": "Signature Information",
+      "signatureDescription": "The signature is used to verify the token's integrity and authenticity.",
+      "signatureValue": "Signature",
+      "signatureNote": "Note: This tool decodes tokens client-side. Signature verification requires the secret key, which should never be exposed in client-side code.",
+      "noToken": "No token to decode",
+      "enterTokenHint": "Enter a JWT token on the left to see the decoded output"
+    },
+    "regex-tester": {
+      "title": "Regex Tester",
+      "description": "Test, debug and validate regular expressions with real-time highlighting and explanations.",
+      "seo": {
+        "title": "Regex Tester & Debugger - Online Regular Expression Tool - OHCodex",
+        "description": "Test and debug regular expressions online. Real-time match highlighting, regex presets, and cheat sheet. Free client-side regex tool."
+      },
+      "header": "Regex Tester",
+      "subtitle": "Test, debug and validate regular expressions with real-time highlighting and explanations.",
+      "pattern": "Regular Expression",
+      "patternPlaceholder": "Enter your regex pattern...",
+      "testString": "Test String",
+      "testStringPlaceholder": "Enter text to test against the pattern...",
+      "matches": "Matches Highlighted",
+      "matchResults": "Match Results",
+      "match": "Match",
+      "matches_plural": "Matches",
+      "position": "Position",
+      "groups": "Captured Groups",
+      "characters": "characters",
+      "copied": "Copied to clipboard",
+      "copyError": "Failed to copy",
+      "copyRegex": "Copy Regex",
+      "presetLoaded": "Loaded {name} preset",
+      "presetsTab": "Presets",
+      "cheatSheetTab": "Reference",
+      "commonPresets": "Common Presets",
+      "presetsDescription": "Click to load common regex patterns",
+      "cheatSheet": "Quick Reference",
+      "flags": {
+        "g": "Global - Find all matches",
+        "i": "Case insensitive",
+        "m": "Multiline mode",
+        "s": "Dot matches newlines",
+        "u": "Unicode support",
+        "y": "Sticky matching"
+      },
+      "categories": {
+        "anchors": "Anchors",
+        "characterClasses": "Character Classes",
+        "quantifiers": "Quantifiers",
+        "groups": "Groups & Lookaround",
+        "brackets": "Brackets",
+        "flags": "Flags"
+      },
+      "presets": {
+        "email": "Email Address",
+        "url": "URL",
+        "phone": "Phone Number",
+        "ip": "IP Address",
+        "hexColor": "Hex Color",
+        "date": "Date (YYYY-MM-DD)",
+        "creditCard": "Credit Card",
+        "uuid": "UUID/GUID",
+        "password": "Strong Password",
+        "hashtag": "Hashtag",
+        "mention": "Mention",
+        "htmlTag": "HTML Tag"
+      },
+      "tip": {
+        "title": "Pro Tip",
+        "description": "Use capturing groups () to extract specific parts of your matches. They appear in the results panel."
+      }
     },
     "ui": {
       "ctaButton": "Let's Talk About Your Project",

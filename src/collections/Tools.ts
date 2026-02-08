@@ -67,20 +67,12 @@ export const Tools: CollectionConfig = {
                 },
                 {
                   name: 'codeKey',
-                  type: 'select',
+                  type: 'text',
                   required: true,
                   label: 'Motor Técnico (Componente React)',
                   admin: {
-                    description: 'Selecciona qué herramienta funcional cargar aquí.',
+                    description: 'Valores: vault, image-optimizer, pdf-studio, data-station, qr-factory, ocr-vision, base64, css-minifier, password-gen, jwt-decoder, regex-tester, color-palette',
                   },
-                  options: [
-                    { label: 'Vault (Encriptación)', value: 'vault' },
-                    { label: 'Image Optimizer', value: 'image-optimizer' },
-                    { label: 'PDF Studio', value: 'pdf-studio' },
-                    { label: 'Data Station (JSON/SQL)', value: 'data-station' },
-                    { label: 'QR Factory', value: 'qr-factory' },
-                    { label: 'OCR Vision (IA)', value: 'ocr-vision' }, // <--- NUEVA OPCIÓN AÑADIDA
-                  ],
                 },
               ],
             },
@@ -99,19 +91,13 @@ export const Tools: CollectionConfig = {
                 },
                 {
                   name: 'icon',
-                  type: 'select',
+                  type: 'text',
                   label: 'Icono Visual',
                   defaultValue: 'box',
-                  options: [
-                    { label: 'Candado (Vault)', value: 'lock' },
-                    { label: 'Imagen/Foto', value: 'image' },
-                    { label: 'Documento PDF', value: 'file-text' },
-                    { label: 'Base de Datos', value: 'database' },
-                    { label: 'Código QR', value: 'qr-code' },
-                    { label: 'Escáner OCR', value: 'scan' }, // <--- NUEVA OPCIÓN AÑADIDA
-                    { label: 'Caja Genérica', value: 'box' },
-                  ],
-                  admin: { width: '50%' },
+                  admin: { 
+                    width: '50%',
+                    description: 'Valores: lock, image, file-text, database, qr-code, scan, code, palette, key, key-round, regex, box'
+                  },
                 },
               ],
             },

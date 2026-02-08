@@ -42,7 +42,8 @@
     "ourTools": {
       "title": "Suite d'Ingénierie",
       "subtitle": "Outils puissants, privés et basés sur navigateur pour développeurs modernes.",
-      "useTool": "Utiliser l'outil"
+      "useTool": "Utiliser l'outil",
+      "viewAll": "Voir tous les outils"
     }
   },
   "contactSection": {
@@ -296,7 +297,9 @@
       "enterUrl": "Entrer l'URL...",
       "ssid": "Nom du Réseau (SSID)",
       "wifiPassword": "Mot de Passe WiFi",
-      "security": { "nopass": "Sans mot de passe" },
+      "security": {
+        "nopass": "Sans mot de passe"
+      },
       "firstName": "Prénom",
       "lastName": "Nom",
       "phone": "Téléphone",
@@ -327,6 +330,154 @@
       "placeholder": "Le texte reconnu apparaîtra ici pour édition...",
       "success": "Texte extrait avec succès",
       "error": "Impossible de reconnaître le texte"
+    },
+    "password-gen": {
+      "title": "Générateur de Mots de Passe",
+      "description": "Générez des mots de passe sécurisés et des phrases mémorables avec des options personnalisables.",
+      "seo": {
+        "title": "Générateur de Mots de Passe Sécurisés - Mots de Passe Aléatoires Forts - OHCodex",
+        "description": "Outil gratuit de génération de mots de passe. Créez des mots de passe forts et des phrases mémorables. Génération côté client pour une sécurité maximale."
+      },
+      "header": "Générateur de Mots de Passe",
+      "subtitle": "Générez des mots de passe sécurisés et des phrases mémorables. Tout le traitement se fait dans votre navigateur.",
+      "passwordTab": "Mot de Passe",
+      "passphraseTab": "Phrase Secrète",
+      "generate": "Générer",
+      "copy": "Copier",
+      "copied": "Copié dans le presse-papiers",
+      "copyError": "Échec de la copie",
+      "options": "Options",
+      "length": "Longueur",
+      "wordCount": "Nombre de Mots",
+      "includeUppercase": "Majuscules (A-Z)",
+      "includeLowercase": "Minuscules (a-z)",
+      "includeNumbers": "Chiffres (0-9)",
+      "includeSymbols": "Symboles (!@#$%)",
+      "excludeAmbiguous": "Exclure ambigus (0, O, l, 1, I)",
+      "separator": "Séparateur de Mots",
+      "noSeparator": "Aucun",
+      "space": "Espace",
+      "capitalize": "Mettre en Majuscule",
+      "includeNumber": "Ajouter un Nombre Aléatoire",
+      "strength": {
+        "title": "Force du Mot de Passe",
+        "weak": "Faible",
+        "fair": "Moyen",
+        "good": "Bon",
+        "strong": "Fort",
+        "entropy": "Entropie"
+      },
+      "history": {
+        "title": "Historique Récent",
+        "empty": "Aucun mot de passe généré",
+        "cleared": "Historique effacé"
+      },
+      "security": {
+        "title": "100% Privé et Sécurisé",
+        "description": "Tous les mots de passe sont générés localement dans votre navigateur via l'API Web Crypto. Rien n'est envoyé à un serveur."
+      }
+    },
+    "jwt-decoder": {
+      "title": "Décodeur JWT",
+      "description": "Décodez et inspectez les JSON Web Tokens. Affichez l'en-tête, le payload et validez l'expiration.",
+      "seo": {
+        "title": "Décodeur JWT - Inspecter les Tokens Online - OHCodex",
+        "description": "Outil gratuit de décodage JWT. Décodez les JSON Web Tokens pour voir l'en-tête, les claims du payload et vérifier la signature. Vérifiez l'expiration instantanément."
+      },
+      "header": "Décodeur JWT",
+      "subtitle": "Décodez et inspectez les JSON Web Tokens. Affichez l'en-tête, les claims du payload et vérifiez la validité du token.",
+      "inputToken": "Token JWT",
+      "inputDescription": "Collez votre token JWT ici pour le décoder",
+      "tokenPlaceholder": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "loadSample": "Charger Exemple",
+      "invalidToken": "Format JWT invalide. Le token doit avoir 3 parties séparées par des points.",
+      "copied": "Copié dans le presse-papiers",
+      "copyError": "Échec de la copie",
+      "sampleLoaded": "Token exemple chargé",
+      "tokenTimeline": "Chronologie du Token",
+      "issuedAt": "Émis Le (iat)",
+      "expiresAt": "Expire Le (exp)",
+      "notBefore": "Pas Avant (nbf)",
+      "expired": "expiré",
+      "tokenValid": "Le token est valide",
+      "tokenInvalid": "Le token est invalide",
+      "decodedOutput": "Sortie Décodée",
+      "headerTab": "En-tête",
+      "payloadTab": "Payload",
+      "signatureTab": "Signature",
+      "algorithm": "Algorithme",
+      "type": "Type",
+      "customClaims": "Claims Personnalisés",
+      "signatureInfo": "Information de Signature",
+      "signatureDescription": "La signature est utilisée pour vérifier l'intégrité et l'authenticité du token.",
+      "signatureValue": "Signature",
+      "signatureNote": "Note: Cet outil décode les tokens côté client. La vérification de signature nécessite la clé secrète, qui ne doit jamais être exposée dans le code client.",
+      "noToken": "Aucun token à décoder",
+      "enterTokenHint": "Entrez un token JWT à gauche pour voir la sortie décodée"
+    },
+    "regex-tester": {
+      "title": "Testeur de Regex",
+      "description": "Testez, déboguez et validez les expressions régulières avec mise en surbrillance en temps réel.",
+      "seo": {
+        "title": "Testeur de Regex - Outil d'Expressions Régulières - OHCodex",
+        "description": "Testez et déboguez les expressions régulières en ligne. Mise en surbrillance en temps réel, modèles prédéfinis et aide-mémoire. Outil gratuit."
+      },
+      "header": "Testeur de Regex",
+      "subtitle": "Testez, déboguez et validez les expressions régulières avec mise en surbrillance en temps réel.",
+      "pattern": "Expression Régulière",
+      "patternPlaceholder": "Entrez votre motif regex...",
+      "testString": "Texte de Test",
+      "testStringPlaceholder": "Entrez le texte à tester...",
+      "matches": "Correspondances",
+      "matchResults": "Résultats",
+      "match": "Correspondance",
+      "matches_plural": "Correspondances",
+      "position": "Position",
+      "groups": "Groupes Capturés",
+      "characters": "caractères",
+      "copied": "Copié dans le presse-papiers",
+      "copyError": "Erreur de copie",
+      "copyRegex": "Copier le Regex",
+      "presetLoaded": "Modèle {name} chargé",
+      "presetsTab": "Modèles",
+      "cheatSheetTab": "Référence",
+      "commonPresets": "Modèles Courants",
+      "presetsDescription": "Cliquez pour charger des motifs regex courants",
+      "cheatSheet": "Référence Rapide",
+      "flags": {
+        "g": "Global - Toutes les correspondances",
+        "i": "Insensible à la casse",
+        "m": "Mode multiligne",
+        "s": "Le point inclut les sauts",
+        "u": "Support Unicode",
+        "y": "Recherche sticky"
+      },
+      "categories": {
+        "anchors": "Ancres",
+        "characterClasses": "Classes de Caractères",
+        "quantifiers": "Quantificateurs",
+        "groups": "Groupes et Lookaround",
+        "brackets": "Crochets",
+        "flags": "Drapeaux"
+      },
+      "presets": {
+        "email": "Adresse Email",
+        "url": "URL",
+        "phone": "Téléphone",
+        "ip": "Adresse IP",
+        "hexColor": "Couleur Hex",
+        "date": "Date (AAAA-MM-JJ)",
+        "creditCard": "Carte de Crédit",
+        "uuid": "UUID/GUID",
+        "password": "Mot de Passe Fort",
+        "hashtag": "Hashtag",
+        "mention": "Mention",
+        "htmlTag": "Balise HTML"
+      },
+      "tip": {
+        "title": "Astuce Pro",
+        "description": "Utilisez des groupes de capture () pour extraire des parties spécifiques. Ils apparaissent dans le panneau de résultats."
+      }
     },
     "ui": {
       "ctaButton": "Parlons de votre Projet",

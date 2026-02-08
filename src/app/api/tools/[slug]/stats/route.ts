@@ -13,7 +13,7 @@ export async function GET(
     
     // Contar usos totales
     const totalResult = await payload.count({
-      collection: 'tool-usage-logs',
+      collection: 'tool-usage-logs' as any,
       where: {
         toolSlug: {
           equals: slug
@@ -23,7 +23,7 @@ export async function GET(
     
     // Contar personas únicas (por IP hash)
     const uniqueResult = await payload.find({
-      collection: 'tool-usage-logs',
+      collection: 'tool-usage-logs' as any,
       where: {
         toolSlug: {
           equals: slug

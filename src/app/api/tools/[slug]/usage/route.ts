@@ -38,7 +38,7 @@ export async function POST(
     
     // Crear log de uso mediante Payload
     await payload.create({
-      collection: 'tool-usage-logs',
+      collection: 'tool-usage-logs' as any,
       data: {
         toolSlug: slug,
         ipHash: ipHash,

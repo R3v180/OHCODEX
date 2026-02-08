@@ -10,6 +10,11 @@ const inter = Inter({
 export const metadata = {
   title: "OHCodex",
   description: "Software Architecture & Development",
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

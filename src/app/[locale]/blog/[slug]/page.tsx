@@ -169,7 +169,7 @@ export default async function BlogPostPage({ params }: Args) {
       {coverUrl && (
         <div className="container px-4 mx-auto max-w-5xl mb-12">
           <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
-            <Image src={coverUrl} alt={post.title} fill className="object-cover" priority />
+            <Image src={coverUrl} alt={post.title} fill className="object-cover" priority sizes="100vw" />
           </div>
         </div>
       )}

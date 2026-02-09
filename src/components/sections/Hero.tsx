@@ -1,21 +1,21 @@
-'use client'
-
+// SERVER COMPONENT - No 'use client' needed
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Code2, Layers, Database } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 
 // Definimos la interfaz para recibir los datos dinámicos desde page.tsx
 interface HeroProps {
   badge?: string | null
   title: string
   subtitle: string
+  locale: string
 }
 
-export function Hero({ badge, title, subtitle }: HeroProps) {
-  // Cargamos las traducciones del namespace 'hero'
-  const t = useTranslations('hero')
+export async function Hero({ badge, title, subtitle, locale }: HeroProps) {
+  // Cargamos las traducciones del namespace 'hero' en el servidor
+  const t = await getTranslations({ locale, namespace: 'hero' })
 
   return (
     <section id="hero" className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-border bg-background pt-20 pb-16">

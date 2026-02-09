@@ -86,6 +86,9 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    // ⚠️ PROTECCIÓN: Nunca modificar schema automáticamente
+    // Las migraciones deben hacerse manualmente con: npm run payload migrate
+    push: false,
   }),
   sharp,
   plugins: [

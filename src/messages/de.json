@@ -359,7 +359,15 @@
       "space": "Leerzeichen",
       "capitalize": "Wörter großschreiben",
       "includeNumber": "Zufallszahl hinzufügen",
-      "strength": "Stärke",
+      "strength": {
+        "title": "Stärke",
+        "weak": "Schwach",
+        "fair": "Mäßig",
+        "good": "Gut",
+        "strong": "Stark",
+        "entropy": "Entropie",
+        "description": "Entropie misst die Zufälligkeit des Passworts. Mehr Bits = sicherer."
+      },
       "history": {
         "title": "Verlauf",
         "empty": "Noch keine Passwörter generiert",
@@ -368,15 +376,7 @@
       "security": {
         "title": "100% Privat & Sicher",
         "description": "Alle Passwörter werden lokal in Ihrem Browser mit der Web Crypto API generiert. Nichts wird an einen Server gesendet."
-      },
-      "weak": "Schwach",
-      "medium": "Mittel",
-      "strong": "Stark",
-      "veryStrong": "Sehr Stark",
-      "excludeSimilar": "Ähnliche ausschließen",
-      "easyToSay": "Leicht auszusprechen",
-      "easyToRead": "Leicht zu lesen",
-      "allCharacters": "Alle Zeichen"
+      }
     },
     "jwt-decoder": {
       "title": "JWT Decoder",
@@ -490,6 +490,14 @@
         "description": "Verwenden Sie Erfassungsgruppen (), um bestimmte Teile zu extrahieren. Sie erscheinen im Ergebnisbereich."
       },
       "noMatches": "Keine Übereinstimmungen",
+      "flags": {
+        "g": "Global",
+        "i": "Groß-/Kleinschreibung ignorieren",
+        "m": "Mehrzeilig",
+        "s": "Punkt alle",
+        "u": "Unicode",
+        "y": "Sticky"
+      },
       "global": "Global",
       "ignoreCase": "Groß-/Kleinschreibung ignorieren",
       "multiline": "Mehrzeilig",
@@ -567,39 +575,55 @@
       "cssOutput": "CSS Ausgabe"
     },
     "color-palette": {
-      "title": "Farbschema",
-      "description": "Erstellen Sie harmonische Farbschemata.",
-      "header": "Farbschema",
-      "subtitle": "Erstellen Sie harmonische Farbschemata.",
+      "title": "Farbschema Generator",
+      "description": "Erstellen Sie harmonische Farbpaletten für Ihre Designs. Generieren Sie monochrome, analoge und komplementäre Kombinationen.",
+      "header": "Farbschema Generator",
+      "subtitle": "Erstellen Sie harmonische Farbpaletten für Ihre Designs. Generieren Sie monochrome, analoge und komplementäre Kombinationen.",
       "baseColor": "Grundfarbe",
-      "harmonyType": "Harmonie",
-      "harmony": {
-        "monochromatic": "Monochromatisch",
-        "analogous": "Analog",
+      "hexValue": "HEX Wert",
+      "randomPalette": "Zufällige Palette",
+      "algorithm": "Algorithmus",
+      "algorithms": {
         "complementary": "Komplementär",
-        "splitComplementary": "Geteilt",
         "triadic": "Triadisch",
-        "tetradic": "Tetradisch"
+        "tetradic": "Tetradisch",
+        "analogous": "Analog",
+        "monochromatic": "Monochromatisch",
+        "splitComplementary": "Geteilt Komplementär"
       },
-      "palette": "Palette",
-      "color": "Farbe",
-      "hex": "HEX",
-      "rgb": "RGB",
-      "hsl": "HSL",
-      "copyHex": "HEX Kopieren",
-      "copyRgb": "RGB Kopieren",
-      "copyCss": "CSS kopieren",
-      "exportCss": "CSS exportieren",
-      "exportJson": "JSON exportieren",
-      "copied": "Kopiert",
-      "copyError": "Fehler",
-      "locked": "Gesperrt",
-      "unlocked": "Entsperrt",
-      "generate": "Generieren",
-      "copyHsl": "HSL Kopieren",
-      "lockColor": "Farbe Sperren",
-      "unlockColor": "Farbe Entsperren",
-      "exportPalette": "Palette Exportieren"
+      "colors": "Farben",
+      "export": "Exportieren",
+      "copyAsCSS": "Als CSS kopieren",
+      "copyAsJSON": "Als JSON kopieren",
+      "copyAsSCSS": "Als SCSS kopieren",
+      "copied": "In die Zwischenablage kopiert",
+      "copyError": "Kopieren fehlgeschlagen",
+      "history": {
+        "title": "Verlauf",
+        "empty": "Keine gespeicherten Paletten"
+      },
+      "generatedPalette": "Generierte Palette",
+      "savePalette": "Palette Speichern",
+      "savedToHistory": "Palette im Verlauf gespeichert",
+      "loadedFromHistory": "Palette aus Verlauf geladen",
+      "historyCleared": "Verlauf gelöscht",
+      "preview": "Vorschau",
+      "lightMode": "Heller Modus",
+      "darkMode": "Dunkler Modus",
+      "mixedMode": "Gemischter Modus",
+      "sampleHeading": "Beispielüberschrift",
+      "sampleText": "Dies ist ein Beispieltext, um zu zeigen, wie Farben in verschiedenen Interface-Kontexten aussehen.",
+      "button": "Knopf",
+      "cardTitle": "Karte",
+      "aboutPalette": "Über diese Palette",
+      "algorithmDescriptions": {
+        "complementary": "Verwendet gegenüberliegende Farben auf dem Farbkreis für maximalen Kontrast.",
+        "triadic": "Drei gleich weit entfernte Farben auf dem Farbkreis für lebendige Harmonie.",
+        "tetradic": "Vier Farben in komplementären Paaren für reiche Vielfalt.",
+        "analogous": "Benachbarte Farben auf dem Farbkreis für sanfte Harmonie.",
+        "monochromatic": "Variationen einer einzelnen Farbe durch verschiedene Sättigungen und Helligkeiten.",
+        "splitComplementary": "Eine Grundfarbe mit zwei Farben, die an ihr Komplement grenzen."
+      }
     }
   },
   "footer": {

@@ -123,7 +123,7 @@ export async function ProductsSection({ locale }: { locale: string }) {
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-colors">
                       {iconUrl ? (
                         <div className="relative w-8 h-8">
-                            <Image src={iconUrl} alt="logo" fill className="object-contain" />
+                            <Image src={iconUrl} alt="logo" fill className="object-contain" sizes="32px" />
                         </div>
                       ) : (
                         <Rocket className="h-6 w-6 text-zinc-400 group-hover:text-cyan-400" />

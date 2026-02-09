@@ -359,7 +359,15 @@
       "space": "Espacio",
       "capitalize": "Capitalizar Palabras",
       "includeNumber": "Añadir Número Aleatorio",
-      "strength": "Fortaleza",
+      "strength": {
+        "title": "Fortaleza",
+        "weak": "Débil",
+        "fair": "Regular",
+        "good": "Buena",
+        "strong": "Fuerte",
+        "entropy": "Entropía",
+        "description": "La entropía mide la aleatoriedad de la contraseña. Más bits = más segura."
+      },
       "history": {
         "title": "Historial Reciente",
         "empty": "Aún no se han generado contraseñas",
@@ -368,15 +376,7 @@
       "security": {
         "title": "100% Privado y Seguro",
         "description": "Todas las contraseñas se generan localmente en tu navegador usando la API Web Crypto. Nada se envía a ningún servidor."
-      },
-      "weak": "Débil",
-      "medium": "Media",
-      "strong": "Fuerte",
-      "veryStrong": "Muy Fuerte",
-      "excludeSimilar": "Excluir similares",
-      "easyToSay": "Fácil de decir",
-      "easyToRead": "Fácil de leer",
-      "allCharacters": "Todos los caracteres"
+      }
     },
     "jwt-decoder": {
       "title": "Decodificador JWT",
@@ -481,6 +481,14 @@
         "description": "Usa grupos de captura () para extraer partes específicas de tus coincidencias. Aparecerán en el panel de resultados."
       },
       "noMatches": "Sin coincidencias",
+      "flags": {
+        "g": "Global",
+        "i": "Ignorar mayúsculas",
+        "m": "Multilínea",
+        "s": "Dot all",
+        "u": "Unicode",
+        "y": "Sticky"
+      },
       "global": "Global",
       "ignoreCase": "Ignorar mayúsculas",
       "multiline": "Multilínea",
@@ -580,34 +588,50 @@
       "header": "Generador de Paletas",
       "subtitle": "Crea paletas de colores armoniosas para tus diseños. Genera combinaciones monocromáticas, análogas y complementarias.",
       "baseColor": "Color Base",
-      "harmonyType": "Tipo de Armonía",
-      "harmony": {
-        "monochromatic": "Monocromática",
-        "analogous": "Análoga",
-        "complementary": "Complementaria",
-        "splitComplementary": "Complementaria Dividida",
-        "triadic": "Triádica",
-        "tetradic": "Tetrádica"
+      "hexValue": "Valor HEX",
+      "randomPalette": "Paleta Aleatoria",
+      "algorithm": "Algoritmo",
+      "algorithms": {
+        "complementary": "Complementario",
+        "triadic": "Triádico",
+        "tetradic": "Tetrádico",
+        "analogous": "Análogo",
+        "monochromatic": "Monocromático",
+        "splitComplementary": "Complementario Dividido"
       },
-      "palette": "Paleta Generada",
-      "color": "Color",
-      "hex": "HEX",
-      "rgb": "RGB",
-      "hsl": "HSL",
-      "copyHex": "Copiar HEX",
-      "copyRgb": "Copiar RGB",
-      "copyCss": "Copiar CSS",
-      "exportCss": "Exportar CSS",
-      "exportJson": "Exportar JSON",
+      "colors": "colores",
+      "export": "Exportar",
+      "copyAsCSS": "Copiar como CSS",
+      "copyAsJSON": "Copiar como JSON",
+      "copyAsSCSS": "Copiar como SCSS",
       "copied": "Copiado al portapapeles",
       "copyError": "Error al copiar",
-      "locked": "Bloqueado",
-      "unlocked": "Desbloqueado",
-      "generate": "Generar",
-      "copyHsl": "Copiar HSL",
-      "lockColor": "Bloquear Color",
-      "unlockColor": "Desbloquear Color",
-      "exportPalette": "Exportar Paleta"
+      "history": {
+        "title": "Historial",
+        "empty": "No hay paletas guardadas"
+      },
+      "generatedPalette": "Paleta Generada",
+      "savePalette": "Guardar Paleta",
+      "savedToHistory": "Paleta guardada en historial",
+      "loadedFromHistory": "Paleta cargada del historial",
+      "historyCleared": "Historial borrado",
+      "preview": "Vista Previa",
+      "lightMode": "Modo Claro",
+      "darkMode": "Modo Oscuro",
+      "mixedMode": "Modo Mixto",
+      "sampleHeading": "Encabezado de Ejemplo",
+      "sampleText": "Este es un texto de ejemplo para mostrar cómo se ven los colores en diferentes contextos de interfaz.",
+      "button": "Botón",
+      "cardTitle": "Tarjeta",
+      "aboutPalette": "Sobre esta Paleta",
+      "algorithmDescriptions": {
+        "complementary": "Usa colores opuestos en la rueda cromática para crear contraste máximo.",
+        "triadic": "Tres colores equidistantes en la rueda cromática para armonía vibrante.",
+        "tetradic": "Cuatro colores en pares complementarios para variedad rica.",
+        "analogous": "Colores adyacentes en la rueda cromática para armonía suave.",
+        "monochromatic": "Variaciones de un solo color mediante diferentes saturaciones y luminosidades.",
+        "splitComplementary": "Un color base con dos colores adyacentes a su complementario."
+      }
     },
     "ui": {
       "ctaButton": "Hablemos de tu Proyecto",

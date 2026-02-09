@@ -359,7 +359,15 @@
       "space": "Space",
       "capitalize": "Capitalize Words",
       "includeNumber": "Add Random Number",
-      "strength": "Strength",
+      "strength": {
+        "title": "Strength",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong",
+        "entropy": "Entropy",
+        "description": "Entropy measures the randomness of the password. More bits = more secure."
+      },
       "history": {
         "title": "Recent History",
         "empty": "No passwords generated yet",
@@ -368,15 +376,7 @@
       "security": {
         "title": "100% Private & Secure",
         "description": "All passwords are generated locally in your browser using the Web Crypto API. Nothing is sent to any server."
-      },
-      "weak": "Weak",
-      "medium": "Medium",
-      "strong": "Strong",
-      "veryStrong": "Very Strong",
-      "excludeSimilar": "Exclude similar",
-      "easyToSay": "Easy to say",
-      "easyToRead": "Easy to read",
-      "allCharacters": "All characters"
+      }
     },
     "jwt-decoder": {
       "title": "JWT Decoder",
@@ -490,6 +490,14 @@
         "description": "Use capturing groups () to extract specific parts of your matches. They appear in the results panel."
       },
       "noMatches": "No matches",
+      "flags": {
+        "g": "Global",
+        "i": "Ignore case",
+        "m": "Multiline",
+        "s": "Dot all",
+        "u": "Unicode",
+        "y": "Sticky"
+      },
       "global": "Global",
       "ignoreCase": "Ignore case",
       "multiline": "Multiline",
@@ -567,39 +575,55 @@
       "cssOutput": "Output CSS"
     },
     "color-palette": {
-      "title": "Color Palette",
-      "description": "Create harmonious color palettes.",
-      "header": "Color Palette",
-      "subtitle": "Create harmonious color palettes.",
+      "title": "Color Palette Generator",
+      "description": "Create harmonious color palettes for your designs. Generate monochromatic, analogous, and complementary combinations.",
+      "header": "Color Palette Generator",
+      "subtitle": "Create harmonious color palettes for your designs. Generate monochromatic, analogous, and complementary combinations.",
       "baseColor": "Base Color",
-      "harmonyType": "Harmony",
-      "harmony": {
-        "monochromatic": "Monochromatic",
-        "analogous": "Analogous",
+      "hexValue": "HEX Value",
+      "randomPalette": "Random Palette",
+      "algorithm": "Algorithm",
+      "algorithms": {
         "complementary": "Complementary",
-        "splitComplementary": "Split",
         "triadic": "Triadic",
-        "tetradic": "Tetradic"
+        "tetradic": "Tetradic",
+        "analogous": "Analogous",
+        "monochromatic": "Monochromatic",
+        "splitComplementary": "Split Complementary"
       },
-      "palette": "Palette",
-      "color": "Color",
-      "hex": "HEX",
-      "rgb": "RGB",
-      "hsl": "HSL",
-      "copyHex": "Copy HEX",
-      "copyRgb": "Copy RGB",
-      "copyCss": "Copy CSS",
-      "exportCss": "Export CSS",
-      "exportJson": "Export JSON",
-      "copied": "Copied",
-      "copyError": "Error",
-      "locked": "Locked",
-      "unlocked": "Unlocked",
-      "generate": "Generate",
-      "copyHsl": "Copy HSL",
-      "lockColor": "Lock Color",
-      "unlockColor": "Unlock Color",
-      "exportPalette": "Export Palette"
+      "colors": "colors",
+      "export": "Export",
+      "copyAsCSS": "Copy as CSS",
+      "copyAsJSON": "Copy as JSON",
+      "copyAsSCSS": "Copy as SCSS",
+      "copied": "Copied to clipboard",
+      "copyError": "Failed to copy",
+      "history": {
+        "title": "History",
+        "empty": "No saved palettes"
+      },
+      "generatedPalette": "Generated Palette",
+      "savePalette": "Save Palette",
+      "savedToHistory": "Palette saved to history",
+      "loadedFromHistory": "Palette loaded from history",
+      "historyCleared": "History cleared",
+      "preview": "Preview",
+      "lightMode": "Light Mode",
+      "darkMode": "Dark Mode",
+      "mixedMode": "Mixed Mode",
+      "sampleHeading": "Sample Heading",
+      "sampleText": "This is sample text to show how colors look in different interface contexts.",
+      "button": "Button",
+      "cardTitle": "Card",
+      "aboutPalette": "About this Palette",
+      "algorithmDescriptions": {
+        "complementary": "Uses opposite colors on the color wheel to create maximum contrast.",
+        "triadic": "Three equidistant colors on the color wheel for vibrant harmony.",
+        "tetradic": "Four colors in complementary pairs for rich variety.",
+        "analogous": "Adjacent colors on the color wheel for smooth harmony.",
+        "monochromatic": "Variations of a single color through different saturations and lightness.",
+        "splitComplementary": "One base color with two colors adjacent to its complement."
+      }
     }
   },
   "footer": {

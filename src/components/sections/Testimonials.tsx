@@ -107,7 +107,8 @@ export function Testimonials({
                         src={imageUrl} 
                         alt={item.authorName} 
                         fill 
-                        className="object-cover" 
+                        className="object-cover"
+                        sizes="48px"
                       />
                     ) : (
                       <div className="h-full w-full flex items-center justify-center text-zinc-500 font-bold text-xl">

@@ -170,6 +170,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <>
       {/* 1. HERO Corporativo */}
       <Hero 
+        locale={locale}
         badge={landing?.heroBadge}
         title={landing?.heroTitle || "OHCodex Software Studio"}
         subtitle={landing?.heroSubtitle || "Engineering the future."}

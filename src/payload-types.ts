@@ -20,6 +20,7 @@ export interface Config {
     analytics: Analytics;
     tools: Tool;
     'tool-reports': ToolReport;
+    'tool-usage-logs': ToolUsageLog;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -35,6 +36,7 @@ export interface Config {
     analytics: AnalyticsSelect<false> | AnalyticsSelect<true>;
     tools: ToolsSelect<false> | ToolsSelect<true>;
     'tool-reports': ToolReportsSelect<false> | ToolReportsSelect<true>;
+    'tool-usage-logs': ToolUsageLogsSelect<false> | ToolUsageLogsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -303,6 +305,17 @@ export interface ToolReport {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tool-usage-logs".
+ */
+export interface ToolUsageLog {
+  id: number;
+  toolSlug: string;
+  ipHash: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -343,6 +356,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tool-reports';
         value: number | ToolReport;
+      } | null)
+    | ({
+        relationTo: 'tool-usage-logs';
+        value: number | ToolUsageLog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -553,6 +570,16 @@ export interface ToolReportsSelect<T extends boolean = true> {
   description?: T;
   status?: T;
   notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tool-usage-logs_select".
+ */
+export interface ToolUsageLogsSelect<T extends boolean = true> {
+  toolSlug?: T;
+  ipHash?: T;
   updatedAt?: T;
   createdAt?: T;
 }

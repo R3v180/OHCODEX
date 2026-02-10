@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     // Crear el registro de demo request
     const demoRequest = await payload.create({
-      collection: 'demo-requests',
+      collection: 'demo-requests' as any,
       data: {
         name: name.trim(),
         email: email.toLowerCase().trim(),

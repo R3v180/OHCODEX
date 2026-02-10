@@ -42,7 +42,7 @@ export const DemoRequests: CollectionConfig = {
 
             // Guardar el token en el documento
             await req.payload.update({
-              collection: 'demo-requests',
+              collection: 'demo-requests' as any,
               id: doc.id,
               data: {
                 accessToken: token,

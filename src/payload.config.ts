@@ -26,6 +26,7 @@ import { Analytics } from './collections/Analytics'
 import { Tools } from './collections/Tools'
 import { ToolReports } from './collections/ToolReports'
 import { ToolUsageLogs } from './collections/ToolUsageLogs'
+import { DemoRequests } from './collections/DemoRequests'
 
 // 2. Globales
 import { Company } from './globals/Company'
@@ -69,6 +70,7 @@ export default buildConfig({
     Tools,
     ToolReports,
     ToolUsageLogs,
+    DemoRequests,
   ],
   globals: [
     Company, 

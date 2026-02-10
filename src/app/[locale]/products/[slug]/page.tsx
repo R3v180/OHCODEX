@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ArrowRight, ExternalLink, Layers, Rocket, CheckCircle2, Timer, FlaskConical } from 'lucide-react'
+import { DemoRequestForm } from '@/components/poolcontrol/DemoRequestForm'
 // 👇 CAMBIO: Usamos Link inteligente
 import { Link } from '@/i18n/routing'
 import Image from 'next/image'
@@ -261,14 +262,26 @@ export default async function ProductPage({ params }: Args) {
                 {t('technicalSheet')}
               </h3>
               
-              {product.projectUrl ? (
+              {/* Formulario Demo para PoolControl */}
+              {slug === 'pool-control-erp' && (
+                <div className="mb-6">
+                  <DemoRequestForm 
+                    utmSource="ohcodex-portfolio" 
+                    utmMedium="pool-control-page"
+                  />
+                </div>
+              )}
+              
+              {product.projectUrl && slug !== 'pool-control-erp' && (
                 <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white mb-6 shadow-lg shadow-cyan-900/20" asChild>
                   <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
                     {t('visitWebsite')} 
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-              ) : (
+              )}
+              
+              {!product.projectUrl && slug !== 'pool-control-erp' && (
                 <Button disabled className="w-full bg-zinc-800 text-zinc-500 border border-zinc-700 mb-6">
                   {t('inDevelopment')}
                 </Button>

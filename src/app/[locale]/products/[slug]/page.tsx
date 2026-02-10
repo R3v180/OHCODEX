@@ -127,10 +127,12 @@ export default async function ProductPage({ params }: Args) {
   const heroUrl = typeof product.heroImage === 'object' && product.heroImage?.url ? product.heroImage.url : null
   const logoUrl = typeof product.logo === 'object' && product.logo?.url ? product.logo.url : null
   
-  const statusKey = product.status as keyof typeof STATUS_VISUALS
+  // HACK: PoolControl siempre muestra Beta hasta que se actualice en BD
+  const productStatus = slug === 'pool-control-erp' ? 'beta' : product.status
+  const statusKey = productStatus as keyof typeof STATUS_VISUALS
   const visuals = STATUS_VISUALS[statusKey] || STATUS_VISUALS.concept
   const StatusIcon = visuals.icon
-  const statusLabel = t(`status.${product.status}`)
+  const statusLabel = t(`status.${productStatus}`)
 
   const softwareJsonLd = {
     '@context': 'https://schema.org',

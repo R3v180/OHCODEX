@@ -96,8 +96,10 @@ export async function ProductsSection({ locale }: { locale: string }) {
         {/* REJILLA CONFIGURABLE */}
         <div className={`grid grid-cols-1 md:grid-cols-2 ${gridClass} gap-8`}>
           {products.map((product) => {
+            // HACK: PoolControl siempre muestra Beta hasta que se actualice en BD
+            const productStatus = product.slug === 'pool-control-erp' ? 'beta' : product.status
             // Pasamos 't' para que el estado se traduzca
-            const status = getStatusConfig(product.status, t)
+            const status = getStatusConfig(productStatus, t)
             const StatusIcon = status.icon
             
             const iconUrl = typeof product.logo === 'object' && product.logo?.url 

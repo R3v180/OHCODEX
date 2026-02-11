@@ -21,6 +21,7 @@ export interface Config {
     tools: Tool;
     'tool-reports': ToolReport;
     'tool-usage-logs': ToolUsageLog;
+    'demo-requests': DemoRequest;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -37,6 +38,7 @@ export interface Config {
     tools: ToolsSelect<false> | ToolsSelect<true>;
     'tool-reports': ToolReportsSelect<false> | ToolReportsSelect<true>;
     'tool-usage-logs': ToolUsageLogsSelect<false> | ToolUsageLogsSelect<true>;
+    'demo-requests': DemoRequestsSelect<false> | DemoRequestsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -316,6 +318,27 @@ export interface ToolUsageLog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "demo-requests".
+ */
+export interface DemoRequest {
+  id: number;
+  status?: ('pending' | 'sent' | 'accessed' | 'converted') | null;
+  accessToken?: string | null;
+  name: string;
+  email: string;
+  company?: string | null;
+  phone?: string | null;
+  poolCount?: ('1-5' | '6-20' | '21-50' | '50+') | null;
+  message?: string | null;
+  utmSource?: string | null;
+  utmMedium?: string | null;
+  ipAddress?: string | null;
+  accessedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -360,6 +383,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tool-usage-logs';
         value: number | ToolUsageLog;
+      } | null)
+    | ({
+        relationTo: 'demo-requests';
+        value: number | DemoRequest;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -580,6 +607,26 @@ export interface ToolReportsSelect<T extends boolean = true> {
 export interface ToolUsageLogsSelect<T extends boolean = true> {
   toolSlug?: T;
   ipHash?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "demo-requests_select".
+ */
+export interface DemoRequestsSelect<T extends boolean = true> {
+  status?: T;
+  accessToken?: T;
+  name?: T;
+  email?: T;
+  company?: T;
+  phone?: T;
+  poolCount?: T;
+  message?: T;
+  utmSource?: T;
+  utmMedium?: T;
+  ipAddress?: T;
+  accessedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

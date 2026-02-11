@@ -2,17 +2,17 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ payload, req }: MigrateUpArgs): Promise<void> {
   await payload.db.drizzle.execute(sql`
-   CREATE TYPE "public"."_locales" AS ENUM('es', 'en', 'fr', 'de', 'it', 'pt');
-  CREATE TYPE "public"."enum_products_status" AS ENUM('concept', 'development', 'beta', 'live');
-  CREATE TYPE "public"."enum_contact_submissions_service_type" AS ENUM('pwa', 'saas', 'api', 'other');
-  CREATE TYPE "public"."enum_tools_steps_step_icon" AS ENUM('upload', 'settings', 'zap', 'download', 'lock', 'edit');
-  CREATE TYPE "public"."enum_tool_reports_status" AS ENUM('pending', 'in_progress', 'fixed', 'dismissed');
+   DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = '_locales') THEN CREATE TYPE "public"."_locales" AS ENUM('es', 'en', 'fr', 'de', 'it', 'pt'); END IF; END $$;
+  DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_products_status') THEN CREATE TYPE "public"."enum_products_status" AS ENUM('concept', 'development', 'beta', 'live'); END IF; END $$;
+  DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_contact_submissions_service_type') THEN CREATE TYPE "public"."enum_contact_submissions_service_type" AS ENUM('pwa', 'saas', 'api', 'other'); END IF; END $$;
+  DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_tools_steps_step_icon') THEN CREATE TYPE "public"."enum_tools_steps_step_icon" AS ENUM('upload', 'settings', 'zap', 'download', 'lock', 'edit'); END IF; END $$;
+  DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_tool_reports_status') THEN CREATE TYPE "public"."enum_tool_reports_status" AS ENUM('pending', 'in_progress', 'fixed', 'dismissed'); END IF; END $$;
   CREATE TYPE "public"."enum_demo_requests_status" AS ENUM('pending', 'sent', 'accessed', 'converted');
   CREATE TYPE "public"."enum_demo_requests_pool_count" AS ENUM('1-5', '6-20', '21-50', '50+');
-  CREATE TYPE "public"."enum_landing_page_products_grid_cols" AS ENUM('2', '3', '4');
-  CREATE TYPE "public"."enum_landing_page_products_align" AS ENUM('center', 'left');
-  CREATE TYPE "public"."enum_landing_page_features_align" AS ENUM('left', 'center');
-  CREATE TYPE "public"."enum_landing_page_features_list_icon" AS ENUM('smartphone', 'zap', 'database', 'shield', 'code', 'users', 'rocket');
+  DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_landing_page_products_grid_cols') THEN CREATE TYPE "public"."enum_landing_page_products_grid_cols" AS ENUM('2', '3', '4'); END IF; END $$;
+  DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_landing_page_products_align') THEN CREATE TYPE "public"."enum_landing_page_products_align" AS ENUM('center', 'left'); END IF; END $$;
+  DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_landing_page_features_align') THEN CREATE TYPE "public"."enum_landing_page_features_align" AS ENUM('left', 'center'); END IF; END $$;
+  DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_landing_page_features_list_icon') THEN CREATE TYPE "public"."enum_landing_page_features_list_icon" AS ENUM('smartphone', 'zap', 'database', 'shield', 'code', 'users', 'rocket'); END IF; END $$;
   CREATE TABLE IF NOT EXISTS "users" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,

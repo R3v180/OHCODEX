@@ -6,7 +6,7 @@ import { SignJWT } from 'jose'
 const DEMO_JWT_SECRET = new TextEncoder().encode(
   process.env.DEMO_JWT_SECRET || 'demo-secret-change-in-production'
 )
-const POOLCONTROL_URL = process.env.POOLCONTROL_URL || 'https://pool-control-app.onrender.com'
+const POOLCONTROL_URL = process.env.POOLCONTROL_URL || 'https://poolcontrolpro.com'
 
 export const DemoRequests: CollectionConfig = {
   slug: 'demo-requests',

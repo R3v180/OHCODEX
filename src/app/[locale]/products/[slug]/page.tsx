@@ -274,7 +274,7 @@ export default async function ProductPage({ params }: Args) {
                 </div>
               )}
               
-              {product.projectUrl && slug !== 'pool-control-erp' && (
+              {product.projectUrl && (
                 <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white mb-6 shadow-lg shadow-cyan-900/20" asChild>
                   <a href={product.projectUrl} target="_blank" rel="noopener noreferrer">
                     {t('visitWebsite')} 
@@ -283,7 +283,7 @@ export default async function ProductPage({ params }: Args) {
                 </Button>
               )}
               
-              {!product.projectUrl && slug !== 'pool-control-erp' && (
+              {!product.projectUrl && (
                 <Button disabled className="w-full bg-zinc-800 text-zinc-500 border border-zinc-700 mb-6">
                   {t('inDevelopment')}
                 </Button>

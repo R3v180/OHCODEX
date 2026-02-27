@@ -1,0 +1,4 @@
+﻿
+> ohcodex@1.0.0 payload
+> cross-env NODE_OPTIONS=--no-deprecation payload run scripts/seed-tools-v3.ts
+

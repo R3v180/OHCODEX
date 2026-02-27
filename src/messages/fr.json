@@ -462,7 +462,14 @@
       "commonPresets": "Modèles Courants",
       "presetsDescription": "Cliquez pour charger des motifs regex courants",
       "cheatSheet": "Référence Rapide",
-      "flags": "Drapeaux",
+      "flags": {
+        "g": "Global",
+        "i": "Ignorer casse",
+        "m": "Multiligne",
+        "s": "Point tout",
+        "u": "Unicode",
+        "y": "Sticky"
+      },
       "categories": {
         "anchors": "Ancres",
         "characterClasses": "Classes de Caractères",
@@ -490,14 +497,6 @@
         "description": "Utilisez des groupes de capture () pour extraire des parties spécifiques. Ils apparaissent dans le panneau de résultats."
       },
       "noMatches": "Aucune correspondance",
-      "flags": {
-        "g": "Global",
-        "i": "Ignorer casse",
-        "m": "Multiligne",
-        "s": "Point tout",
-        "u": "Unicode",
-        "y": "Sticky"
-      },
       "global": "Global",
       "ignoreCase": "Ignorer casse",
       "multiline": "Multiligne",
@@ -624,6 +623,29 @@
         "monochromatic": "Variations d'une seule couleur à travers différentes saturations et luminosités.",
         "splitComplementary": "Une couleur de base avec deux couleurs adjacentes à son complément."
       }
+    },
+    "fileCarver": {
+      "title": "File Carver",
+      "dropMessage": "Drag & Drop a corrupted file here",
+      "supportMessage": "Supports RAW dumps, corrupted ZIPs, missing headers, etc.",
+      "browseButton": "Browse File",
+      "startCarving": "Start Data Recovery",
+      "analyzing": "Analyzing binary signatures...",
+      "completed": "Analysis completed",
+      "foundFiles": "Found Data Extracts",
+      "download": "Save",
+      "noResults": "No recognizable magic bytes found in this file.",
+      "feature1": "No files are uploaded. Processing happens entirely in your local browser memory.",
+      "feature2": "Detects JPEG, PNG, GIF, PDF, ZIP, MP3 and WAV signatures.",
+      "feature3": "Ideal for cybersecurity, forensics and recovering sensitive dropped data.",
+      "scanAnother": "Scanner un autre fichier"
+    },
+    "hexDiff": {
+      "title": "Hex Diff",
+      "originalFile": "Original File (A)",
+      "modifiedFile": "Modified File (B)",
+      "browseButton": "Select File",
+      "remove": "Supprimer"
     }
   },
   "footer": {

@@ -21,6 +21,8 @@ import { PasswordGeneratorTool } from '@/components/tools/password-gen/PasswordG
 import { JWTDecoderTool } from '@/components/tools/jwt-decoder/JWTDecoderTool'
 import { RegexTesterTool } from '@/components/tools/regex-tester/RegexTesterTool'
 import { ColorPaletteTool } from '@/components/tools/color-palette/ColorPaletteTool'
+import { FileCarverTool } from '@/components/tools/file-carver/FileCarverTool'
+import { HexDiffTool } from '@/components/tools/hex-diff/HexDiffTool'
 
 // Componentes de UI
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -28,17 +30,17 @@ import { AdSlot } from '@/components/shared/AdSlot'
 import { ToolPageFooter } from '@/components/tool-ui'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
-import { 
-  ArrowRight, 
-  Sparkles, 
-  Upload, 
-  Settings, 
-  Zap, 
-  Download, 
-  Lock, 
+import {
+  ArrowRight,
+  Sparkles,
+  Upload,
+  Settings,
+  Zap,
+  Download,
+  Lock,
   PenLine,
   LucideIcon,
-  ScanLine 
+  ScanLine
 } from 'lucide-react'
 
 // Tipos generados
@@ -57,6 +59,8 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType<any>> = {
   'jwt-decoder': JWTDecoderTool,
   'regex-tester': RegexTesterTool,
   'color-palette': ColorPaletteTool,
+  'file-carver': FileCarverTool,
+  'hex-diff': HexDiffTool,
 }
 
 const STEP_ICONS: Record<string, LucideIcon> = {
@@ -111,7 +115,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, locale } = await params
   const payload = await getPayload({ config: configPromise })
-  
+
   const { docs } = await payload.find({
     collection: 'tools',
     where: { slug: { equals: slug } },
@@ -134,7 +138,7 @@ export default async function ToolPage({ params }: Props) {
   const { slug, locale } = await params
   const payload = await getPayload({ config: configPromise })
   const t = await getTranslations('common')
-  const tToolUI = await getTranslations('tools.ui') 
+  const tToolUI = await getTranslations('tools.ui')
 
   const { docs } = await payload.find({
     collection: 'tools',
@@ -181,7 +185,7 @@ export default async function ToolPage({ params }: Props) {
       {faqJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />}
 
       <div className="container px-4 mx-auto max-w-6xl">
-        
+
         {/* 👇 CORRECCIÓN: Breadcrumbs con rutas base limpias */}
         <Breadcrumbs
           items={[
@@ -208,7 +212,7 @@ export default async function ToolPage({ params }: Props) {
         {tool.steps && tool.steps.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 relative">
             <div className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-zinc-800 to-transparent -z-10" />
-            
+
             {tool.steps.map((step, index) => {
               const Icon = STEP_ICONS[step.stepIcon || 'zap'] || Zap
               return (
@@ -243,7 +247,7 @@ export default async function ToolPage({ params }: Props) {
         {tool.ctaTitle && (
           <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-950/20 to-black p-8 md:p-12 text-center mb-20 group">
             <div className="absolute top-0 right-0 -mr-20 -mt-20 h-80 w-80 rounded-full bg-cyan-500/10 blur-[100px] transition-all duration-500 group-hover:bg-cyan-500/20" />
-            
+
             <Sparkles className="h-10 w-10 text-cyan-400 mx-auto mb-6" />
             <h2 className="text-3xl font-bold text-white mb-4">
               {tool.ctaTitle}
@@ -254,7 +258,7 @@ export default async function ToolPage({ params }: Props) {
             {/* 👇 CORRECCIÓN: Botón usando Link inteligente para la redirección de contacto */}
             <Button size="lg" asChild className="h-12 px-8 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-base shadow-[0_0_20px_-5px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.6)] transition-all">
               <Link href={tool.ctaLink || "/#contacto"}>
-                {tToolUI('ctaButton') || "Hablemos de tu Proyecto"} 
+                {tToolUI('ctaButton') || "Hablemos de tu Proyecto"}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -263,7 +267,7 @@ export default async function ToolPage({ params }: Props) {
 
         {tool.content && (
           <div className="prose prose-invert prose-lg max-w-4xl mx-auto mb-20">
-             {/* @ts-ignore */}
+            {/* @ts-ignore */}
             <SerializeLexical nodes={tool.content.root.children} />
           </div>
         )}

@@ -21,10 +21,10 @@ export const Tools: CollectionConfig = {
       async ({ doc, req }) => {
         try {
           if (req.locale) {
-             revalidatePath(`/${req.locale}/tools`)
+            revalidatePath(`/${req.locale}/tools`)
           }
           revalidatePath('/tools')
-          
+
           if (doc.slug && req.locale) {
             revalidatePath(`/${req.locale}/tools/${doc.slug}`)
           }
@@ -60,7 +60,7 @@ export const Tools: CollectionConfig = {
                   type: 'text',
                   required: true,
                   unique: true,
-                  label: 'Slug URL', 
+                  label: 'Slug URL',
                   admin: {
                     description: 'Identificador en la URL (ej: vault, pdf-studio).',
                   },
@@ -71,7 +71,7 @@ export const Tools: CollectionConfig = {
                   required: true,
                   label: 'Motor Técnico (Componente React)',
                   admin: {
-                    description: 'Valores: vault, image-optimizer, pdf-studio, data-station, qr-factory, ocr-vision, base64, css-minifier, password-gen, jwt-decoder, regex-tester, color-palette',
+                    description: 'Valores: vault, image-optimizer, pdf-studio, data-station, qr-factory, ocr-vision, base64, css-minifier, password-gen, jwt-decoder, regex-tester, color-palette, file-carver, hex-diff',
                   },
                 },
               ],
@@ -94,9 +94,9 @@ export const Tools: CollectionConfig = {
                   type: 'text',
                   label: 'Icono Visual',
                   defaultValue: 'box',
-                  admin: { 
+                  admin: {
                     width: '50%',
-                    description: 'Valores: lock, image, file-text, database, qr-code, scan, code, palette, key, key-round, regex, box'
+                    description: 'Valores: lock, image, file-text, database, qr-code, scan, code, palette, key, key-round, regex, box, dna, split-square-horizontal'
                   },
                 },
               ],

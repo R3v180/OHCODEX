@@ -462,7 +462,14 @@
       "commonPresets": "Preset Comuni",
       "presetsDescription": "Clicca per caricare pattern regex comuni",
       "cheatSheet": "Riferimento Rapido",
-      "flags": "Flag",
+      "flags": {
+        "g": "Globale",
+        "i": "Ignora maiuscole",
+        "m": "Multilinea",
+        "s": "Punto tutto",
+        "u": "Unicode",
+        "y": "Sticky"
+      },
       "categories": {
         "anchors": "Ancore",
         "characterClasses": "Classi di Caratteri",
@@ -490,14 +497,6 @@
         "description": "Usa i gruppi di cattura () per estrarre parti specifiche. Appaiono nel pannello risultati."
       },
       "noMatches": "Nessuna corrispondenza",
-      "flags": {
-        "g": "Globale",
-        "i": "Ignora maiuscole",
-        "m": "Multilinea",
-        "s": "Punto tutto",
-        "u": "Unicode",
-        "y": "Sticky"
-      },
       "global": "Globale",
       "ignoreCase": "Ignora maiuscole",
       "multiline": "Multilinea",
@@ -624,6 +623,29 @@
         "monochromatic": "Variazioni di un singolo colore attraverso diverse saturazioni e luminosità.",
         "splitComplementary": "Un colore base con due colori adiacenti al suo complementare."
       }
+    },
+    "fileCarver": {
+      "title": "File Carver",
+      "dropMessage": "Drag & Drop a corrupted file here",
+      "supportMessage": "Supports RAW dumps, corrupted ZIPs, missing headers, etc.",
+      "browseButton": "Browse File",
+      "startCarving": "Start Data Recovery",
+      "analyzing": "Analyzing binary signatures...",
+      "completed": "Analysis completed",
+      "foundFiles": "Found Data Extracts",
+      "download": "Save",
+      "noResults": "No recognizable magic bytes found in this file.",
+      "feature1": "No files are uploaded. Processing happens entirely in your local browser memory.",
+      "feature2": "Detects JPEG, PNG, GIF, PDF, ZIP, MP3 and WAV signatures.",
+      "feature3": "Ideal for cybersecurity, forensics and recovering sensitive dropped data.",
+      "scanAnother": "Scansiona un altro file"
+    },
+    "hexDiff": {
+      "title": "Hex Diff",
+      "originalFile": "Original File (A)",
+      "modifiedFile": "Modified File (B)",
+      "browseButton": "Select File",
+      "remove": "Rimuovi"
     }
   },
   "footer": {

@@ -462,7 +462,14 @@
       "commonPresets": "Presets Comuns",
       "presetsDescription": "Clique para carregar padrões regex comuns",
       "cheatSheet": "Referência Rápida",
-      "flags": "Flags",
+      "flags": {
+        "g": "Global",
+        "i": "Ignorar maiúsculas",
+        "m": "Multilinha",
+        "s": "Ponto tudo",
+        "u": "Unicode",
+        "y": "Sticky"
+      },
       "categories": {
         "anchors": "Âncoras",
         "characterClasses": "Classes de Caracteres",
@@ -490,14 +497,6 @@
         "description": "Use grupos de captura () para extrair partes específicas. Eles aparecem no painel de resultados."
       },
       "noMatches": "Sem correspondências",
-      "flags": {
-        "g": "Global",
-        "i": "Ignorar maiúsculas",
-        "m": "Multilinha",
-        "s": "Ponto tudo",
-        "u": "Unicode",
-        "y": "Sticky"
-      },
       "global": "Global",
       "ignoreCase": "Ignorar maiúsculas",
       "multiline": "Multilinha",
@@ -624,6 +623,29 @@
         "monochromatic": "Variações de uma única cor através de diferentes saturações e luminosidades.",
         "splitComplementary": "Uma cor base com duas cores adjacentes ao seu complementar."
       }
+    },
+    "fileCarver": {
+      "title": "File Carver",
+      "dropMessage": "Drag & Drop a corrupted file here",
+      "supportMessage": "Supports RAW dumps, corrupted ZIPs, missing headers, etc.",
+      "browseButton": "Browse File",
+      "startCarving": "Start Data Recovery",
+      "analyzing": "Analyzing binary signatures...",
+      "completed": "Analysis completed",
+      "foundFiles": "Found Data Extracts",
+      "download": "Save",
+      "noResults": "No recognizable magic bytes found in this file.",
+      "feature1": "No files are uploaded. Processing happens entirely in your local browser memory.",
+      "feature2": "Detects JPEG, PNG, GIF, PDF, ZIP, MP3 and WAV signatures.",
+      "feature3": "Ideal for cybersecurity, forensics and recovering sensitive dropped data.",
+      "scanAnother": "Verificar outro arquivo"
+    },
+    "hexDiff": {
+      "title": "Hex Diff",
+      "originalFile": "Original File (A)",
+      "modifiedFile": "Modified File (B)",
+      "browseButton": "Select File",
+      "remove": "Remover"
     }
   },
   "footer": {

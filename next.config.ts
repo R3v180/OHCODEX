@@ -11,6 +11,11 @@ const withNextIntl = createNextIntlPlugin(i18nPath)
 const nextConfig: NextConfig = {
   // Paquetes que necesitan ejecutarse en el servidor
   serverExternalPackages: ['geoip-lite'],
+
+  // Desactivar ESLint en el build de producción (Render) para no requerir eslint instalado en prod
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   
   // Configuración de imágenes (Cloudinary)
   images: {

@@ -33,6 +33,7 @@ import { Company } from './globals/Company'
 import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
 import { EmailSettings } from './globals/EmailSettings'
+import { AdsSettings } from './globals/AdsSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -77,6 +78,7 @@ export default buildConfig({
     Legal, 
     Landing, 
     EmailSettings,
+    AdsSettings,
   ],
   
   editor: lexicalEditor(),

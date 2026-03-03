@@ -160,9 +160,51 @@ export default async function ToolPage({ params }: Props) {
 
   if (!tool) return notFound()
 
-  // Por ahora desactivamos la configuración dinámica de anuncios vía global
-  const topAdConfig = null
-  const bottomAdConfig = null
+  let topAdConfig: any = null
+  let bottomAdConfig: any = null
+
+  try {
+    const adsRaw = await payload.findGlobal({ slug: 'ads-settings' as any })
+    if (adsRaw?.enabled) {
+      const pickVariant = (pos: string) => {
+        const posConfig = (adsRaw as any).positions?.find((p: any) => p.position === pos)
+        if (!posConfig?.variants?.length) return null
+        const active = posConfig.variants.filter((v: any) => v.enabled !== false)
+        if (!active.length) return null
+        const totalWeight = active.reduce((s: number, v: any) => s + (v.weight || 1), 0)
+        let roll = Math.random() * totalWeight
+        for (const v of active) {
+          roll -= v.weight || 1
+          if (roll <= 0) return v
+        }
+        return active[0]
+      }
+
+      const buildConfig = (pos: 'top' | 'sidebar' | 'bottom') => {
+        const variant = pickVariant(pos)
+        if (!variant) return null
+        return {
+          enabled: true,
+          network: variant.network,
+          adsenseClientId: (adsRaw as any).adsenseClientId || undefined,
+          adSlotId: variant.adsenseSlotId || undefined,
+          ezoicPlaceholderId: variant.ezoicPlaceholderId || undefined,
+          houseImageUrl: variant.houseImageUrl || undefined,
+          houseHref: variant.houseHref || undefined,
+          houseAlt: variant.houseAlt || undefined,
+          houseHtml: variant.houseHtml || undefined,
+          variantLabel: variant.label || undefined,
+          toolSlug: slug,
+          locale,
+        }
+      }
+
+      topAdConfig = buildConfig('top')
+      bottomAdConfig = buildConfig('bottom')
+    }
+  } catch {
+    // AdsSettings not configured yet — show placeholders
+  }
 
   const ToolComponent = TOOL_COMPONENTS[tool.codeKey] || null
 

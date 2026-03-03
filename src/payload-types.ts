@@ -18,6 +18,7 @@ export interface Config {
     posts: Post;
     categories: Category;
     analytics: Analytics;
+    'ads-events': AdsEvent;
     tools: Tool;
     'tool-reports': ToolReport;
     'tool-usage-logs': ToolUsageLog;
@@ -35,6 +36,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     analytics: AnalyticsSelect<false> | AnalyticsSelect<true>;
+    'ads-events': AdsEventsSelect<false> | AdsEventsSelect<true>;
     tools: ToolsSelect<false> | ToolsSelect<true>;
     'tool-reports': ToolReportsSelect<false> | ToolReportsSelect<true>;
     'tool-usage-logs': ToolUsageLogsSelect<false> | ToolUsageLogsSelect<true>;
@@ -51,12 +53,14 @@ export interface Config {
     'legal-texts': LegalText;
     'landing-page': LandingPage;
     'email-settings': EmailSetting;
+    'ads-settings': AdsSetting;
   };
   globalsSelect: {
     'company-info': CompanyInfoSelect<false> | CompanyInfoSelect<true>;
     'legal-texts': LegalTextsSelect<false> | LegalTextsSelect<true>;
     'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
     'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
+    'ads-settings': AdsSettingsSelect<false> | AdsSettingsSelect<true>;
   };
   locale: 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt';
   user: User & {
@@ -244,6 +248,24 @@ export interface Analytics {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ads-events".
+ */
+export interface AdsEvent {
+  id: number;
+  slotPosition: 'top' | 'sidebar' | 'bottom';
+  network: 'adsense' | 'ezoic' | 'house';
+  variantId?: string | null;
+  variantLabel?: string | null;
+  eventType: 'impression' | 'click';
+  toolSlug?: string | null;
+  locale?: string | null;
+  userAgent?: string | null;
+  ipHash?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tools".
  */
 export interface Tool {
@@ -371,6 +393,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'analytics';
         value: number | Analytics;
+      } | null)
+    | ({
+        relationTo: 'ads-events';
+        value: number | AdsEvent;
       } | null)
     | ({
         relationTo: 'tools';
@@ -547,6 +573,23 @@ export interface AnalyticsSelect<T extends boolean = true> {
   browser?: T;
   source?: T;
   companyName?: T;
+  ipHash?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ads-events_select".
+ */
+export interface AdsEventsSelect<T extends boolean = true> {
+  slotPosition?: T;
+  network?: T;
+  variantId?: T;
+  variantLabel?: T;
+  eventType?: T;
+  toolSlug?: T;
+  locale?: T;
+  userAgent?: T;
   ipHash?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -814,6 +857,48 @@ export interface EmailSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ads-settings".
+ */
+export interface AdsSetting {
+  id: number;
+  enabled?: boolean | null;
+  adsenseClientId?: string | null;
+  slots?:
+    | {
+        position: 'top' | 'sidebar' | 'bottom';
+        adSlotId?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  adsenseScriptSrc?: string | null;
+  ezoicSiteId?: string | null;
+  ezoicScriptSrc?: string | null;
+  positions?:
+    | {
+        position: 'top' | 'sidebar' | 'bottom';
+        variants?:
+          | {
+              label?: string | null;
+              network: 'adsense' | 'ezoic' | 'house';
+              weight?: number | null;
+              enabled?: boolean | null;
+              adsenseSlotId?: string | null;
+              ezoicPlaceholderId?: string | null;
+              houseImageUrl?: string | null;
+              houseHref?: string | null;
+              houseAlt?: string | null;
+              houseHtml?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "company-info_select".
  */
 export interface CompanyInfoSelect<T extends boolean = true> {
@@ -916,6 +1001,48 @@ export interface EmailSettingsSelect<T extends boolean = true> {
   fromName?: T;
   fromEmail?: T;
   toEmail?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ads-settings_select".
+ */
+export interface AdsSettingsSelect<T extends boolean = true> {
+  enabled?: T;
+  adsenseClientId?: T;
+  slots?:
+    | T
+    | {
+        position?: T;
+        adSlotId?: T;
+        id?: T;
+      };
+  adsenseScriptSrc?: T;
+  ezoicSiteId?: T;
+  ezoicScriptSrc?: T;
+  positions?:
+    | T
+    | {
+        position?: T;
+        variants?:
+          | T
+          | {
+              label?: T;
+              network?: T;
+              weight?: T;
+              enabled?: T;
+              adsenseSlotId?: T;
+              ezoicPlaceholderId?: T;
+              houseImageUrl?: T;
+              houseHref?: T;
+              houseAlt?: T;
+              houseHtml?: T;
+              id?: T;
+            };
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

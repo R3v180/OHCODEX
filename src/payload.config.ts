@@ -27,12 +27,14 @@ import { Tools } from './collections/Tools'
 import { ToolReports } from './collections/ToolReports'
 import { ToolUsageLogs } from './collections/ToolUsageLogs'
 import { DemoRequests } from './collections/DemoRequests'
+import { AdsEvents } from './collections/AdsEvents'
 
 // 2. Globales
 import { Company } from './globals/Company'
 import { Legal } from './globals/Legal'
 import { Landing } from './globals/Landing'
 import { EmailSettings } from './globals/EmailSettings'
+import { AdsSettings } from './globals/AdsSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -67,6 +69,7 @@ export default buildConfig({
     Posts,      
     Categories,
     Analytics,
+    AdsEvents,
     Tools,
     ToolReports,
     ToolUsageLogs,
@@ -76,7 +79,8 @@ export default buildConfig({
     Company, 
     Legal, 
     Landing, 
-    EmailSettings
+    EmailSettings,
+    AdsSettings,
   ],
   
   editor: lexicalEditor(),

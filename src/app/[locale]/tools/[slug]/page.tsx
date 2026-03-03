@@ -160,6 +160,69 @@ export default async function ToolPage({ params }: Props) {
 
   if (!tool) return notFound()
 
+  // Cargamos configuración de anuncios (AdSense, Ezoic, House) desde el global
+  const adsSettings: any = await payload.findGlobal({
+    slug: 'ads-settings',
+  })
+
+  const positions = (adsSettings?.positions as any[]) || []
+
+  const pickVariantForPosition = (position: 'top' | 'sidebar' | 'bottom') => {
+    const slot = positions.find((p) => p.position === position)
+    const variants: any[] = (slot?.variants || []).filter((v) => v.enabled !== false)
+    if (!adsSettings?.enabled || !variants.length) return null
+
+    const totalWeight = variants.reduce((acc, v) => acc + (v.weight || 1), 0)
+    if (!totalWeight) return null
+
+    let r = Math.random() * totalWeight
+    let chosen: any = variants[0]
+    for (const v of variants) {
+      const w = v.weight || 1
+      if ((r -= w) <= 0) {
+        chosen = v
+        break
+      }
+    }
+
+    if (!chosen?.network) return null
+
+    const baseConfig = {
+      enabled: true,
+      network: chosen.network as 'adsense' | 'ezoic' | 'house',
+      variantId: chosen.id,
+      variantLabel: chosen.label,
+      toolSlug: slug,
+      locale,
+    }
+
+    if (chosen.network === 'adsense') {
+      return {
+        ...baseConfig,
+        adsenseClientId: adsSettings?.adsenseClientId as string | undefined,
+        adSlotId: chosen.adsenseSlotId as string | undefined,
+      }
+    }
+
+    if (chosen.network === 'ezoic') {
+      return {
+        ...baseConfig,
+        ezoicPlaceholderId: chosen.ezoicPlaceholderId as string | undefined,
+      }
+    }
+
+    return {
+      ...baseConfig,
+      houseImageUrl: chosen.houseImageUrl as string | undefined,
+      houseHref: chosen.houseHref as string | undefined,
+      houseAlt: chosen.houseAlt as string | undefined,
+      houseHtml: chosen.houseHtml as string | undefined,
+    }
+  }
+
+  const topAdConfig = pickVariantForPosition('top')
+  const bottomAdConfig = pickVariantForPosition('bottom')
+
   const ToolComponent = TOOL_COMPONENTS[tool.codeKey] || null
 
   const jsonLd = {
@@ -241,7 +304,7 @@ export default async function ToolPage({ params }: Props) {
         )}
 
         <div className="mb-8 flex justify-center">
-          <AdSlot position="top" />
+          <AdSlot position="top" config={topAdConfig || { enabled: false }} />
         </div>
 
         <div className="mb-20 scroll-mt-24" id="app">
@@ -301,7 +364,7 @@ export default async function ToolPage({ params }: Props) {
         )}
 
         <div className="flex justify-center">
-          <AdSlot position="bottom" />
+          <AdSlot position="bottom" config={bottomAdConfig || { enabled: false }} />
         </div>
 
         {/* Footer con estadísticas y reporte de bugs */}

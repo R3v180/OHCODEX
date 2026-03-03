@@ -33,24 +33,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const userAgent = req.headers.get('user-agent') || undefined
-    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || undefined
-
-    await payload.create({
-      collection: 'ads-events' as any,
-      data: {
-        slotPosition,
-        network,
-        variantId,
-        variantLabel,
-        eventType,
-        toolSlug,
-        locale,
-        userAgent,
-        ipHash: ip, // En el futuro se puede hash-ear; de momento guardamos tal cual o se puede dejar vacío
-      },
-    })
-
+    // Por ahora dejamos el endpoint como no-op para no depender de migraciones ni nuevas tablas
+    // En el futuro podremos registrar estos eventos en una colección dedicada.
     return NextResponse.json({ ok: true })
   } catch (error) {
     console.error('Error registrando evento de anuncio:', error)

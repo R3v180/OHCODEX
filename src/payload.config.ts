@@ -27,7 +27,6 @@ import { Tools } from './collections/Tools'
 import { ToolReports } from './collections/ToolReports'
 import { ToolUsageLogs } from './collections/ToolUsageLogs'
 import { DemoRequests } from './collections/DemoRequests'
-import { AdsEvents } from './collections/AdsEvents'
 
 // 2. Globales
 import { Company } from './globals/Company'
@@ -69,7 +68,6 @@ export default buildConfig({
     Posts,      
     Categories,
     Analytics,
-    AdsEvents,
     Tools,
     ToolReports,
     ToolUsageLogs,

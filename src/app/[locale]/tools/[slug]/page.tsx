@@ -23,6 +23,11 @@ import { RegexTesterTool } from '@/components/tools/regex-tester/RegexTesterTool
 import { ColorPaletteTool } from '@/components/tools/color-palette/ColorPaletteTool'
 import { FileCarverTool } from '@/components/tools/file-carver/FileCarverTool'
 import { HexDiffTool } from '@/components/tools/hex-diff/HexDiffTool'
+import { ImageSteganographyTool } from '@/components/tools/image-steganography/ImageSteganographyTool'
+import { SSHKeyGeneratorTool } from '@/components/tools/ssh-key-generator/SSHKeyGeneratorTool'
+import { SSLCertificateGeneratorTool } from '@/components/tools/ssl-certificate-generator/SSLCertificateGeneratorTool'
+import { FileEntropyAnalyzerTool } from '@/components/tools/file-entropy-analyzer/FileEntropyAnalyzerTool'
+import { AdvancedHashGeneratorTool } from '@/components/tools/advanced-hash-generator/AdvancedHashGeneratorTool'
 
 // Componentes de UI
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -61,6 +66,11 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType<any>> = {
   'color-palette': ColorPaletteTool,
   'file-carver': FileCarverTool,
   'hex-diff': HexDiffTool,
+  'image-steganography': ImageSteganographyTool,
+  'ssh-key-generator': SSHKeyGeneratorTool,
+  'ssl-certificate-generator': SSLCertificateGeneratorTool,
+  'file-entropy-analyzer': FileEntropyAnalyzerTool,
+  'advanced-hash-generator': AdvancedHashGeneratorTool,
 }
 
 const STEP_ICONS: Record<string, LucideIcon> = {

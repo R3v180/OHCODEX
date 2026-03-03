@@ -646,6 +646,201 @@
       "modifiedFile": "Modified File (B)",
       "browseButton": "Select File",
       "remove": "Remove"
+    },
+    "image-steganography": {
+      "header": "Image Steganography Free",
+      "subtitle": "Hide text or full files inside PNG/JPG images without uploading anything. 100% in your browser.",
+      "description": "Free steganography tool to hide messages or files in photos using LSB technique. Ideal for security and privacy testing.",
+      "privacy": "All processing happens locally in your browser. Images and messages are never sent to any server.",
+      "modes": {
+        "embedTitle": "Hide data inside an image",
+        "extractTitle": "Extract data from an image",
+        "embed": "Hide data",
+        "extract": "Extract data"
+      },
+      "payload": {
+        "text": "Hide text",
+        "file": "Hide file"
+      },
+      "coverImage": "Cover image",
+      "coverDrop": "Drag your PNG/JPG image here",
+      "coverHint": "Recommended max size 4K. The larger the image, the more data you can hide.",
+      "capacity": {
+        "total": "Total capacity: {pixels} pixels · {bits} LSB bits",
+        "used": "Used: {used} bytes of {max} available bytes"
+      },
+      "payloadTextLabel": "Text to hide",
+      "payloadTextPlaceholder": "Write the secret message you want to hide inside the image...",
+      "characters": "characters",
+      "bytesAvailable": "Available bytes: {available}",
+      "payloadFileLabel": "File to hide",
+      "payloadDrop": "Drag here the file you want to hide",
+      "payloadHint": "The file is embedded byte by byte into the pixels. Only the steganographic image is stored on your device.",
+      "fits": "Fits inside the selected image.",
+      "tooLarge": "The file is too large. Approximate maximum: {max} bytes.",
+      "processing": "Processing...",
+      "stegoImage": "Stego image",
+      "stegoDrop": "Drag here the image that contains hidden data",
+      "stegoHint": "It must be an image previously generated with this or another compatible steganography tool.",
+      "extractedTextLabel": "Extracted text",
+      "extractedTextPlaceholder": "The hidden message will appear here if the image contains embedded text...",
+      "extractedFileLabel": "Extracted file",
+      "fileReady": "File ready to download",
+      "noFileYet": "No hidden file detected yet.",
+      "actions": {
+        "embed": "Hide now",
+        "extract": "Extract now",
+        "downloadStego": "Download image with hidden data",
+        "downloadPayload": "Download extracted file",
+        "copyUrl": "Copy download URL",
+        "copyText": "Copy extracted text"
+      },
+      "success": {
+        "embed": "Data successfully hidden inside the image.",
+        "embedShort": "Steganography completed",
+        "extract": "Data successfully extracted from the image."
+      },
+      "errors": {
+        "onlyImages": "Only image files (PNG/JPG) are allowed.",
+        "loadImage": "Could not load image. Try another file.",
+        "noCover": "First select a cover image.",
+        "noPayloadText": "Write some text to hide in the image.",
+        "noPayloadFile": "Select a file to hide in the image.",
+        "notEnoughCapacity": "The image does not have enough capacity to store all the data. Try a larger image or less data.",
+        "encode": "An error occurred while embedding the data into the image.",
+        "noStego": "Select an image that contains hidden data.",
+        "decode": "Could not extract valid data from the image.",
+        "copy": "Could not copy to clipboard."
+      },
+      "copied": "Copied to clipboard.",
+      "localOnly": "100% local processing. Nothing is uploaded to external servers.",
+      "disclaimer": "This tool is intended for educational and security testing purposes. Do not use it for illegal activities or to violate others' privacy."
+    },
+    "sshKeyGen": {
+      "header": "SSH Key Generator Free",
+      "subtitle": "Generate RSA, Ed25519 and ECDSA SSH key pairs with fingerprints directly in your browser. 100% private.",
+      "title": "Generate secure SSH key pairs",
+      "description": "Free SSH key generator to create modern key pairs for servers and Git. All keys are generated client-side using Web Crypto API.",
+      "privacy": "Keys are never sent to any server. Everything is generated and kept locally in your browser.",
+      "keyType": "Key type",
+      "bits": "RSA key size (bits)",
+      "bitsHint": "Use 4096 bits for maximum compatibility and security. Higher values increase generation time.",
+      "passphrase": "Passphrase (optional)",
+      "passphrasePlaceholder": "Optional passphrase to encrypt your private key...",
+      "passphraseHint": "For production use, always protect your private key with a strong passphrase.",
+      "generating": "Generating keys...",
+      "generated": "SSH key pair generated successfully.",
+      "publicKey": "Public key (OpenSSH)",
+      "publicKeyPlaceholder": "The OpenSSH public key will appear here...",
+      "privateKey": "Private key (PEM)",
+      "privateKeyPlaceholder": "The PEM-encoded private key will appear here. Keep it secret.",
+      "fingerprint": "SHA256 fingerprint",
+      "actions": {
+        "generate": "Generate keys",
+        "copy": "Copy"
+      },
+      "errors": {
+        "generate": "Could not generate key pair.",
+        "copy": "Could not copy to clipboard."
+      },
+      "copied": "Copied to clipboard.",
+      "localOnly": "100% local generation. Keys never leave your browser."
+    },
+    "sslCertGen": {
+      "header": "Self-Signed SSL Certificate Generator Free",
+      "subtitle": "Generate private key, CSR and self-signed SSL certificate for testing directly in your browser.",
+      "title": "Generate SSL certificates and CSRs",
+      "description": "Free browser-based tool to create self-signed certificates and CSRs. Ideal for local development, staging and labs.",
+      "privacy": "Keys and certificates are generated locally in your browser and never sent to any server.",
+      "algorithm": "Key algorithm",
+      "validYears": "Validity (years)",
+      "validYearsHint": "Set how many years the certificate should be valid for (1–10). For production, follow CA best practices.",
+      "dn": {
+        "title": "Distinguished Name (DN)"
+      },
+      "csr": "Certificate Signing Request (CSR)",
+      "csrPlaceholder": "Generated CSR in PEM format will appear here...",
+      "certificate": "Self-signed certificate",
+      "certPlaceholder": "Generated certificate in PEM format will appear here...",
+      "privateKey": "Private key (PEM)",
+      "keyPlaceholder": "Generated private key in PEM format will appear here...",
+      "generating": "Generating certificate...",
+      "generated": "Certificate bundle generated successfully.",
+      "actions": {
+        "generate": "Generate certificate",
+        "copy": "Copy",
+        "downloadBundle": "Download bundle (key + CSR + cert)"
+      },
+      "errors": {
+        "missingRequired": "CN and country (C) are required fields.",
+        "generate": "Could not generate certificate bundle.",
+        "copy": "Could not copy to clipboard."
+      },
+      "copied": "Copied to clipboard.",
+      "localOnly": "100% local generation. Keys and CSR never leave your browser."
+    },
+    "fileEntropy": {
+      "header": "File Entropy Analyzer Free",
+      "subtitle": "Upload a file and measure its Shannon entropy, randomness percentage and probable nature (plain, compressed, encrypted).",
+      "title": "Analyze file entropy and randomness",
+      "description": "Free browser-based tool to estimate whether a file is likely plaintext, compressed or encrypted based on its entropy.",
+      "privacy": "Files are processed locally in your browser. Nothing is uploaded to any server.",
+      "dropHere": "Drag and drop a file here",
+      "dropHint": "We only read the bytes client-side to compute entropy. No data is stored.",
+      "analyzing": "Analyzing entropy...",
+      "actions": {
+        "analyze": "Analyze file"
+      },
+      "metrics": {
+        "entropy": "Shannon entropy",
+        "randomness": "Randomness",
+        "size": "File size:"
+      },
+      "bitsPerByte": "bits/byte",
+      "classification": {
+        "plain": "Likely plaintext / structured",
+        "compressed": "Likely compressed data",
+        "encrypted": "Likely encrypted data"
+      },
+      "histogramTitle": "Byte distribution histogram (0–255)",
+      "histogramLabel": "Occurrences per byte value",
+      "noData": "Upload a file and run the analysis to see its entropy profile.",
+      "errors": {
+        "noFile": "Select a file to analyze.",
+        "read": "Could not read the selected file."
+      },
+      "localOnly": "100% local analysis. No file content leaves your device."
+    },
+    "advHash": {
+      "header": "Advanced Hash Generator Free",
+      "subtitle": "Generate SHA-256, SHA-512 and PBKDF2 hashes with configurable parameters directly in your browser.",
+      "title": "Generate advanced cryptographic hashes",
+      "description": "Free hashing tool to derive strong digests and PBKDF2 keys for security testing and password storage prototypes.",
+      "privacy": "All hashing is performed locally with Web Crypto API. Inputs are never sent to a server.",
+      "inputLabel": "Input to hash",
+      "inputPlaceholder": "Write the text or secret you want to hash...",
+      "salt": "Salt",
+      "saltPlaceholder": "Enter a random salt, e.g. base64 or hex...",
+      "iterations": "Iterations",
+      "iterationsHint": "Higher iterations increase security but also CPU time. Use realistic values for your environment.",
+      "length": "Output length (bytes)",
+      "lengthHint": "Typical PBKDF2 key sizes are 32 bytes (256 bits) or 64 bytes (512 bits).",
+      "generating": "Generating hash...",
+      "generated": "Hash generated successfully.",
+      "outputLabel": "Resulting hash (hex)",
+      "outputPlaceholder": "The generated hash will appear here...",
+      "actions": {
+        "generate": "Generate hash",
+        "copy": "Copy"
+      },
+      "errors": {
+        "noInput": "Enter some input text to hash.",
+        "noSalt": "Provide a salt to derive PBKDF2.",
+        "generate": "Could not generate the hash.",
+        "copy": "Could not copy to clipboard."
+      },
+      "copied": "Copied to clipboard.",
+      "localOnly": "100% local hashing. No secrets leave your browser."
     }
   },
   "footer": {

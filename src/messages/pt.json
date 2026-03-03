@@ -646,6 +646,201 @@
       "modifiedFile": "Modified File (B)",
       "browseButton": "Select File",
       "remove": "Remover"
+    },
+    "image-steganography": {
+      "header": "Esteganografia em Imagens Grátis",
+      "subtitle": "Oculte texto ou arquivos completos dentro de imagens PNG/JPG sem enviar nada. 100% no seu navegador.",
+      "description": "Ferramenta de esteganografia gratuita para esconder mensagens ou arquivos em fotos usando a técnica LSB. Ideal para testes de segurança e privacidade.",
+      "privacy": "Todo o processamento ocorre localmente no seu navegador. Imagens e mensagens nunca são enviadas para nenhum servidor.",
+      "modes": {
+        "embedTitle": "Ocultar dados em uma imagem",
+        "extractTitle": "Extrair dados de uma imagem",
+        "embed": "Ocultar dados",
+        "extract": "Extrair dados"
+      },
+      "payload": {
+        "text": "Ocultar texto",
+        "file": "Ocultar arquivo"
+      },
+      "coverImage": "Imagem de capa",
+      "coverDrop": "Arraste sua imagem PNG/JPG aqui",
+      "coverHint": "Tamanho máximo recomendado 4K. Quanto maior a imagem, mais dados você poderá esconder.",
+      "capacity": {
+        "total": "Capacidade total: {pixels} pixels · {bits} bits LSB",
+        "used": "Usado: {used} bytes de {max} bytes disponíveis"
+      },
+      "payloadTextLabel": "Texto a ocultar",
+      "payloadTextPlaceholder": "Escreva a mensagem secreta que deseja esconder dentro da imagem...",
+      "characters": "caracteres",
+      "bytesAvailable": "Bytes disponíveis: {available}",
+      "payloadFileLabel": "Arquivo a ocultar",
+      "payloadDrop": "Arraste aqui o arquivo que deseja ocultar",
+      "payloadHint": "O arquivo é incorporado byte a byte nos pixels. Apenas a imagem esteganografada é salva no seu dispositivo.",
+      "fits": "Cabe dentro da imagem selecionada.",
+      "tooLarge": "O arquivo é muito grande. Máximo aproximado: {max} bytes.",
+      "processing": "Processando...",
+      "stegoImage": "Imagem esteganografada",
+      "stegoDrop": "Arraste aqui a imagem que contém dados ocultos",
+      "stegoHint": "Deve ser uma imagem gerada anteriormente com esta ou outra ferramenta de esteganografia compatível.",
+      "extractedTextLabel": "Texto extraído",
+      "extractedTextPlaceholder": "A mensagem oculta aparecerá aqui se a imagem contiver texto incorporado...",
+      "extractedFileLabel": "Arquivo extraído",
+      "fileReady": "Arquivo pronto para download",
+      "noFileYet": "Nenhum arquivo oculto detectado ainda.",
+      "actions": {
+        "embed": "Ocultar agora",
+        "extract": "Extrair agora",
+        "downloadStego": "Baixar imagem com dados ocultos",
+        "downloadPayload": "Baixar arquivo extraído",
+        "copyUrl": "Copiar URL de download",
+        "copyText": "Copiar texto extraído"
+      },
+      "success": {
+        "embed": "Dados ocultados com sucesso na imagem.",
+        "embedShort": "Esteganografia concluída",
+        "extract": "Dados extraídos com sucesso da imagem."
+      },
+      "errors": {
+        "onlyImages": "Somente arquivos de imagem (PNG/JPG) são permitidos.",
+        "loadImage": "Não foi possível carregar a imagem. Tente outro arquivo.",
+        "noCover": "Primeiro selecione uma imagem de capa.",
+        "noPayloadText": "Escreva algum texto para ocultar na imagem.",
+        "noPayloadFile": "Selecione um arquivo para ocultar na imagem.",
+        "notEnoughCapacity": "A imagem não tem capacidade suficiente para armazenar todos os dados. Tente uma imagem maior ou menos dados.",
+        "encode": "Ocorreu um erro ao inserir os dados na imagem.",
+        "noStego": "Selecione uma imagem que contenha dados ocultos.",
+        "decode": "Não foi possível extrair dados válidos da imagem.",
+        "copy": "Não foi possível copiar para a área de transferência."
+      },
+      "copied": "Copiado para a área de transferência.",
+      "localOnly": "Processamento 100% local. Nada é enviado para servidores externos.",
+      "disclaimer": "Esta ferramenta é destinada a fins educacionais e testes de segurança. Não a utilize para atividades ilegais ou que violem a privacidade de terceiros."
+    },
+    "sshKeyGen": {
+      "header": "Gerador de Chaves SSH Grátis",
+      "subtitle": "Gere pares de chaves SSH RSA, Ed25519 e ECDSA com fingerprints diretamente no navegador. 100% privado.",
+      "title": "Gerar pares de chaves SSH seguras",
+      "description": "Ferramenta gratuita para criar pares de chaves SSH modernas para servidores e Git. Todas as chaves são geradas no cliente usando Web Crypto API.",
+      "privacy": "As chaves nunca são enviadas a nenhum servidor. Tudo é gerado e mantido localmente no seu navegador.",
+      "keyType": "Tipo de chave",
+      "bits": "Tamanho da chave RSA (bits)",
+      "bitsHint": "Use 4096 bits para máxima segurança e compatibilidade. Valores maiores aumentam o tempo de geração.",
+      "passphrase": "Passphrase (opcional)",
+      "passphrasePlaceholder": "Passphrase opcional para criptografar sua chave privada...",
+      "passphraseHint": "Em produção, sempre proteja a chave privada com uma passphrase forte.",
+      "generating": "Gerando chaves...",
+      "generated": "Par de chaves SSH gerado com sucesso.",
+      "publicKey": "Chave pública (OpenSSH)",
+      "publicKeyPlaceholder": "A chave pública OpenSSH aparecerá aqui...",
+      "privateKey": "Chave privada (PEM)",
+      "privateKeyPlaceholder": "A chave privada em formato PEM aparecerá aqui. Mantenha-a em segredo.",
+      "fingerprint": "Impressão digital SHA256",
+      "actions": {
+        "generate": "Gerar chaves",
+        "copy": "Copiar"
+      },
+      "errors": {
+        "generate": "Não foi possível gerar o par de chaves.",
+        "copy": "Não foi possível copiar para a área de transferência."
+      },
+      "copied": "Copiado para a área de transferência.",
+      "localOnly": "Geração 100% local. As chaves nunca saem do seu navegador."
+    },
+    "sslCertGen": {
+      "header": "Gerador de Certificados SSL Autofirmados Grátis",
+      "subtitle": "Gere chave privada, CSR e certificado SSL autofirmado para testes diretamente no navegador.",
+      "title": "Gerar certificados SSL e CSR",
+      "description": "Ferramenta gratuita no navegador para criar certificados autofirmados e CSR. Ideal para desenvolvimento local, staging e ambientes de teste.",
+      "privacy": "Chaves e certificados são gerados localmente no navegador e nunca são enviados a servidores.",
+      "algorithm": "Algoritmo da chave",
+      "validYears": "Validade (anos)",
+      "validYearsHint": "Defina por quantos anos o certificado deve ser válido (1–10). Em produção, siga as boas práticas das autoridades certificadoras.",
+      "dn": {
+        "title": "Distinguished Name (DN)"
+      },
+      "csr": "Certificate Signing Request (CSR)",
+      "csrPlaceholder": "O CSR gerado em formato PEM aparecerá aqui...",
+      "certificate": "Certificado autofirmado",
+      "certPlaceholder": "O certificado gerado em formato PEM aparecerá aqui...",
+      "privateKey": "Chave privada (PEM)",
+      "keyPlaceholder": "A chave privada gerada em formato PEM aparecerá aqui...",
+      "generating": "Gerando certificado...",
+      "generated": "Pacote de certificado gerado com sucesso.",
+      "actions": {
+        "generate": "Gerar certificado",
+        "copy": "Copiar",
+        "downloadBundle": "Baixar bundle (chave + CSR + cert)"
+      },
+      "errors": {
+        "missingRequired": "Os campos CN e país (C) são obrigatórios.",
+        "generate": "Não foi possível gerar o pacote de certificado.",
+        "copy": "Não foi possível copiar para a área de transferência."
+      },
+      "copied": "Copiado para a área de transferência.",
+      "localOnly": "Geração 100% local. Chaves e CSR nunca saem do navegador."
+    },
+    "fileEntropy": {
+      "header": "Analisador de Entropia de Arquivos Grátis",
+      "subtitle": "Envie um arquivo e meça a entropia de Shannon, percentual de aleatoriedade e natureza provável (texto, compactado, criptografado).",
+      "title": "Analisar entropia e aleatoriedade de um arquivo",
+      "description": "Ferramenta gratuita no navegador para estimar se um arquivo é provavelmente texto puro, compactado ou criptografado com base na entropia.",
+      "privacy": "Os arquivos são processados localmente no seu navegador. Nada é enviado para servidores.",
+      "dropHere": "Arraste um arquivo aqui",
+      "dropHint": "Lemos apenas os bytes no lado do cliente para calcular a entropia. Nenhum dado é armazenado.",
+      "analyzing": "Analisando entropia...",
+      "actions": {
+        "analyze": "Analisar arquivo"
+      },
+      "metrics": {
+        "entropy": "Entropia de Shannon",
+        "randomness": "Aleatoriedade",
+        "size": "Tamanho do arquivo:"
+      },
+      "bitsPerByte": "bits/byte",
+      "classification": {
+        "plain": "Provavelmente texto / estruturado",
+        "compressed": "Provavelmente dados compactados",
+        "encrypted": "Provavelmente dados criptografados"
+      },
+      "histogramTitle": "Histograma da distribuição de bytes (0–255)",
+      "histogramLabel": "Ocorrências por valor de byte",
+      "noData": "Envie um arquivo e execute a análise para ver o perfil de entropia.",
+      "errors": {
+        "noFile": "Selecione um arquivo para analisar.",
+        "read": "Não foi possível ler o arquivo selecionado."
+      },
+      "localOnly": "Análise 100% local. Nenhum conteúdo de arquivo sai do dispositivo."
+    },
+    "advHash": {
+      "header": "Gerador de Hash Avançado Grátis",
+      "subtitle": "Gere hashes SHA-256, SHA-512 e PBKDF2 com parâmetros configuráveis diretamente no navegador.",
+      "title": "Gerar hashes criptográficos avançados",
+      "description": "Ferramenta gratuita de hashing para derivar digests fortes e chaves PBKDF2 para testes de segurança e protótipos de armazenamento de senhas.",
+      "privacy": "Todo o hashing é feito localmente com Web Crypto API. As entradas nunca são enviadas a um servidor.",
+      "inputLabel": "Entrada para hash",
+      "inputPlaceholder": "Escreva o texto ou segredo que deseja hashear...",
+      "salt": "Salt",
+      "saltPlaceholder": "Informe um salt aleatório, por exemplo em base64 ou hexadecimal...",
+      "iterations": "Iterações",
+      "iterationsHint": "Mais iterações aumentam a segurança, mas também o tempo de CPU. Use valores realistas para o seu ambiente.",
+      "length": "Tamanho da saída (bytes)",
+      "lengthHint": "Tamanhos típicos de chave PBKDF2 são 32 bytes (256 bits) ou 64 bytes (512 bits).",
+      "generating": "Gerando hash...",
+      "generated": "Hash gerado com sucesso.",
+      "outputLabel": "Hash resultante (hex)",
+      "outputPlaceholder": "O hash gerado aparecerá aqui...",
+      "actions": {
+        "generate": "Gerar hash",
+        "copy": "Copiar"
+      },
+      "errors": {
+        "noInput": "Informe um texto para hashear.",
+        "noSalt": "Forneça um salt para derivar PBKDF2.",
+        "generate": "Não foi possível gerar o hash.",
+        "copy": "Não foi possível copiar para a área de transferência."
+      },
+      "copied": "Copiado para a área de transferência.",
+      "localOnly": "Hashing 100% local. Nenhum segredo sai do seu navegador."
     }
   },
   "footer": {

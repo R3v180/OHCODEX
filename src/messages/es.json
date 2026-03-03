@@ -658,6 +658,75 @@
       "modifiedFile": "Archivo Modificado (B)",
       "browseButton": "Seleccionar Archivo",
       "remove": "Eliminar"
+    },
+    "image-steganography": {
+      "header": "Esteganografía en Imágenes Gratis",
+      "subtitle": "Oculta texto o archivos completos dentro de imágenes PNG/JPG sin subir nada a servidores. 100% en tu navegador.",
+      "description": "Herramienta de esteganografía gratis para esconder mensajes o archivos en fotos usando la técnica LSB. Ideal para pruebas de seguridad y privacidad.",
+      "privacy": "Todo el procesamiento ocurre localmente en tu navegador. Las imágenes y los mensajes nunca se envían a ningún servidor.",
+      "modes": {
+        "embedTitle": "Ocultar datos en una imagen",
+        "extractTitle": "Extraer datos de una imagen",
+        "embed": "Ocultar datos",
+        "extract": "Extraer datos"
+      },
+      "payload": {
+        "text": "Ocultar texto",
+        "file": "Ocultar archivo"
+      },
+      "coverImage": "Imagen de portada",
+      "coverDrop": "Arrastra aquí tu imagen PNG/JPG",
+      "coverHint": "Tamaño máximo recomendado 4K. Cuanto mayor sea la imagen, más datos podrás ocultar.",
+      "capacity": {
+        "total": "Capacidad total: {pixels} píxeles · {bits} bits LSB",
+        "used": "Usado: {used} bytes de {max} bytes disponibles"
+      },
+      "payloadTextLabel": "Texto a ocultar",
+      "payloadTextPlaceholder": "Escribe el mensaje secreto que quieres esconder dentro de la imagen...",
+      "characters": "caracteres",
+      "bytesAvailable": "Bytes disponibles: {available}",
+      "payloadFileLabel": "Archivo a ocultar",
+      "payloadDrop": "Arrastra aquí el archivo que quieras ocultar",
+      "payloadHint": "El archivo se incrusta byte a byte dentro de los píxeles. Solo se guarda una copia esteganografiada en tu dispositivo.",
+      "fits": "Cabe dentro de la imagen seleccionada.",
+      "tooLarge": "El archivo es demasiado grande. Máximo aproximado: {max} bytes.",
+      "processing": "Procesando...",
+      "stegoImage": "Imagen esteganografiada",
+      "stegoDrop": "Arrastra aquí la imagen que contiene datos ocultos",
+      "stegoHint": "Debe ser una imagen previamente generada con esta u otra herramienta de esteganografía compatible.",
+      "extractedTextLabel": "Texto extraído",
+      "extractedTextPlaceholder": "El mensaje oculto aparecerá aquí si la imagen contiene texto incrustado...",
+      "extractedFileLabel": "Archivo extraído",
+      "fileReady": "Archivo listo para descargar",
+      "noFileYet": "Aún no se ha detectado ningún archivo oculto.",
+      "actions": {
+        "embed": "Ocultar ahora",
+        "extract": "Extraer ahora",
+        "downloadStego": "Descargar imagen con datos ocultos",
+        "downloadPayload": "Descargar archivo extraído",
+        "copyUrl": "Copiar URL de descarga",
+        "copyText": "Copiar texto extraído"
+      },
+      "success": {
+        "embed": "Datos ocultos correctamente en la imagen.",
+        "embedShort": "Esteganografía completada",
+        "extract": "Datos extraídos correctamente de la imagen."
+      },
+      "errors": {
+        "onlyImages": "Solo se permiten archivos de imagen (PNG/JPG).",
+        "loadImage": "No se pudo cargar la imagen. Prueba con otro archivo.",
+        "noCover": "Primero selecciona una imagen de portada.",
+        "noPayloadText": "Escribe algún texto para ocultar en la imagen.",
+        "noPayloadFile": "Selecciona un archivo para ocultar en la imagen.",
+        "notEnoughCapacity": "La imagen no tiene capacidad suficiente para almacenar todos los datos. Prueba con una imagen más grande o con menos datos.",
+        "encode": "Ocurrió un error al incrustar los datos en la imagen.",
+        "noStego": "Selecciona una imagen que contenga datos ocultos.",
+        "decode": "No se pudieron extraer datos válidos de la imagen.",
+        "copy": "No se pudo copiar al portapapeles."
+      },
+      "copied": "Copiado al portapapeles.",
+      "localOnly": "Procesamiento 100% local. Nada se sube a servidores externos.",
+      "disclaimer": "Esta herramienta está pensada para fines educativos y de pruebas de seguridad. No la utilices para actividades ilegales o que vulneren la privacidad de terceros."
     }
   },
   "footer": {

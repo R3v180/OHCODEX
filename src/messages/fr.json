@@ -646,6 +646,201 @@
       "modifiedFile": "Modified File (B)",
       "browseButton": "Select File",
       "remove": "Supprimer"
+    },
+    "image-steganography": {
+      "header": "Stéganographie d’Images Gratuite",
+      "subtitle": "Cachez du texte ou des fichiers entiers dans des images PNG/JPG sans rien téléverser. 100% dans votre navigateur.",
+      "description": "Outil de stéganographie gratuit pour cacher des messages ou des fichiers dans des photos via la technique LSB. Idéal pour les tests de sécurité et de confidentialité.",
+      "privacy": "Tout le traitement s’effectue localement dans votre navigateur. Les images et messages ne sont jamais envoyés à un serveur.",
+      "modes": {
+        "embedTitle": "Cacher des données dans une image",
+        "extractTitle": "Extraire des données d’une image",
+        "embed": "Cacher des données",
+        "extract": "Extraire des données"
+      },
+      "payload": {
+        "text": "Cacher du texte",
+        "file": "Cacher un fichier"
+      },
+      "coverImage": "Image de couverture",
+      "coverDrop": "Glissez-déposez ici votre image PNG/JPG",
+      "coverHint": "Taille maximale recommandée : 4K. Plus l’image est grande, plus vous pouvez cacher de données.",
+      "capacity": {
+        "total": "Capacité totale : {pixels} pixels · {bits} bits LSB",
+        "used": "Utilisé : {used} octets sur {max} octets disponibles"
+      },
+      "payloadTextLabel": "Texte à cacher",
+      "payloadTextPlaceholder": "Écrivez le message secret que vous voulez cacher dans l’image...",
+      "characters": "caractères",
+      "bytesAvailable": "Octets disponibles : {available}",
+      "payloadFileLabel": "Fichier à cacher",
+      "payloadDrop": "Glissez ici le fichier que vous souhaitez cacher",
+      "payloadHint": "Le fichier est intégré octet par octet dans les pixels. Seule l’image stéganographiée est enregistrée sur votre appareil.",
+      "fits": "Tient dans l’image sélectionnée.",
+      "tooLarge": "Le fichier est trop volumineux. Maximum approximatif : {max} octets.",
+      "processing": "Traitement en cours...",
+      "stegoImage": "Image stéganographiée",
+      "stegoDrop": "Glissez ici l’image qui contient des données cachées",
+      "stegoHint": "Il doit s’agir d’une image générée avec cet outil ou un autre outil de stéganographie compatible.",
+      "extractedTextLabel": "Texte extrait",
+      "extractedTextPlaceholder": "Le message caché apparaîtra ici si l’image contient du texte intégré...",
+      "extractedFileLabel": "Fichier extrait",
+      "fileReady": "Fichier prêt à être téléchargé",
+      "noFileYet": "Aucun fichier caché détecté pour le moment.",
+      "actions": {
+        "embed": "Cacher maintenant",
+        "extract": "Extraire maintenant",
+        "downloadStego": "Télécharger l’image avec données cachées",
+        "downloadPayload": "Télécharger le fichier extrait",
+        "copyUrl": "Copier l’URL de téléchargement",
+        "copyText": "Copier le texte extrait"
+      },
+      "success": {
+        "embed": "Données cachées avec succès dans l’image.",
+        "embedShort": "Stéganographie terminée",
+        "extract": "Données extraites avec succès de l’image."
+      },
+      "errors": {
+        "onlyImages": "Seuls les fichiers image (PNG/JPG) sont autorisés.",
+        "loadImage": "Impossible de charger l’image. Essayez un autre fichier.",
+        "noCover": "Sélectionnez d’abord une image de couverture.",
+        "noPayloadText": "Écrivez du texte à cacher dans l’image.",
+        "noPayloadFile": "Sélectionnez un fichier à cacher dans l’image.",
+        "notEnoughCapacity": "L’image n’a pas assez de capacité pour stocker toutes les données. Essayez une image plus grande ou moins de données.",
+        "encode": "Une erreur est survenue lors de l’incrustation des données dans l’image.",
+        "noStego": "Sélectionnez une image qui contient des données cachées.",
+        "decode": "Impossible d’extraire des données valides de l’image.",
+        "copy": "Impossible de copier dans le presse-papiers."
+      },
+      "copied": "Copié dans le presse-papiers.",
+      "localOnly": "Traitement 100% local. Aucune donnée n’est envoyée à des serveurs externes.",
+      "disclaimer": "Cet outil est destiné à des fins éducatives et de tests de sécurité. Ne l’utilisez pas pour des activités illégales ou portant atteinte à la vie privée d’autrui."
+    },
+    "sshKeyGen": {
+      "header": "Générateur de Clés SSH Gratuit",
+      "subtitle": "Générez des paires de clés SSH RSA, Ed25519 et ECDSA avec empreintes directement dans votre navigateur. 100% privé.",
+      "title": "Générer des paires de clés SSH sécurisées",
+      "description": "Outil gratuit pour créer des paires de clés SSH modernes pour serveurs et Git. Toutes les clés sont générées côté client via Web Crypto API.",
+      "privacy": "Les clés ne sont jamais envoyées à un serveur. Tout est généré et conservé localement dans votre navigateur.",
+      "keyType": "Type de clé",
+      "bits": "Taille de clé RSA (bits)",
+      "bitsHint": "Utilisez 4096 bits pour une sécurité et une compatibilité maximales. Des valeurs plus élevées augmentent le temps de génération.",
+      "passphrase": "Passphrase (optionnelle)",
+      "passphrasePlaceholder": "Passphrase optionnelle pour chiffrer votre clé privée...",
+      "passphraseHint": "En production, protégez toujours votre clé privée avec une passphrase forte.",
+      "generating": "Génération des clés...",
+      "generated": "Paire de clés SSH générée avec succès.",
+      "publicKey": "Clé publique (OpenSSH)",
+      "publicKeyPlaceholder": "La clé publique OpenSSH apparaîtra ici...",
+      "privateKey": "Clé privée (PEM)",
+      "privateKeyPlaceholder": "La clé privée encodée en PEM apparaîtra ici. Gardez-la secrète.",
+      "fingerprint": "Empreinte SHA256",
+      "actions": {
+        "generate": "Générer les clés",
+        "copy": "Copier"
+      },
+      "errors": {
+        "generate": "Impossible de générer la paire de clés.",
+        "copy": "Impossible de copier dans le presse-papiers."
+      },
+      "copied": "Copié dans le presse-papiers.",
+      "localOnly": "Génération 100% locale. Les clés ne quittent jamais votre navigateur."
+    },
+    "sslCertGen": {
+      "header": "Générateur de Certificats SSL Autofirmés Gratuit",
+      "subtitle": "Générez clé privée, CSR et certificat SSL autofirmé pour vos tests directement dans le navigateur.",
+      "title": "Générer des certificats SSL et des CSR",
+      "description": "Outil gratuit dans le navigateur pour créer des certificats autofirmés et des CSR. Idéal pour le développement local, la préproduction et les labs.",
+      "privacy": "Les clés et certificats sont générés localement dans votre navigateur et ne sont jamais envoyés à un serveur.",
+      "algorithm": "Algorithme de clé",
+      "validYears": "Validité (années)",
+      "validYearsHint": "Définissez la durée de validité du certificat (1–10 ans). En production, suivez les bonnes pratiques des AC.",
+      "dn": {
+        "title": "Distinguished Name (DN)"
+      },
+      "csr": "Certificate Signing Request (CSR)",
+      "csrPlaceholder": "Le CSR généré au format PEM apparaîtra ici...",
+      "certificate": "Certificat autofirmé",
+      "certPlaceholder": "Le certificat généré au format PEM apparaîtra ici...",
+      "privateKey": "Clé privée (PEM)",
+      "keyPlaceholder": "La clé privée générée au format PEM apparaîtra ici...",
+      "generating": "Génération du certificat...",
+      "generated": "Ensemble certificat généré avec succès.",
+      "actions": {
+        "generate": "Générer le certificat",
+        "copy": "Copier",
+        "downloadBundle": "Télécharger le bundle (clé + CSR + cert)"
+      },
+      "errors": {
+        "missingRequired": "Les champs CN et pays (C) sont obligatoires.",
+        "generate": "Impossible de générer le bundle de certificat.",
+        "copy": "Impossible de copier dans le presse-papiers."
+      },
+      "copied": "Copié dans le presse-papiers.",
+      "localOnly": "Génération 100% locale. Les clés et le CSR ne quittent jamais votre navigateur."
+    },
+    "fileEntropy": {
+      "header": "Analyseur d’Entropie de Fichiers Gratuit",
+      "subtitle": "Téléversez un fichier et mesurez son entropie de Shannon, son pourcentage d’aléa et sa nature probable (texte, compressé, chiffré).",
+      "title": "Analyser l’entropie et l’aléa d’un fichier",
+      "description": "Outil gratuit dans le navigateur pour estimer si un fichier est probablement en clair, compressé ou chiffré à partir de son entropie.",
+      "privacy": "Les fichiers sont traités localement dans votre navigateur. Rien n’est téléversé vers un serveur.",
+      "dropHere": "Glissez-déposez un fichier ici",
+      "dropHint": "Nous lisons uniquement les octets côté client pour calculer l’entropie. Aucune donnée n’est stockée.",
+      "analyzing": "Analyse de l’entropie...",
+      "actions": {
+        "analyze": "Analyser le fichier"
+      },
+      "metrics": {
+        "entropy": "Entropie de Shannon",
+        "randomness": "Aléa",
+        "size": "Taille du fichier :"
+      },
+      "bitsPerByte": "bits/octet",
+      "classification": {
+        "plain": "Probablement texte / structuré",
+        "compressed": "Probablement des données compressées",
+        "encrypted": "Probablement des données chiffrées"
+      },
+      "histogramTitle": "Histogramme de distribution des octets (0–255)",
+      "histogramLabel": "Occurrences par valeur d’octet",
+      "noData": "Téléversez un fichier et lancez l’analyse pour voir son profil d’entropie.",
+      "errors": {
+        "noFile": "Sélectionnez un fichier à analyser.",
+        "read": "Impossible de lire le fichier sélectionné."
+      },
+      "localOnly": "Analyse 100% locale. Aucun contenu de fichier ne quitte votre appareil."
+    },
+    "advHash": {
+      "header": "Générateur de Hash Avancé Gratuit",
+      "subtitle": "Générez des hashes SHA-256, SHA-512 et PBKDF2 avec paramètres configurables directement dans votre navigateur.",
+      "title": "Générer des empreintes cryptographiques avancées",
+      "description": "Outil gratuit pour dériver des empreintes fortes et des clés PBKDF2 pour tests de sécurité et prototypes de stockage de mots de passe.",
+      "privacy": "Tout le hachage est effectué localement via Web Crypto API. Les entrées ne sont jamais envoyées à un serveur.",
+      "inputLabel": "Entrée à hacher",
+      "inputPlaceholder": "Écrivez le texte ou secret que vous souhaitez hacher...",
+      "salt": "Sel",
+      "saltPlaceholder": "Saisissez un sel aléatoire, par ex. en base64 ou hex...",
+      "iterations": "Itérations",
+      "iterationsHint": "Plus d’itérations augmentent la sécurité mais aussi le temps CPU. Utilisez des valeurs réalistes pour votre environnement.",
+      "length": "Longueur de sortie (octets)",
+      "lengthHint": "Les tailles de clé PBKDF2 typiques sont 32 octets (256 bits) ou 64 octets (512 bits).",
+      "generating": "Génération du hash...",
+      "generated": "Hash généré avec succès.",
+      "outputLabel": "Hash résultant (hex)",
+      "outputPlaceholder": "Le hash généré apparaîtra ici...",
+      "actions": {
+        "generate": "Générer le hash",
+        "copy": "Copier"
+      },
+      "errors": {
+        "noInput": "Saisissez un texte à hacher.",
+        "noSalt": "Fournissez un sel pour dériver PBKDF2.",
+        "generate": "Impossible de générer le hash.",
+        "copy": "Impossible de copier dans le presse-papiers."
+      },
+      "copied": "Copié dans le presse-papiers.",
+      "localOnly": "Hachage 100% local. Aucun secret ne quitte votre navigateur."
     }
   },
   "footer": {

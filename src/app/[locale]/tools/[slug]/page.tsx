@@ -162,14 +162,14 @@ export default async function ToolPage({ params }: Props) {
 
   // Cargamos configuración de anuncios (AdSense, Ezoic, House) desde el global
   const adsSettings: any = await payload.findGlobal({
-    slug: 'ads-settings',
+    slug: 'ads-settings' as any,
   })
 
   const positions = (adsSettings?.positions as any[]) || []
 
   const pickVariantForPosition = (position: 'top' | 'sidebar' | 'bottom') => {
-    const slot = positions.find((p) => p.position === position)
-    const variants: any[] = (slot?.variants || []).filter((v) => v.enabled !== false)
+    const slot = positions.find((p: any) => p.position === position)
+    const variants: any[] = (slot?.variants || []).filter((v: any) => v.enabled !== false)
     if (!adsSettings?.enabled || !variants.length) return null
 
     const totalWeight = variants.reduce((acc, v) => acc + (v.weight || 1), 0)

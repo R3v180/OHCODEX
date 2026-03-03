@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || undefined
 
     await payload.create({
-      collection: 'ads-events',
+      collection: 'ads-events' as any,
       data: {
         slotPosition,
         network,

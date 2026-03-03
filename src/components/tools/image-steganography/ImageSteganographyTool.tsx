@@ -219,6 +219,7 @@ export function ImageSteganographyTool() {
       if (!ctx) throw new Error('Canvas context lost')
       ctx.putImageData(stegoData, 0, 0)
 
+      // SIEMPRE guardar como PNG: JPEG es lossy y destruye los bits LSB
       canvas.toBlob(
         (blob) => {
           if (!blob) {
@@ -233,8 +234,7 @@ export function ImageSteganographyTool() {
           toast.success(t('success.embed'))
           setProcessing(false)
         },
-        coverFile.type || 'image/png',
-        0.95,
+        'image/png',
       )
     } catch (error) {
       console.error(error)

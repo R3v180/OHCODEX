@@ -666,13 +666,13 @@
       "coverDrop": "Ziehen Sie Ihr PNG/JPG-Bild hierher",
       "coverHint": "Empfohlene maximale Größe: 4K. Je größer das Bild, desto mehr Daten können Sie verstecken.",
       "capacity": {
-        "total": "Gesamtkapazität: {pixels} Pixel · {bits} LSB-Bits",
-        "used": "Verwendet: {used} Bytes von {max} verfügbaren Bytes"
+        "total": "Kapazität: {pixels} Pixel · max. {bytes} Bytes",
+        "used": "Verwendet: {used} Bytes ({percent}%)"
       },
       "payloadTextLabel": "Zu versteckender Text",
       "payloadTextPlaceholder": "Schreiben Sie die geheime Nachricht, die Sie im Bild verstecken möchten...",
       "characters": "Zeichen",
-      "bytesAvailable": "Verfügbare Bytes: {available}",
+      "bytesAvailable": "{bytes} Bytes verfügbar",
       "payloadFileLabel": "Zu versteckende Datei",
       "payloadDrop": "Ziehen Sie hier die Datei hinein, die Sie verstecken möchten",
       "payloadHint": "Die Datei wird Byte für Byte in den Pixeln eingebettet. Nur das steganografierte Bild wird auf Ihrem Gerät gespeichert.",

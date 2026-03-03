@@ -666,13 +666,13 @@
       "coverDrop": "Glissez-déposez ici votre image PNG/JPG",
       "coverHint": "Taille maximale recommandée : 4K. Plus l’image est grande, plus vous pouvez cacher de données.",
       "capacity": {
-        "total": "Capacité totale : {pixels} pixels · {bits} bits LSB",
-        "used": "Utilisé : {used} octets sur {max} octets disponibles"
+        "total": "Capacité : {pixels} pixels · max. {bytes} octets",
+        "used": "Utilisé : {used} octets ({percent}%)"
       },
       "payloadTextLabel": "Texte à cacher",
       "payloadTextPlaceholder": "Écrivez le message secret que vous voulez cacher dans l’image...",
       "characters": "caractères",
-      "bytesAvailable": "Octets disponibles : {available}",
+      "bytesAvailable": "{bytes} octets disponibles",
       "payloadFileLabel": "Fichier à cacher",
       "payloadDrop": "Glissez ici le fichier que vous souhaitez cacher",
       "payloadHint": "Le fichier est intégré octet par octet dans les pixels. Seule l’image stéganographiée est enregistrée sur votre appareil.",

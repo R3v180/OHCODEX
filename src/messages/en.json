@@ -666,13 +666,13 @@
       "coverDrop": "Drag your PNG/JPG image here",
       "coverHint": "Recommended max size 4K. The larger the image, the more data you can hide.",
       "capacity": {
-        "total": "Total capacity: {pixels} pixels · {bits} LSB bits",
-        "used": "Used: {used} bytes of {max} available bytes"
+        "total": "Capacity: {pixels} pixels · max. {bytes} bytes",
+        "used": "Used: {used} bytes ({percent}%)"
       },
       "payloadTextLabel": "Text to hide",
       "payloadTextPlaceholder": "Write the secret message you want to hide inside the image...",
       "characters": "characters",
-      "bytesAvailable": "Available bytes: {available}",
+      "bytesAvailable": "{bytes} bytes available",
       "payloadFileLabel": "File to hide",
       "payloadDrop": "Drag here the file you want to hide",
       "payloadHint": "The file is embedded byte by byte into the pixels. Only the steganographic image is stored on your device.",
